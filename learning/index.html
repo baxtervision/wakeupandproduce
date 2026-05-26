@@ -166,20 +166,9 @@
       </div>
     </div>
   </main>
-  <footer class="shared-footer">
-    <span>Wake Up and Produce</span>
-    <span><a href="..">Home</a></span>
-    <span><a href="../offense-guide">Offense</a></span>
-    <span><a href="../defense-guide">Defense</a></span>
-    <span><a href="../key-terms">Key Terms</a></span>
-  </footer>
+  <div data-shared-footer></div>
+  <script src="../shared-nav.js"></script>
   <script>
-    // Shared nav injection
-    fetch('../shared-nav.html').then(r => r.ok ? r.text() : null).then(html => {
-      if (!html) return;
-      document.querySelectorAll('[data-shared-nav]').forEach(el => el.outerHTML = html);
-    }).catch(() => {});
-
     // Active sidebar highlight on scroll
     const sections = document.querySelectorAll('.dl-card');
     const navBtns = document.querySelectorAll('.dl-nav-btn');

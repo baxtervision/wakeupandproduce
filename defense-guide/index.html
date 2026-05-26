@@ -659,30 +659,6 @@
     window.addEventListener('hashchange', initFromHash);
     initFromHash();
   </script>
-  <script>
-(function () {
-  const isSubpage = /\/(offensive-key-actions|grinnell-tracker|offense-guide|defense-guide|key-terms|recruiting)\//.test(location.pathname);
-  const pathPrefix = isSubpage ? '../' : '';
-  const nav = document.querySelector('[data-shared-nav]');
-  if (nav) {
-    nav.innerHTML = '<nav class="shared-nav" aria-label="Primary navigation">' +
-      '<a class="shared-brand" href="' + pathPrefix + '">Wake Up &amp; Produce</a>' +
-      '<div class="shared-nav-links">' +
-        '<a href="' + pathPrefix + '">Home</a>' +
-        '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
-        '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
-        '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
-        '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
-        '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
-        '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
-      '</div>' +
-    '</nav>';
-  }
-  const footer = document.querySelector('[data-shared-footer]');
-  if (footer) {
-    footer.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Baxter</span></footer>';
-  }
-}());
-  </script>
+  <script src="../shared-nav.js"></script>
 </body>
 </html>
