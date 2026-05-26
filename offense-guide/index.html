@@ -239,15 +239,15 @@
         const systems = {
             readreact: {
                 title: 'Read & React Offense', subtitle: 'Habit-based offense where every player reacts to the ball handler.', tag: 'Positionless',
-                strengths: ['Builds universal decision-making habits.', 'Scales well from youth to varsity.', 'Punishes ball-watching and poor help rotations.'],
-                weaknesses: ['Can look loose before habits are automatic.', 'Requires consistent teaching language.', 'Spacing collapses if cutters do not finish routes.'],
-                cues: ['Pass and cut with purpose.', 'Fill empty spots on airtime.', 'Drive north-south and circle behind penetration.'],
-                counters: ['Switching gaps', 'Top-locking cutters', 'Zone help sitting in driving lanes'],
+                strengths: ['Builds universal spacing and decision-making habits.', 'Gives players rules instead of memorized plays.', 'Works from 5-out, 4-out, and transition alignments.'],
+                weaknesses: ['Looks messy until habits become automatic.', 'Requires consistent terminology from coaches.', 'Breaks down when cuts are lazy or spacing is ignored.'],
+                cues: ['Pass, cut, and fill with purpose.', 'React to the ball, not the play call.', 'Keep the floor spaced while pressure moves.'],
+                counters: ['Defensive overplays', 'Help defenders sitting in gaps', 'Zone defenders loading to the ball'],
                 actions: [
                     defineAction({
                         id: 'passcut',
                         title: 'Layer 1: Pass & Cut',
-                        desc: 'The passer cuts hard to the rim after every pass, exits to an empty spot, and teammates fill on airtime.',
+                        desc: 'The passer cuts hard to the rim after every perimeter pass, exits to an empty spot, and teammates fill open spots on airtime.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2' },
@@ -260,13 +260,28 @@
                         ]
                     }),
                     defineAction({
+                        id: 'lakercut',
+                        title: 'Layer 2: Post Pass & Cut / Laker Cut',
+                        desc: 'Enter the ball to the post, then cut off the post looking for a handoff or layup. A post entry should never stop movement.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p1' },
+                        steps: [
+                            { type: 'pass', from: 'p1', to: 'p5', label: '1 enters to the post' },
+                            { type: 'cut', player: 'p1', to: 'leftBlock', label: '1 laker cuts off 5' },
+                            { type: 'handoff', from: 'p5', to: 'p1', label: '5 feeds 1 on the cut' },
+                            { actions: [
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
+                            ], label: 'Perimeter fills away from the ball' }
+                        ]
+                    }),
+                    defineAction({
                         id: 'dribbleat',
-                        title: 'Layer 2: Dribble At Backdoor',
-                        desc: 'When the ball is dribbled directly at a teammate, that player back cuts and the next players fill open spots.',
+                        title: 'Layer 3: Dribble At Backdoor',
+                        desc: 'When the ball handler dribbles directly at a perimeter teammate, that teammate back cuts immediately. The cut protects spacing and punishes pressure.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'drive', player: 'p1', to: 'leftSlot', label: '1 dribbles at 2' },
-                            { type: 'cut', player: 'p2', to: 'rim', label: '2 back cuts to the rim' },
+                            { type: 'cut', player: 'p2', to: 'rim', label: '2 back cuts immediately' },
                             { type: 'fill', player: 'p2', to: 'rightCorner', label: '2 exits opposite' },
                             { actions: [
                                 { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
@@ -276,8 +291,8 @@
                     }),
                     defineAction({
                         id: 'circle',
-                        title: 'Layer 3: Drive & Circle Movement',
-                        desc: 'A north-south drive triggers perimeter players to circle in the direction of the drive for kick-out windows.',
+                        title: 'Layer 4: Drive & Circle Movement',
+                        desc: 'When the ball handler drives north-south, perimeter players circle behind the drive to create kick-out windows and maintain spacing.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives the right lane' },
@@ -290,9 +305,24 @@
                         ]
                     }),
                     defineAction({
+                        id: 'postreaction',
+                        title: 'Layer 5: Post Reaction on Penetration',
+                        desc: 'When a perimeter player drives, the post slides to the short corner to open a passing window and clear help-side traffic from the paint.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p1' },
+                        steps: [
+                            { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives the right lane' },
+                            { actions: [
+                                { type: 'fill', player: 'p5', to: 'rightShortCorner', label: '5 slides to the short corner' },
+                                { type: 'fill', player: 'p3', to: 'rightCorner', label: '3 circles behind the drive' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' }
+                            ], label: 'Post opens a window on the drive side' },
+                            { type: 'pass', from: 'p1', to: 'p5', label: '1 kicks to 5 in the short corner' }
+                        ]
+                    }),
+                    defineAction({
                         id: 'drivebaseline',
-                        title: 'Layer 4: Baseline Drive & Circle',
-                        desc: 'A baseline drive creates a drift pass window while the top and opposite side protect spacing.',
+                        title: 'Layer 6: Baseline Drive & Drift',
+                        desc: 'A baseline drive triggers the corner drift, a safety rotation above the ball, and opposite-side spacing so the driver has outlets.',
                         setup: { players: { p1: 'rightWing', p2: 'top', p3: 'leftWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightBaseline', label: '1 drives the baseline' },
@@ -304,55 +334,37 @@
                         ]
                     }),
                     defineAction({
-                        id: 'postentry',
-                        title: 'Layer 5: Post Entry Fill',
-                        desc: 'After a post entry, the passer cuts and exits while perimeter teammates fill away from the ball.',
-                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p1' },
+                        id: 'pinskip',
+                        title: 'Layer 7: Pin & Skip',
+                        desc: 'Against zone or heavy help, a weak-side player pins the backside defender so the ball can be skipped to an open shooter.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p3' },
                         steps: [
-                            { type: 'pass', from: 'p1', to: 'p5', label: '1 enters the ball to 5' },
-                            { type: 'cut', player: 'p1', to: 'rim', label: '1 cuts after the entry' },
-                            { type: 'fill', player: 'p1', to: 'leftCorner', label: '1 exits away from the post' },
-                            { actions: [
-                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
-                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
-                            ], label: 'The perimeter fills away from the post' }
+                            { type: 'screen', player: 'p4', to: 'pinLeftWing', label: '4 pins the weak-side defender' },
+                            { type: 'fill', player: 'p2', to: 'skipLeftSlot', label: '2 lifts into the skip window' },
+                            { type: 'pass', from: 'p3', to: 'p2', label: '3 skips the ball to 2' },
+                            { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 releases after the pin' }
                         ]
                     }),
                     defineAction({
-                        id: 'postdribble',
-                        title: 'Layer 6: Post Dribble At',
-                        desc: 'When the post dribbles at a perimeter teammate, that teammate back cuts just like the perimeter dribble-at read.',
-                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p5' },
+                        id: 'circlereverse',
+                        title: 'Layer 8: Circle Reverse',
+                        desc: 'When the ball reverses sides, the offense mirrors the circle movement in the new attack direction. The floor stays spaced and the defense must recover.',
+                        setup: { players: { p1: 'rightWing', p2: 'top', p3: 'leftWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
-                            { type: 'drive', player: 'p5', to: 'rightSlotHigh', label: '5 dribbles out toward 3' },
-                            { type: 'cut', player: 'p3', to: 'rim', label: '3 back cuts to the rim' },
-                            { type: 'fill', player: 'p3', to: 'leftCorner', label: '3 exits opposite' },
+                            { type: 'pass', from: 'p1', to: 'p2', label: '1 reverses to 2 at the top' },
+                            { type: 'drive', player: 'p2', to: 'leftElbow', label: '2 attacks the left lane' },
                             { actions: [
-                                { type: 'fill', player: 'p1', to: 'rightWing', label: '1 fills the right wing' },
-                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' }
-                            ], label: 'The guards fill behind the cut' }
-                        ]
-                    }),
-                    defineAction({
-                        id: 'speeddribble',
-                        title: 'Layer 7: Speed Dribble / DHO',
-                        desc: 'A speed dribble aimed at a teammate creates a dribble handoff. The receiver attacks while the original handler spaces to the vacated spot.',
-                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
-                        steps: [
-                            { type: 'drive', player: 'p1', to: 'rightSlotHigh', label: '1 speed dribbles at 3' },
-                            { type: 'cut', player: 'p3', to: 'rightSlot', label: '3 curls to receive the handoff' },
-                            { type: 'handoff', from: 'p1', to: 'p3', label: '1 hands off to 3' },
-                            { actions: [
-                                { type: 'fill', player: 'p1', to: 'rightWing', label: '1 spaces off the handoff' },
-                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
-                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
-                            ], label: 'Spacing fills as 3 attacks with the ball' }
+                                { type: 'fill', player: 'p3', to: 'leftCorner', label: '3 circles to the corner' },
+                                { type: 'fill', player: 'p4', to: 'rim', label: '4 dives to the paint' },
+                                { type: 'fill', player: 'p1', to: 'top', label: '1 fills the top' },
+                                { type: 'fill', player: 'p5', to: 'rightWing', label: '5 lifts to the wing' }
+                            ], label: 'Circle reverses to the left side' }
                         ]
                     }),
                     defineAction({
                         id: 'backscreen',
-                        title: 'Layer 8: Back Screen',
-                        desc: 'A weak-side teammate sets a back screen, the cutter goes shoulder-to-shoulder, and the ball can hit the layup window.',
+                        title: 'Layer 9: Back Screen',
+                        desc: 'A player screens away from the ball to free a teammate on a back cut. The screener reads the defense and the floor maintains spacing.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'screen', player: 'p4', to: 'screenLeftWing', label: '4 sets a back screen for 2' },
@@ -363,8 +375,8 @@
                     }),
                     defineAction({
                         id: 'ballscreen',
-                        title: 'Layer 9: Ball Screen',
-                        desc: 'The screener arrives on the ball, the handler uses the screen, and the screener rolls to occupy help.',
+                        title: 'Layer 10: Ball Screen',
+                        desc: 'A player screens the ball, the handler attacks the screen, and the screener rolls or pops while the other three players space correctly.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'screen', player: 'p5', to: 'ballScreenLeft', label: '5 sets the ball screen' },
@@ -377,44 +389,35 @@
                         ]
                     }),
                     defineAction({
-                        id: 'multiplecuts',
-                        title: 'Layer 10: Multiple Cuts',
-                        desc: 'Every passer cuts, so one reversal can create multiple rim touches and automatic fill movement.',
+                        id: 'powerdribble',
+                        title: 'Layer 11: Power Dribble / DHO',
+                        desc: 'A strong dribble toward a teammate triggers a dribble handoff. The receiver attacks immediately while the original ball handler spaces or rolls behind the action.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
-                            { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2' },
-                            { type: 'cut', player: 'p1', to: 'rim', label: '1 cuts to the rim' },
-                            { type: 'fill', player: 'p1', to: 'rightCorner', label: '1 exits to the corner' },
-                            { type: 'pass', from: 'p2', to: 'p3', label: '2 reverses to 3' },
-                            { type: 'cut', player: 'p2', to: 'rim', label: '2 cuts after the pass' },
-                            { type: 'fill', player: 'p2', to: 'leftCorner', label: '2 exits to the empty corner' }
-                        ]
-                    }),
-                    defineAction({
-                        id: 'pinskip',
-                        title: 'Layer 11: Pin & Skip',
-                        desc: 'Against zone help, a weak-side player pins the defender and the ball skips over the top to the open teammate.',
-                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p3' },
-                        steps: [
-                            { type: 'screen', player: 'p4', to: 'pinLeftWing', label: '4 pins the weak-side defender' },
-                            { type: 'fill', player: 'p2', to: 'skipLeftSlot', label: '2 lifts into the skip window' },
-                            { type: 'pass', from: 'p3', to: 'p2', label: '3 skips the ball to 2' },
-                            { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 releases after the pin' }
-                        ]
-                    }),
-                    defineAction({
-                        id: 'transitionpost',
-                        title: 'Layer 12: Transition Post',
-                        desc: 'The rim runner sprints into early post position before the defense is set, while the guards space around the entry.',
-                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
-                        steps: [
-                            { type: 'sprint', player: 'p5', to: 'postSeal', label: '5 sprints to early post position' },
-                            { type: 'pass', from: 'p1', to: 'p5', label: '1 enters early to 5' },
+                            { type: 'drive', player: 'p1', to: 'rightSlotHigh', label: '1 power dribbles at 3' },
+                            { type: 'cut', player: 'p3', to: 'rightSlot', label: '3 curls to receive the handoff' },
+                            { type: 'handoff', from: 'p1', to: 'p3', label: '1 hands off to 3' },
                             { actions: [
-                                { type: 'fill', player: 'p1', to: 'trailTop', label: '1 trails to the top' },
-                                { type: 'fill', player: 'p2', to: 'leftSlotHigh', label: '2 spaces high left' },
-                                { type: 'fill', player: 'p3', to: 'rightSlotHigh', label: '3 spaces high right' }
-                            ], label: 'The perimeter spaces around the post' }
+                                { type: 'fill', player: 'p1', to: 'rightWing', label: '1 spaces off the handoff' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
+                            ], label: '3 attacks while spacing fills behind' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'transitionflow',
+                        title: 'Layer 12: Transition Flow into 4-Out, 1-In',
+                        desc: 'The offense flows from transition into organized spacing. The rim runner establishes the post, the guards fill perimeter spots, and the team arrives naturally in a 4-out, 1-in shape.',
+                        setup: { players: { p1: 'leftWide', p2: 'rightWide', p3: 'leftSlotHigh', p4: 'rightSlotHigh', p5: 'highSafety' }, ball: 'p1' },
+                        steps: [
+                            { type: 'sprint', player: 'p5', to: 'rightBlock', label: '5 rim runs into early post' },
+                            { actions: [
+                                { type: 'sprint', player: 'p1', to: 'leftCorner', label: '1 fills the left corner' },
+                                { type: 'sprint', player: 'p2', to: 'rightCorner', label: '2 fills the right corner' },
+                                { type: 'sprint', player: 'p3', to: 'leftWing', label: '3 fills the left wing' },
+                                { type: 'sprint', player: 'p4', to: 'top', label: '4 trails to the top' }
+                            ], label: 'Guards arrive in 4-out shape' },
+                            { type: 'pass', from: 'p1', to: 'p5', label: '1 enters the ball to 5 on arrival' }
                         ]
                     })]
             },
