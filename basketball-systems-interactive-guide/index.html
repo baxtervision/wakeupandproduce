@@ -4,40 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basketball Systems Interactive Guide | Wake Up and Produce</title>
+    <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container { height: 400px; }
-        }
-        .court-bg {
-            background-color: #f5f5f4;
-            border: 2px solid #d6d3d1;
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-        .court-line {
-            position: absolute;
-            border: 2px solid #e7e5e4;
-        }
-        .player-dot {
-            transition: all 0.5s ease-in-out;
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f5f5f4; }
-        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
-    </style>
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans antialiased leading-relaxed">
     <nav class="bg-white shadow-sm sticky top-0 z-50">
@@ -48,13 +17,13 @@
                         <div class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">B</div>
                         <span class="font-bold text-xl tracking-tight text-stone-900">Offensive Systems</span>
                     </div>
-                    <a class="sm:hidden text-sm font-semibold text-stone-500 hover:text-orange-600" href="../">Home</a>
+                    <a class="site-home-link sm:hidden" href="../">Wake Up &amp; Produce</a>
                 </div>
                 <div class="flex flex-wrap gap-1 sm:space-x-4">
                     <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn px-3 py-2 rounded-md text-sm font-medium bg-stone-100 text-orange-600 transition-colors">Overview</button>
                     <button onclick="switchTab('readreact')" id="tab-readreact" class="tab-btn px-3 py-2 rounded-md text-sm font-medium text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors">Read & React</button>
                     <button onclick="switchTab('grinnell')" id="tab-grinnell" class="tab-btn px-3 py-2 rounded-md text-sm font-medium text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors">Grinnell</button>
-                    <a class="hidden sm:inline-flex px-3 py-2 rounded-md text-sm font-medium text-stone-500 hover:text-orange-600 hover:bg-stone-100 transition-colors" href="../">Home</a>
+                    <a class="site-home-link hidden sm:inline-flex" href="../">Wake Up &amp; Produce</a>
                 </div>
             </div>
         </div>

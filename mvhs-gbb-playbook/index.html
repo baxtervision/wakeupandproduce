@@ -4,79 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVHS GBB Playbook | Wake Up and Produce</title>
+    <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        @media (max-width: 768px) { .chart-container { height: 250px; } }
-
-        .court-container {
-            background-color: #f5f0e6;
-            border: 2px solid #d6d3d1;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            max-width: 500px;
-            aspect-ratio: 1 / 1;
-            margin: 0 auto;
-        }
-        .paint {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 32%;
-            height: 40%;
-            border: 2px solid #d6d3d1;
-            border-bottom: none;
-            background-color: rgba(214, 211, 209, 0.2);
-        }
-        .free-throw-circle {
-            position: absolute;
-            bottom: 40%;
-            left: 50%;
-            transform: translateX(-50%) translateY(50%);
-            width: 32%;
-            aspect-ratio: 1/1;
-            border: 2px solid #d6d3d1;
-            border-radius: 50%;
-        }
-        .three-point-line {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(30%);
-            width: 90%;
-            aspect-ratio: 1/1;
-            border: 2px solid #d6d3d1;
-            border-radius: 50%;
-        }
-        .player-node {
-            position: absolute;
-            width: 28px;
-            height: 28px;
-            margin-left: -14px;
-            margin-top: -14px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .offense { background-color: #3b82f6; color: white; border: 2px solid #2563eb; }
-        .defense { background-color: #ef4444; color: white; border: 2px solid #dc2626; }
-
-        .nav-item.active { background-color: #f3f4f6; border-left: 4px solid #f97316; font-weight: 600; color: #ea580c; }
-
-        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
-        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
-    </style>
 </head>
 <body class="bg-stone-50 text-stone-800 h-screen flex flex-col overflow-hidden">
     <header class="bg-white border-b border-stone-200 px-6 py-4 flex justify-between items-center z-20 shadow-sm shrink-0">
@@ -85,7 +16,7 @@
             <h1 class="text-xl font-bold tracking-tight text-stone-900">MVHS GBB Playbook</h1>
         </div>
         <div class="flex items-center gap-3">
-            <a class="hidden sm:inline text-sm font-semibold text-stone-500 hover:text-orange-600" href="../">Wake Up and Produce</a>
+            <a class="site-home-link" href="../">Wake Up &amp; Produce</a>
             <button id="mobileMenuBtn" class="md:hidden text-stone-500 hover:text-stone-800">
                 &#9776; Menu
             </button>

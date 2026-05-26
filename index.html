@@ -4,184 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wake Up &amp; Produce</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg: #f5f0e8;
-            --surface: #ece8df;
-            --border: #d9d4c8;
-            --text-primary: #1c1a16;
-            --text-secondary: #6b6557;
-            --text-muted: #9e9689;
-            --accent: #e8600a;
-        }
-
-        body {
-            font-family: "DM Sans", sans-serif;
-            background-color: var(--bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            padding: 3.5rem 2rem 0;
-            max-width: 960px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .wordmark {
-            font-family: "DM Serif Display", serif;
-            font-size: clamp(2.4rem, 6vw, 4rem);
-            line-height: 1.05;
-            letter-spacing: 0;
-            color: var(--text-primary);
-        }
-
-        .wordmark em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .tagline {
-            margin-top: 0.75rem;
-            font-size: 0.9rem;
-            font-weight: 300;
-            color: var(--text-muted);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .divider {
-            max-width: 960px;
-            margin: 2.5rem auto 0;
-            padding: 0 2rem;
-            width: 100%;
-        }
-
-        .divider hr {
-            border: none;
-            border-top: 1px solid var(--border);
-        }
-
-        main {
-            flex: 1;
-            padding: 2.5rem 2rem 5rem;
-            max-width: 960px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .section-label {
-            font-size: 0.72rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1px;
-            background-color: var(--border);
-            border: 1px solid var(--border);
-        }
-
-        .project-card {
-            background-color: var(--bg);
-            padding: 1.75rem;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            transition: background-color 0.15s ease;
-            position: relative;
-            min-height: 260px;
-        }
-
-        .project-card:hover {
-            background-color: var(--surface);
-        }
-
-        .project-card:hover .card-arrow {
-            opacity: 1;
-            transform: translate(2px, -2px);
-        }
-
-        .card-tag {
-            font-size: 0.68rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--accent);
-        }
-
-        .card-title {
-            font-family: "DM Serif Display", serif;
-            font-size: 1.3rem;
-            line-height: 1.2;
-            color: var(--text-primary);
-            padding-right: 1.5rem;
-        }
-
-        .card-desc {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            flex: 1;
-        }
-
-        .card-arrow {
-            position: absolute;
-            top: 1.75rem;
-            right: 1.75rem;
-            font-size: 1rem;
-            color: var(--text-muted);
-            opacity: 0;
-            transition: opacity 0.15s ease, transform 0.15s ease;
-        }
-
-        footer {
-            padding: 1.5rem 2rem;
-            max-width: 960px;
-            margin: 0 auto;
-            width: 100%;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        footer span {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        @media (max-width: 500px) {
-            .projects-grid { grid-template-columns: 1fr; }
-            footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <header>
-        <h1 class="wordmark" aria-label="Wake Up and Produce">Wake Up<br><em>&amp; Produce</em></h1>
-        <p class="tagline">A collection of things being built</p>
+<body class="site-home">
+    <header class="site-header">
+        <h1 class="site-wordmark" aria-label="Wake Up and Produce">Wake Up<br><em>&amp; Produce</em></h1>
+        <p class="site-tagline">A collection of basketball tools, systems guides, and playbook resources being built.</p>
     </header>
 
-    <div class="divider"><hr></div>
+    <div class="site-divider"><hr></div>
 
-    <main>
-        <p class="section-label">Projects</p>
+    <main class="site-main">
+        <p class="site-section-label">Projects</p>
         <div class="projects-grid">
             <a href="mvhs-gbb-playbook/" class="project-card">
                 <span class="card-tag">Basketball</span>
@@ -197,6 +32,15 @@
                 <span class="card-arrow" aria-hidden="true">&nearr;</span>
             </a>
 
+
+
+            <a href="basketball-defensive-systems-masterclass/" class="project-card">
+                <span class="card-tag">Defense</span>
+                <h2 class="card-title">Basketball Defensive Systems Masterclass</h2>
+                <p class="card-desc">A slide-deck masterclass covering man, zone, press, junk defenses, teaching progressions, counters, and system selection.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
             <a href="basketball-systems-interactive-guide/" class="project-card">
                 <span class="card-tag">Guide</span>
                 <h2 class="card-title">Basketball Systems Interactive Guide</h2>
@@ -206,7 +50,7 @@
         </div>
     </main>
 
-    <footer>
+    <footer class="site-footer">
         <span>Wake Up &amp; Produce</span>
         <span id="year"></span>
     </footer>
