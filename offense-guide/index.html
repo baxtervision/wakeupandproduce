@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offense Guide | Wake Up and Produce</title>
+    <meta name="description" content="Interactive offense guide covering Read and React, Grinnell, and Traditional Motion with animated court diagrams and coaching cues.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased leading-relaxed">
+    <div data-shared-nav></div>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="mb-4">
+            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Offensive systems guide</p>
+            <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight">Basketball Offensive Systems</h1>
+        </header>
+
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
+            <div class="lg:col-span-7 bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+                <div class="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Offensive systems">
+                    <button class="system-tab px-4 py-2 rounded-lg text-sm font-bold bg-orange-600 text-white" data-system="readreact">Read & React</button>
+                    <button class="system-tab px-4 py-2 rounded-lg text-sm font-bold bg-white border border-stone-200 text-stone-600" data-system="grinnell">Grinnell</button>
+                    <button class="system-tab px-4 py-2 rounded-lg text-sm font-bold bg-white border border-stone-200 text-stone-600" data-system="motion">Traditional Motion</button>
+                </div>
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h2 id="system-title" class="text-2xl font-extrabold text-stone-900">Read & React Offense</h2>
+                        <p id="system-subtitle" class="text-sm text-stone-500">Habit-based offense where every player reacts to the ball handler.</p>
+                    </div>
+                    <span id="system-tag" class="text-xs font-extrabold uppercase tracking-wider text-orange-600 bg-orange-50 border border-orange-100 rounded-full px-3 py-1">Positionless</span>
+                </div>
+                <div class="w-full max-w-xl mx-auto aspect-[4/3] court-bg" id="system-court">
+                    <div class="court-baseline"></div>
+                    <div class="court-key"></div>
+                    <div class="court-free-throw-circle"></div>
+                    <div class="court-3pt-line"></div>
+                    <div class="court-backboard"></div>
+                    <div class="court-rim"></div>
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 300" aria-label="Animated offensive court diagram">
+                        <g id="routes" stroke-width="3" stroke-linecap="round" fill="none"></g>
+                    </svg>
+                    <div id="ball" class="system-ball"></div>
+                    <div id="p1" class="system-player system-primary">1</div>
+                    <div id="p2" class="system-player">2</div>
+                    <div id="p3" class="system-player">3</div>
+                    <div id="p4" class="system-player">4</div>
+                    <div id="p5" class="system-player">5</div>
+                <div class="route-key" aria-label="Animation key">
+                    <span><i class="route-swatch drive"></i>Dribble/Drive</span>
+                    <span><i class="route-swatch pass"></i>Pass</span>
+                    <span><i class="route-swatch move"></i>Cut/Fill</span>
+                    <span><i class="route-swatch screen"></i>Screen</span>
+                </div>
+                </div>
+                <p id="step-cue" class="mt-4 min-h-[1.5rem] text-center text-sm font-semibold text-stone-600" aria-live="polite"></p>
+                <div class="flex flex-wrap justify-center gap-3 mt-5">
+                    <button id="play-system" class="bg-stone-900 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-700 transition-colors">Play</button>
+                    <button id="detail-system" class="bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition-colors">Play Details</button>
+                    <button id="show-system" class="bg-stone-100 text-stone-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Show Sequence</button>
+                    <button id="reset-system" class="bg-stone-100 text-stone-600 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Reset</button>
+                </div>
+            </div>
+
+            <aside class="lg:col-span-5 space-y-4">
+                <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+                    <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-3">System Actions</h3>
+                    <div id="action-list" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+                </div>
+                <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+                    <h3 id="action-title" class="text-xl font-bold text-stone-900 mb-2"></h3>
+                    <p id="action-desc" class="text-sm text-stone-600"></p>
+                </div>
+            </aside>
+        </section>
+
+        <p class="text-stone-500 text-sm mb-6 max-w-3xl">Compare three offensive frameworks through court movement, teaching cues, strengths, weaknesses, and counters. Select a system above, then use the action list to explore each pattern.</p>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            <article class="system-info-card"><h3>Strengths</h3><ul id="strengths"></ul></article>
+            <article class="system-info-card"><h3>Weaknesses</h3><ul id="weaknesses"></ul></article>
+            <article class="system-info-card"><h3>Teaching Cues</h3><ul id="cues"></ul></article>
+            <article class="system-info-card"><h3>Counters</h3><ul id="counters"></ul></article>
+        </section>
+
+        <section id="grinnell-metrics" class="bg-white border border-stone-200 rounded-lg p-6 shadow-sm mb-6 hidden">
+            <h2 class="text-2xl font-extrabold text-stone-900 mb-1">Grinnell Target Metrics</h2>
+            <p class="text-sm text-stone-500 mb-5">Per-game benchmarks that define a successful Grinnell performance. Meeting all four means the system is working as designed.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Shot Attempts</span><span class="text-sm font-bold text-orange-600">94+ per game</span></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:94%"></div></div>
+                    <p class="text-xs text-stone-500 mt-2">Volume is the foundation. Force the game into a numbers battle where depth and conditioning compound.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">3-Point Rate</span><span class="text-sm font-bold text-orange-600">50%+ of shots</span></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:50%"></div></div>
+                    <p class="text-xs text-stone-500 mt-2">Only threes and layups. No midrange. The math favors the team that eliminates the 2-point pull-up.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Offensive Rebound Rate</span><span class="text-sm font-bold text-orange-600">33%+ per game</span></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:33%"></div></div>
+                    <p class="text-xs text-stone-500 mt-2">Four players crash hard every shot. Extra possessions extend the volume advantage and keep defenses scrambling.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Forced Turnovers</span><span class="text-sm font-bold text-orange-600">32+ per game</span></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:80%"></div></div>
+                    <p class="text-xs text-stone-500 mt-2">Press after every make and miss. More turnovers = more possessions = more shots.</p>
+                </div>
+            </div>
+            <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                <p class="text-sm font-bold text-stone-800 mb-2">Shot Distribution Target</p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-500 flex-shrink-0"></div><span class="text-xs text-stone-600">3-Pointers — 60% of all shots</span></div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></div><span class="text-xs text-stone-600">Layups &amp; at-rim — 38% of all shots</span></div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-stone-400 flex-shrink-0"></div><span class="text-xs text-stone-600">Midrange — 2% (near zero by design)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white border border-stone-200 rounded-lg p-6 shadow-sm">
+            <h2 class="text-2xl font-extrabold text-stone-900 mb-3">System Comparison Snapshot</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 bg-orange-50 border border-orange-100 rounded-lg"><strong>Read & React</strong><p class="text-sm text-stone-600 mt-2">Best when you want every player learning spacing, cuts, and decision-making habits.</p></div>
+                <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg"><strong>Grinnell</strong><p class="text-sm text-stone-600 mt-2">Best when tempo, depth, and volume can overwhelm opponents over time.</p></div>
+                <div class="p-4 bg-stone-100 border border-stone-200 rounded-lg"><strong>Traditional Motion</strong><p class="text-sm text-stone-600 mt-2">Best when screening, timing, and disciplined reads fit your roster identity.</p></div>
+            </div>
+        </section>
+    </main>
+    <div data-shared-footer></div>
+
+    <script>
+        const SPOTS = {
+            top: [50,18],
+            leftWing: [20,30],
+            rightWing: [80,30],
+            leftCorner: [20,70],
+            rightCorner: [80,70],
+            rim: [50,78],
+            leftSlot: [32,28],
+            leftBackdoor: [44,78],
+            rightSlot: [68,28],
+            rightLane: [64,62],
+            leftLane: [36,62],
+            rightBaseline: [84,70],
+            rightCornerLift: [82,28],
+            highSafety: [50,14],
+            rightElbow: [64,48],
+            leftElbow: [36,48],
+            rightBlock: [64,62],
+            leftBlock: [36,62],
+            middleLane: [50,42],
+            leftWide: [16,18],
+            rightWide: [84,18],
+            screenLeftWing: [28,46],
+            ballScreenLeft: [42,30],
+            rollLane: [50,64],
+            leftExit: [14,68],
+            rightExit: [88,68],
+            pinLeftWing: [28,38],
+            skipCatch: [14,22],
+            transitionTop: [54,28],
+            postSprint: [66,50],
+            deepLeftCorner: [12,18],
+            deepRightCorner: [88,18],
+            pressTrapLeft: [20,40],
+            pressTrapRight: [28,46],
+            platoonLeftWing: [22,18],
+            platoonRightWing: [78,18],
+            platoonLeftCorner: [24,42],
+            platoonRightCorner: [76,42],
+            motionScreenAway: [35,35],
+            motionCurlCatch: [48,62],
+            flareScreen: [66,34],
+            flareCatch: [72,24],
+            dribbleEntryLeft: [34,28],
+            postExchangeScreen: [38,34],
+            postExchangeCatch: [50,22],
+            leftSlotHigh: [38,26],
+            rightSlotHigh: [62,26],
+            rightShortCorner: [78,74],
+            leftShortCorner: [22,74],
+            rightDeepCorner: [88,70],
+            leftDeepCorner: [12,70],
+            postSeal: [60,66],
+            trailTop: [50,24],
+            skipLeftSlot: [25,24],
+            rightNail: [58,42]
+        };
+        function clonePositions(positions) {
+            return Object.fromEntries(Object.entries(positions).map(([key, value]) => [key, [value[0], value[1]]]));
+        }
+        function spot(name) { return SPOTS[name] ? [SPOTS[name][0], SPOTS[name][1]] : name; }
+        function playerRoutePoint(positions, player) { return [positions[player][0], positions[player][1]]; }
+        function buildActionFrames(definition) {
+            const positions = {};
+            Object.entries(definition.setup.players).forEach(([player, spotName]) => { positions[player] = spot(spotName); });
+            let ballPlayer = definition.setup.ball;
+            const frames = [{ positions: clonePositions(positions), ball: playerRoutePoint(positions, ballPlayer), routes: [], cue: 'Setup' }];
+            definition.steps.forEach(step => {
+                const routes = [];
+                const actions = step.actions || [step];
+                actions.forEach(action => {
+                    if (action.type === 'pass') {
+                        const from = playerRoutePoint(positions, action.from);
+                        const to = playerRoutePoint(positions, action.to);
+                        if (action.from !== ballPlayer) console.warn('Pass starts away from current ball handler:', action);
+                        routes.push({ from, to, type: 'pass', label: action.label || (action.from + ' passes to ' + action.to) });
+                        ballPlayer = action.to;
+                    } else if (action.type === 'handoff') {
+                        const from = playerRoutePoint(positions, action.from);
+                        const to = playerRoutePoint(positions, action.to);
+                        if (action.from !== ballPlayer) console.warn('Handoff starts away from current ball handler:', action);
+                        routes.push({ from, to, type: 'pass', label: action.label || (action.from + ' hands off to ' + action.to) });
+                        ballPlayer = action.to;
+                    } else if (action.type === 'shot') {
+                        const from = playerRoutePoint(positions, action.player);
+                        const to = spot(action.to || 'rim');
+                        if (action.player !== ballPlayer) console.warn('Shot starts away from current ball handler:', action);
+                        routes.push({ from, to, type: 'pass', label: action.label || (action.player + ' shoots') });
+                        ballPlayer = null;
+                    } else {
+                        const player = action.player;
+                        const from = playerRoutePoint(positions, player);
+                        const to = spot(action.to);
+                        routes.push({ from, to, type: action.type, label: action.label || (player + ' ' + action.type + 's') });
+                        positions[player] = to;
+                    }
+                });
+                frames.push({ positions: clonePositions(positions), ball: ballPlayer ? playerRoutePoint(positions, ballPlayer) : routes[0].to, routes, cue: step.label || actions.map(action => action.label).filter(Boolean).join(' / ') });
+            });
+            return frames;
+        }
+        function defineAction(definition) {
+            return Object.assign({}, definition, { frames: buildActionFrames(definition) });
+        }
+        const systems = {
+            readreact: {
+                title: 'Read & React Offense', subtitle: 'Habit-based offense where every player reacts to the ball handler.', tag: 'Positionless',
+                strengths: ['Builds universal decision-making habits.', 'Scales well from youth to varsity.', 'Punishes ball-watching and poor help rotations.'],
+                weaknesses: ['Can look loose before habits are automatic.', 'Requires consistent teaching language.', 'Spacing collapses if cutters do not finish routes.'],
+                cues: ['Pass and cut with purpose.', 'Fill empty spots on airtime.', 'Drive north-south and circle behind penetration.'],
+                counters: ['Switching gaps', 'Top-locking cutters', 'Zone help sitting in driving lanes'],
+                actions: [
+                    defineAction({
+                        id: 'passcut',
+                        title: 'Layer 1: Pass & Cut',
+                        desc: 'The passer cuts hard to the rim after every pass, exits to an empty spot, and teammates fill on airtime.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2' },
+                            { type: 'cut', player: 'p1', to: 'rim', label: '1 cuts hard to the rim' },
+                            { type: 'fill', player: 'p1', to: 'rightCorner', label: '1 exits to the empty corner' },
+                            { actions: [
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
+                                { type: 'fill', player: 'p5', to: 'rightWing', label: '5 fills the wing' }
+                            ], label: '3 and 5 fill behind the cut' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'dribbleat',
+                        title: 'Layer 2: Dribble At Backdoor',
+                        desc: 'When the ball is dribbled directly at a teammate, that player back cuts and the next players fill open spots.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'drive', player: 'p1', to: 'leftSlot', label: '1 dribbles at 2' },
+                            { type: 'cut', player: 'p2', to: 'rim', label: '2 back cuts to the rim' },
+                            { type: 'fill', player: 'p2', to: 'rightCorner', label: '2 exits opposite' },
+                            { actions: [
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
+                                { type: 'fill', player: 'p5', to: 'rightWing', label: '5 lifts to the wing' }
+                            ], label: 'The weak side fills into five-out spacing' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'circle',
+                        title: 'Layer 3: Drive & Circle Movement',
+                        desc: 'A north-south drive triggers perimeter players to circle in the direction of the drive for kick-out windows.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives the right lane' },
+                            { actions: [
+                                { type: 'fill', player: 'p3', to: 'rightCorner', label: '3 circles to the corner' },
+                                { type: 'fill', player: 'p5', to: 'rim', label: '5 dives to the rim' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
+                            ], label: 'Everyone circles with the drive' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'drivebaseline',
+                        title: 'Layer 4: Baseline Drive & Circle',
+                        desc: 'A baseline drive creates a drift pass window while the top and opposite side protect spacing.',
+                        setup: { players: { p1: 'rightWing', p2: 'top', p3: 'leftWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'drive', player: 'p1', to: 'rightBaseline', label: '1 drives the baseline' },
+                            { actions: [
+                                { type: 'fill', player: 'p5', to: 'rim', label: '5 drifts to the paint' },
+                                { type: 'fill', player: 'p2', to: 'rightSlotHigh', label: '2 slides to safety' },
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' }
+                            ], label: 'The corner drifts and the top rotates' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'postentry',
+                        title: 'Layer 5: Post Entry Fill',
+                        desc: 'After a post entry, the passer cuts and exits while perimeter teammates fill away from the ball.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p1' },
+                        steps: [
+                            { type: 'pass', from: 'p1', to: 'p5', label: '1 enters the ball to 5' },
+                            { type: 'cut', player: 'p1', to: 'rim', label: '1 cuts after the entry' },
+                            { type: 'fill', player: 'p1', to: 'leftCorner', label: '1 exits away from the post' },
+                            { actions: [
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
+                            ], label: 'The perimeter fills away from the post' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'postdribble',
+                        title: 'Layer 6: Post Dribble At',
+                        desc: 'When the post dribbles at a perimeter teammate, that teammate back cuts just like the perimeter dribble-at read.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p5' },
+                        steps: [
+                            { type: 'drive', player: 'p5', to: 'rightSlotHigh', label: '5 dribbles out toward 3' },
+                            { type: 'cut', player: 'p3', to: 'rim', label: '3 back cuts to the rim' },
+                            { type: 'fill', player: 'p3', to: 'leftCorner', label: '3 exits opposite' },
+                            { actions: [
+                                { type: 'fill', player: 'p1', to: 'rightWing', label: '1 fills the right wing' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' }
+                            ], label: 'The guards fill behind the cut' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'speeddribble',
+                        title: 'Layer 7: Speed Dribble / DHO',
+                        desc: 'A speed dribble aimed at a teammate creates a dribble handoff. The receiver attacks while the original handler spaces to the vacated spot.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'drive', player: 'p1', to: 'rightSlotHigh', label: '1 speed dribbles at 3' },
+                            { type: 'cut', player: 'p3', to: 'rightSlot', label: '3 curls to receive the handoff' },
+                            { type: 'handoff', from: 'p1', to: 'p3', label: '1 hands off to 3' },
+                            { actions: [
+                                { type: 'fill', player: 'p1', to: 'rightWing', label: '1 spaces off the handoff' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
+                            ], label: 'Spacing fills as 3 attacks with the ball' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'backscreen',
+                        title: 'Layer 8: Back Screen',
+                        desc: 'A weak-side teammate sets a back screen, the cutter goes shoulder-to-shoulder, and the ball can hit the layup window.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'screen', player: 'p4', to: 'screenLeftWing', label: '4 sets a back screen for 2' },
+                            { type: 'cut', player: 'p2', to: 'rim', label: '2 cuts off the back screen' },
+                            { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2 at the rim' },
+                            { type: 'fill', player: 'p4', to: 'leftWing', label: '4 opens back to the wing' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'ballscreen',
+                        title: 'Layer 9: Ball Screen',
+                        desc: 'The screener arrives on the ball, the handler uses the screen, and the screener rolls to occupy help.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'screen', player: 'p5', to: 'ballScreenLeft', label: '5 sets the ball screen' },
+                            { type: 'drive', player: 'p1', to: 'leftSlot', label: '1 uses the screen' },
+                            { type: 'cut', player: 'p5', to: 'rim', label: '5 rolls to the rim' },
+                            { actions: [
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'rightCorner', label: '4 spaces opposite' }
+                            ], label: 'The perimeter spaces behind the roll' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'multiplecuts',
+                        title: 'Layer 10: Multiple Cuts',
+                        desc: 'Every passer cuts, so one reversal can create multiple rim touches and automatic fill movement.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2' },
+                            { type: 'cut', player: 'p1', to: 'rim', label: '1 cuts to the rim' },
+                            { type: 'fill', player: 'p1', to: 'rightCorner', label: '1 exits to the corner' },
+                            { type: 'pass', from: 'p2', to: 'p3', label: '2 reverses to 3' },
+                            { type: 'cut', player: 'p2', to: 'rim', label: '2 cuts after the pass' },
+                            { type: 'fill', player: 'p2', to: 'leftCorner', label: '2 exits to the empty corner' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'pinskip',
+                        title: 'Layer 11: Pin & Skip',
+                        desc: 'Against zone help, a weak-side player pins the defender and the ball skips over the top to the open teammate.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p3' },
+                        steps: [
+                            { type: 'screen', player: 'p4', to: 'pinLeftWing', label: '4 pins the weak-side defender' },
+                            { type: 'fill', player: 'p2', to: 'skipLeftSlot', label: '2 lifts into the skip window' },
+                            { type: 'pass', from: 'p3', to: 'p2', label: '3 skips the ball to 2' },
+                            { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 releases after the pin' }
+                        ]
+                    }),
+                    defineAction({
+                        id: 'transitionpost',
+                        title: 'Layer 12: Transition Post',
+                        desc: 'The rim runner sprints into early post position before the defense is set, while the guards space around the entry.',
+                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
+                        steps: [
+                            { type: 'sprint', player: 'p5', to: 'postSeal', label: '5 sprints to early post position' },
+                            { type: 'pass', from: 'p1', to: 'p5', label: '1 enters early to 5' },
+                            { actions: [
+                                { type: 'fill', player: 'p1', to: 'trailTop', label: '1 trails to the top' },
+                                { type: 'fill', player: 'p2', to: 'leftSlotHigh', label: '2 spaces high left' },
+                                { type: 'fill', player: 'p3', to: 'rightSlotHigh', label: '3 spaces high right' }
+                            ], label: 'The perimeter spaces around the post' }
+                        ]
+                    })]
+            },
+            grinnell: {
+                title: 'The Grinnell System', subtitle: 'Mathematical pressure offense built on pace, threes, rebounds, and turnovers.', tag: 'Tempo',
+                strengths: ['Weaponizes depth and conditioning.', 'Creates extra possessions through pressure.', 'Forces opponents into uncomfortable tempo.'],
+                weaknesses: ['Can give up layups and open-court chances.', 'Requires deep bench buy-in.', 'Shot quality can swing wildly.'],
+                cues: ['First open three is a good shot.', 'Crash four to the glass.', 'Trap immediately after makes and misses.'],
+                counters: ['Press break middle flashes', 'Patient layups over rushed threes', 'Strong outlet passing'],
+                actions: [
+                    { id: 'firstshot', title: 'First Available Shot', desc: 'Principle 1: Shoot within the first 12 seconds of a possession. Take any open three-pointer without waiting for a secondary option — volume and pace are the weapons.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'middleLane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner' }, { type: 'sprint', player: 'p3', to: 'deepRightCorner' }, { type: 'pass', from: 'p1', to: 'p3' } ] })},
+                    { id: 'press', title: '1-2-2 Double-Team Press', desc: 'Principle 2: A relentless trap after every score and miss. Two players double-team the ball immediately, sacrificing paint defense on purpose to force turnovers and rushed shots.', frames: buildActionFrames({ setup: { players: { p1: 'leftSlot', p2: 'rightSlot', p3: 'rightWing', p4: 'middleLane', p5: 'rim' }, ball: 'p1' }, steps: [ { type: 'trap', player: 'p1', to: 'pressTrapLeft' }, { type: 'trap', player: 'p2', to: 'pressTrapRight' } ] })},
+                    { id: 'platoon', title: '90-Second Platoon Swap', desc: 'Principle 3: Rotate five fresh players every 45–90 seconds to maintain maximum defensive intensity. Depth is a tactical weapon that compounds conditioning advantages over 40 minutes.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'sprint', player: 'p2', to: 'platoonLeftWing' }, { type: 'sprint', player: 'p3', to: 'platoonRightWing' }, { type: 'sprint', player: 'p4', to: 'platoonLeftCorner' }, { type: 'sprint', player: 'p5', to: 'platoonRightCorner' } ] })},
+                    { id: 'lanes', title: 'Numbered Fast Break', desc: 'Principle 4: Specific lanes are assigned on every break. The point guard runs the center lane, wings sprint to the corners, and the trailer spots up on the arc for a deep three.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'middleLane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner' }, { type: 'sprint', player: 'p3', to: 'deepRightCorner' }, { type: 'sprint', player: 'p4', to: 'leftElbow' }, { type: 'sprint', player: 'p5', to: 'rightElbow' } ] })},
+                    { id: 'math', title: 'Shot Volume Mathematics', desc: 'Principle 5: Target 94+ shot attempts per game using only threes and layups — eliminate every midrange shot. Generate more attempts than opponents via glass crashes and full-court traps.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'middleLane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner' }, { type: 'pass', from: 'p1', to: 'p2' } ] })}]
+            },
+            motion: {
+                title: 'Traditional Motion Offense', subtitle: 'Disciplined screening, cutting, and spacing without relying on called plays.', tag: 'Screening',
+                strengths: ['Creates balanced touches and player movement.', 'Rewards timing, screening angles, and patience.', 'Works against man or zone with rule tweaks.'],
+                weaknesses: ['Can stall without strong screeners.', 'Needs players who read defenders, not just patterns.', 'Less explosive if no one can pressure the rim.'],
+                cues: ['Screen the body, not the spot.', 'Cut shoulder-to-shoulder off screens.', 'Reverse the ball before forcing a contested shot.'],
+                counters: ['Switching screens', 'Hard denial on reversal passes', 'Sagging under weak shooters'],
+                actions: [
+                    { id: 'away', title: 'Pass & Screen Away', desc: 'After passing, the passer screens away to free the weak-side player for a curl or pop.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'pass', from: 'p1', to: 'p2' }, { type: 'screen', player: 'p1', to: 'motionScreenAway' }, { type: 'cut', player: 'p3', to: 'leftSlot' } ] })},
+                    { id: 'curl', title: 'Down Screen Curl', desc: 'A wing comes off a down screen and curls tightly when the defender trails.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'screen', player: 'p4', to: 'motionScreenAway' }, { type: 'cut', player: 'p2', to: 'motionCurlCatch' } ] })},
+                    { id: 'flare', title: 'Flare Screen Skip', desc: 'The weak-side screener opens a skip lane for a catch-and-shoot three.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'screen', player: 'p5', to: 'flareScreen' }, { type: 'cut', player: 'p3', to: 'flareCatch' }, { type: 'pass', from: 'p1', to: 'p3' } ] })},
+                    { id: 'dribbleentry', title: 'Dribble Entry', desc: 'Point guard dribbles directly at a wing to trigger a backdoor cut or a space-and-replace action from the opposite side.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'dribbleEntryLeft' }, { type: 'cut', player: 'p2', to: 'leftBackdoor' }, { type: 'fill', player: 'p3', to: 'rightSlot' } ] })},
+                    { id: 'postexchange', title: 'Post Entry & Exchange', desc: 'Guard enters to the post and immediately screens away for a weak-side teammate. The post reads the double and passes to the open cutter.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'leftBlock' }, ball: 'p1' }, steps: [ { type: 'pass', from: 'p1', to: 'p5' }, { type: 'screen', player: 'p1', to: 'postExchangeScreen' }, { type: 'cut', player: 'p3', to: 'postExchangeCatch' }, { type: 'pass', from: 'p5', to: 'p3' } ] })}]
+            }
+        };
+        function base(opts = {}) { return move({}, [], opts); }
+        function move(overrides = {}, routes = [], opts = {}) {
+            const positions = { p1:[50,18], p2:[20,30], p3:[80,30], p4:[20,70], p5:[80,70] };
+            Object.assign(positions, overrides);
+            const ball = Array.isArray(opts.ball) ? opts.ball : opts.ball && positions[opts.ball] ? positions[opts.ball] : overrides.ball || positions.p1;
+            return { positions, ball, routes };
+        }
+        let currentSystem = 'readreact';
+        let currentAction = 0;
+        let timers = [];
+        let animationFrame = null;
+        const players = ['p1','p2','p3','p4','p5'];
+        function setPlayer(id, xy) { const el = document.getElementById(id); el.style.left = xy[0] + '%'; el.style.top = xy[1] + '%'; }
+        function setBall(xy) { const el = document.getElementById('ball'); el.style.left = xy[0] + '%'; el.style.top = xy[1] + '%'; }
+        function drawRoutes(routes, limit = routes.length) {
+            const group = document.getElementById('routes');
+            group.innerHTML = '';
+            const visible = routes.slice(0, limit);
+            visible.forEach((route, index) => {
+                const normalized = Array.isArray(route)
+                    ? { from: [route[0], route[1]], to: [route[2], route[3]], type: route[4], label: route[5] }
+                    : route;
+                const [x1, y1] = normalized.from;
+                const [x2, y2] = normalized.to;
+                const type = normalized.type;
+                const sx1 = x1 * 4, sy1 = y1 * 3, sx2 = x2 * 4, sy2 = y2 * 3;
+                const colors = { pass:'#f59e0b', drive:'#f97316', dribble:'#f97316', screen:'#1c1917', trap:'#2563eb', chase:'#ef4444', switch:'#16a34a' };
+                const movementTypes = ['cut','move','fill','rotate','shift','sprint','crash','shot','close','match'];
+                const color = colors[type] || '#64748b';
+                const isMovement = movementTypes.includes(type);
+                const isDrive = type === 'drive' || type === 'dribble';
+                const dx = sx2 - sx1, dy = sy2 - sy1;
+                const length = Math.sqrt(dx * dx + dy * dy) || 1;
+                const ux = dx / length, uy = dy / length;
+                const nx = -uy, ny = ux;
+                if (isDrive) {
+                    let d = 'M ' + sx1 + ' ' + sy1;
+                    const steps = 18;
+                    for (let i = 1; i <= steps; i++) {
+                        const t = i / steps;
+                        const wave = Math.sin(t * Math.PI * 6) * 5;
+                        d += ' L ' + (sx1 + dx * t + nx * wave).toFixed(1) + ' ' + (sy1 + dy * t + ny * wave).toFixed(1);
+                    }
+                    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+                    path.setAttribute('d', d);
+                    path.setAttribute('stroke', color);
+                    path.setAttribute('fill', 'none');
+                    group.appendChild(path);
+                } else {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+                    line.setAttribute('x1', sx1); line.setAttribute('y1', sy1);
+                    line.setAttribute('x2', sx2); line.setAttribute('y2', sy2);
+                    line.setAttribute('stroke', color);
+                    if (type === 'pass' || isMovement || type === 'trap' || type === 'chase') line.setAttribute('stroke-dasharray', '7 5');
+                    group.appendChild(line);
+                    if (type === 'screen') {
+                        const tbar = document.createElementNS('http://www.w3.org/2000/svg','line');
+                        tbar.setAttribute('x1', sx2 - nx * 9); tbar.setAttribute('y1', sy2 - ny * 9);
+                        tbar.setAttribute('x2', sx2 + nx * 9); tbar.setAttribute('y2', sy2 + ny * 9);
+                        tbar.setAttribute('stroke', color);
+                        group.appendChild(tbar);
+                    }
+                }
+                if (type !== 'screen') {
+                    const arrow = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+                    arrow.setAttribute('points', [
+                        [sx2, sy2],
+                        [sx2 - ux * 12 + nx * 5, sy2 - uy * 12 + ny * 5],
+                        [sx2 - ux * 12 - nx * 5, sy2 - uy * 12 - ny * 5]
+                    ].map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' '));
+                    arrow.setAttribute('fill', color);
+                    group.appendChild(arrow);
+                }
+                const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+                label.setAttribute('x', (sx1 + sx2) / 2);
+                label.setAttribute('y', (sy1 + sy2) / 2 - 6);
+                label.setAttribute('fill', color);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'route-step-label');
+                label.textContent = index + 1;
+                group.appendChild(label);
+                if (normalized.label) {
+                    const title = document.createElementNS('http://www.w3.org/2000/svg','title');
+                    title.textContent = (index + 1) + '. ' + normalized.label;
+                    label.appendChild(title);
+                }
+            });
+        }
+        function setCue(text) { const el = document.getElementById('step-cue'); if (el) el.textContent = text || ''; }
+        function renderFrame(frame, routeLimit = frame.routes ? frame.routes.length : 0, showRoutes = true) {
+            players.forEach(id => setPlayer(id, frame.positions[id]));
+            setBall(frame.ball);
+            drawRoutes(showRoutes ? (frame.routes || []) : [], routeLimit);
+            setCue(frame.cue || '');
+        }
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function ease(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+        function interpolateFrame(from, to, amount) {
+            const positions = {};
+            players.forEach(id => {
+                positions[id] = [
+                    lerp(from.positions[id][0], to.positions[id][0], amount),
+                    lerp(from.positions[id][1], to.positions[id][1], amount)
+                ];
+            });
+            return {
+                positions,
+                ball: [lerp(from.ball[0], to.ball[0], amount), lerp(from.ball[1], to.ball[1], amount)],
+                routes: to.routes || []
+            };
+        }
+        function animateSystemFrames(frames, index = 0, showRoutes = false) {
+            if (index >= frames.length - 1) { animationFrame = null; renderFrame(frames[frames.length - 1], undefined, showRoutes); return; }
+            const from = frames[index], to = frames[index + 1], duration = 950, start = performance.now();
+            function step(now) {
+                const t = Math.min((now - start) / duration, 1);
+                const frame = interpolateFrame(from, to, ease(t));
+                frame.cue = to.cue;
+                renderFrame(frame, showRoutes ? undefined : 0, showRoutes);
+                if (t < 1) animationFrame = requestAnimationFrame(step);
+                else animateSystemFrames(frames, index + 1, showRoutes);
+            }
+            animationFrame = requestAnimationFrame(step);
+        }
+        function renderSystem(systemKey, actionIndex = 0) {
+            clearTimers(); currentSystem = systemKey; currentAction = actionIndex;
+            const system = systems[systemKey];
+            document.getElementById('system-title').textContent = system.title;
+            document.getElementById('system-subtitle').textContent = system.subtitle;
+            document.getElementById('system-tag').textContent = system.tag;
+            ['strengths','weaknesses','cues','counters'].forEach(key => document.getElementById(key).innerHTML = system[key].map(item => `<li>${item}</li>`).join(''));
+            document.querySelectorAll('.system-tab').forEach(btn => {
+                const active = btn.dataset.system === systemKey;
+                btn.className = active ? 'system-tab px-4 py-2 rounded-lg text-sm font-bold bg-orange-600 text-white' : 'system-tab px-4 py-2 rounded-lg text-sm font-bold bg-white border border-stone-200 text-stone-600';
+            });
+            document.getElementById('action-list').innerHTML = system.actions.map((action, index) => `<button class="action-choice ${index === actionIndex ? 'active' : ''}" data-index="${index}"><strong>${action.title}</strong><span>${action.desc}</span></button>`).join('');
+            document.querySelectorAll('.action-choice').forEach(btn => btn.addEventListener('click', () => renderSystem(currentSystem, Number(btn.dataset.index))));
+            document.getElementById('action-title').textContent = system.actions[actionIndex].title;
+            document.getElementById('action-desc').textContent = system.actions[actionIndex].desc;
+            renderFrame(system.actions[actionIndex].frames[0], 0, false);
+            const metrics = document.getElementById('grinnell-metrics');
+            if (metrics) metrics.classList.toggle('hidden', systemKey !== 'grinnell');
+        }
+        function clearTimers() { timers.forEach(clearTimeout); timers = []; if (animationFrame) { cancelAnimationFrame(animationFrame); animationFrame = null; } }
+        function showSequence() {
+            clearTimers();
+            const frames = systems[currentSystem].actions[currentAction].frames;
+            renderFrame(frames[0], 0, false);
+            frames.slice(1).forEach((frame, index) => {
+                timers.push(setTimeout(() => renderFrame(frame, frame.routes.length, true), 850 * (index + 1)));
+            });
+        }
+        function playSequence(showRoutes = false) {
+            clearTimers();
+            const frames = systems[currentSystem].actions[currentAction].frames;
+            renderFrame(frames[0], 0, false);
+            timers.push(setTimeout(() => animateSystemFrames(frames, 0, showRoutes), 450));
+        }
+        document.querySelectorAll('.system-tab').forEach(btn => btn.addEventListener('click', () => renderSystem(btn.dataset.system, 0)));
+        document.getElementById('show-system').addEventListener('click', showSequence);
+        document.getElementById('play-system').addEventListener('click', () => playSequence(false));
+        document.getElementById('detail-system').addEventListener('click', () => playSequence(true));
+        document.getElementById('reset-system').addEventListener('click', () => renderSystem(currentSystem, currentAction));
+        renderSystem('readreact');
+    </script>
+    <script>
+(function () {
+  const isSubpage = /\/(offensive-key-actions|grinnell-tracker|offense-guide|defense-guide|key-terms|recruiting)\//.test(location.pathname);
+  const pathPrefix = isSubpage ? '../' : '';
+  const nav = document.querySelector('[data-shared-nav]');
+  if (nav) {
+    nav.innerHTML = '<nav class="shared-nav" aria-label="Primary navigation">' +
+      '<a class="shared-brand" href="' + pathPrefix + '">Wake Up &amp; Produce</a>' +
+      '<div class="shared-nav-links">' +
+        '<a href="' + pathPrefix + '">Home</a>' +
+        '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
+        '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
+        '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
+        '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
+        '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
+        '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
+      '</div>' +
+    '</nav>';
+  }
+  const footer = document.querySelector('[data-shared-footer]');
+  if (footer) {
+    footer.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Baxter</span></footer>';
+  }
+}());
+    </script>
+</body>
+</html>

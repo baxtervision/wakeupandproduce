@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offensive Key Actions | Wake Up and Produce</title>
+    <meta name="description" content="Interactive offensive key actions guide with modern basketball actions, player reads, counters, court diagrams, and coaching cues.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen">
+    <div data-shared-nav></div>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="mb-6">
+            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Offensive key actions</p>
+            <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight mb-1">Offensive Key Actions</h1>
+            <p class="text-stone-500 text-sm">By Baxter · Mountain View HS Girls Basketball</p>
+        </header>
+
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
+            <!-- Court panel -->
+            <div class="lg:col-span-7 bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h2 id="gbb-action-title" class="text-xl font-extrabold text-stone-900">Select an action</h2>
+                        <p id="gbb-action-tag" class="text-xs font-bold uppercase tracking-wide text-orange-600 mt-1"></p>
+                    </div>
+                </div>
+                <p id="gbb-action-desc" class="text-sm text-stone-500 mb-4 leading-relaxed min-h-[2.5rem]">Choose an action from the list to see its court diagram and animation.</p>
+                <div class="w-full max-w-xl mx-auto aspect-[4/3] court-bg relative" id="gbb-court">
+                    <div class="court-baseline"></div>
+                    <div class="court-key"></div>
+                    <div class="court-free-throw-circle"></div>
+                    <div class="court-3pt-line"></div>
+                    <div class="court-backboard"></div>
+                    <div class="court-rim"></div>
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 300" aria-label="Animated offensive court diagram">
+                        <g id="gbb-routes" stroke-width="3" stroke-linecap="round" fill="none"></g>
+                    </svg>
+                    <div id="gp1" class="system-player system-primary">1</div>
+                    <div id="gp2" class="system-player">2</div>
+                    <div id="gp3" class="system-player">3</div>
+                    <div id="gp4" class="system-player">4</div>
+                    <div id="gp5" class="system-player">5</div>
+                    <div id="gball" class="system-ball"></div>
+                <div class="route-key" aria-label="Animation key">
+                    <span><i class="route-swatch drive"></i>Dribble/Drive</span>
+                    <span><i class="route-swatch pass"></i>Pass</span>
+                    <span><i class="route-swatch move"></i>Cut/Fill</span>
+                    <span><i class="route-swatch screen"></i>Screen</span>
+                </div>
+                </div>
+                <div class="flex justify-center gap-3 mt-5">
+                    <button id="gbb-show" class="bg-stone-100 text-stone-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Show Sequence</button>
+                    <button id="gbb-play" class="bg-stone-900 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-700 transition-colors">Play Animation</button>
+                    <button id="gbb-reset" class="bg-stone-100 text-stone-600 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Reset</button>
+                </div>
+            </div>
+
+            <!-- Right sidebar: action list + info -->
+            <aside class="lg:col-span-5 space-y-4">
+                <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+                    <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-3">Top 10 Actions</h3>
+                    <div id="gbb-action-list" class="space-y-2"></div>
+                </div>
+                <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm space-y-4" id="gbb-info-panel">
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1">Ball Handler Read</h4>
+                        <p id="gbb-read-handler" class="text-sm text-stone-600 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1">Screener / Secondary</h4>
+                        <p id="gbb-read-screener" class="text-sm text-stone-600 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1">Defensive Counters</h4>
+                        <p id="gbb-counters" class="text-sm text-stone-600 leading-relaxed"></p>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <!-- Examples row (shown when action selected) -->
+        <section id="gbb-examples-section" class="bg-white border border-stone-200 rounded-lg p-6 shadow-sm mb-10 hidden">
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-4">Execution Notes</h3>
+            <div id="gbb-examples" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </section>
+    </main>
+
+    <script>
+        // Court animation helpers (same pattern as systems guide)
+        function base(opts={}) { return move({}, [], opts); }
+        function move(overrides={}, routes=[], opts={}) {
+            const positions = { p1:[50,18], p2:[20,30], p3:[80,30], p4:[20,70], p5:[80,70] };
+            Object.assign(positions, overrides);
+            const ball = Array.isArray(opts.ball) ? opts.ball : (opts.ball && positions[opts.ball] ? positions[opts.ball] : (overrides.ball || positions.p1));
+            return { positions, ball, routes };
+        }
+
+        const playbookData = [
+            {
+                id: 'pnr-spread',
+                title: 'High Spread Pick & Roll',
+                tag: 'Initiation',
+                desc: 'The foundational action of modern basketball. A high screen set near the top of the key with three shooters spread across the perimeter. This maximizes space for the ball handler and creates difficult rotation decisions for weak-side defenders.',
+                nodes: [
+                    { id: 'o1', x: 50, y: 15, label: '1' },
+                    { id: 'o5', x: 55, y: 28, label: '5' },
+                    { id: 'o2', x: 10, y: 85, label: '2' },
+                    { id: 'o3', x: 90, y: 85, label: '3' },
+                    { id: 'o4', x: 15, y: 40, label: '4' }
+                ],
+                lines: [
+                    { x1: 55, y1: 28, x2: 45, y2: 18, type: 'screen' },
+                    { x1: 50, y1: 15, x2: 30, y2: 35, type: 'cut' },
+                    { x1: 55, y1: 28, x2: 50, y2: 60, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'If defense plays drop: shoot behind the screen or attack the big downhill. If blitzed: drag two defenders and pass to the short roll. If switched: isolate the mismatch.',
+                    screener: 'Roll hard to the rim if handler attacks the edge. If blitzed, short roll to the free-throw line to operate 4-on-3. If defender goes under, re-screen.'
+                },
+                counters: 'Drop coverage, ice or blue coverage, switching, and weak-side tag rotations.',
+                examples: [
+                    { team: 'Usage', text: 'Use when the primary ball handler can create downhill pressure and corner spacing is available.' },
+                    { team: 'Teaching Point', text: 'The screener must sprint into the screen and open quickly to become a passing target.' },
+                    { team: 'Player Read', text: 'The low defender determines whether the first pass is the roll, skip, or corner kick.' }
+                ],
+                frames: [base({ball:'p1',p5:[58,28]}), move({p1:[66,50],p5:[62,55]},[[58,28,50,18,'screen'],[50,18,66,50,'drive'],[58,28,62,55,'cut']],{ball:[66,50]})]
+            },
+            {
+                id: 'dho',
+                title: 'Dribble Handoff (DHO)',
+                tag: 'Perimeter Movement',
+                desc: 'A post or trail player acts as a hub, dribbling toward a sprinting guard to hand the ball off. It functions similarly to a pick and roll but lets the guard receive the ball already moving downhill.',
+                nodes: [
+                    { id: 'o5', x: 40, y: 35, label: '5' },
+                    { id: 'o2', x: 85, y: 60, label: '2' },
+                    { id: 'o1', x: 15, y: 20, label: '1' }
+                ],
+                lines: [
+                    { x1: 40, y1: 35, x2: 60, y2: 35, type: 'cut' },
+                    { x1: 85, y1: 60, x2: 60, y2: 35, type: 'cut' },
+                    { x1: 60, y1: 35, x2: 50, y2: 60, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'Sprint full speed off the handoff. If defender trails: curl to the rim. If defender goes under: pop for a shot. If defense switches: reject and isolate.',
+                    screener: 'Protect the ball with the body. After handing off, roll hard to the rim or pop to the perimeter to stress the switch.'
+                },
+                counters: 'Switching, going under the handoff, and top-locking to deny the sprint path.',
+                examples: [
+                    { team: 'Usage', text: 'Use to get a shooter or downhill driver moving before the catch.' },
+                    { team: 'Teaching Point', text: 'The handoff player must keep a wide base and make the defender run into the body.' },
+                    { team: 'Player Read', text: 'If denied, the receiver back-cuts and the handoff player keeps the ball.' }
+                ],
+                frames: [move({p5:[42,32]},[],{ball:'p5'}), move({p2:[42,32],p5:[40,55]},[[80,30,42,32,'cut'],[42,32,40,55,'cut']],{ball:[42,32]})]
+            },
+            {
+                id: 'get',
+                title: 'Get Action',
+                tag: 'Early Offense',
+                desc: 'A quick-hitting action where a guard passes to a post or trail player, then immediately sprints to get the ball back through a handoff or pitch. Excellent for exploiting scrambling transition defenses.',
+                nodes: [
+                    { id: 'o1', x: 50, y: 10, label: '1' },
+                    { id: 'o4', x: 30, y: 30, label: '4' }
+                ],
+                lines: [
+                    { x1: 50, y1: 10, x2: 30, y2: 30, type: 'pass' },
+                    { x1: 50, y1: 10, x2: 25, y2: 35, type: 'cut' },
+                    { x1: 25, y1: 35, x2: 40, y2: 60, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'Pass and cut violently. If the defender ball-watches, cut straight to the rim. Otherwise, use the big body to rub off the defender on the return catch.',
+                    screener: 'Catch and read the guard defender. Pitch it back, or fake the handoff and drive if the defender cheats.'
+                },
+                counters: 'Early communication, switching, and a hard show from the post defender.',
+                examples: [
+                    { team: 'Usage', text: 'Use in early offense before the defense is fully matched.' },
+                    { team: 'Teaching Point', text: 'The first pass should trigger immediate movement with no pause.' },
+                    { team: 'Player Read', text: 'If both defenders jump the return, the post player attacks the open lane.' }
+                ],
+                frames: [move({p4:[32,38]},[],{ball:'p1'}), move({p1:[32,38],p4:[40,52]},[[50,18,32,38,'pass'],[50,18,32,38,'cut'],[32,38,40,52,'cut']],{ball:[32,38]})]
+            },
+            {
+                id: 'give-go',
+                title: 'Give and Go (Blind Pig)',
+                tag: 'Cutting',
+                desc: 'A perimeter player passes to a high-post hub. A denied wing immediately cuts back-door to the rim to receive a quick pass from the high post.',
+                nodes: [
+                    { id: 'o1', x: 20, y: 20, label: '1' },
+                    { id: 'o5', x: 50, y: 40, label: '5' },
+                    { id: 'o2', x: 80, y: 25, label: '2' }
+                ],
+                lines: [
+                    { x1: 20, y1: 20, x2: 50, y2: 40, type: 'pass' },
+                    { x1: 80, y1: 25, x2: 50, y2: 80, type: 'cut' },
+                    { x1: 50, y1: 40, x2: 50, y2: 80, type: 'pass' }
+                ],
+                reads: {
+                    handler: 'The cutter reads the overplay. If the defender is denying the catch, plant and cut back-door immediately.',
+                    screener: 'The high-post hub catches with vision, keeps the ball high, and delivers a timely lead pass.'
+                },
+                counters: 'Defenders must avoid ball-watching. If beaten back-door, the low defender must step up and rotate.',
+                examples: [
+                    { team: 'Usage', text: 'Use against aggressive denial pressure.' },
+                    { team: 'Teaching Point', text: 'The backdoor cut works only if the cutter first sells the perimeter catch.' },
+                    { team: 'Player Read', text: 'No denial means hold spacing or flow into a handoff.' }
+                ],
+                frames: [move({p1:[20,22],p5:[50,35],p2:[80,22]},[],{ball:'p1'}), move({p1:[20,22],p5:[50,35],p2:[52,75]},[[20,22,50,35,'pass'],[80,22,52,75,'cut'],[50,35,52,75,'pass']],{ball:[52,75]})]
+            },
+            {
+                id: 'stagger',
+                title: 'Staggered Away Screens',
+                tag: 'Shooter Action',
+                desc: 'Two consecutive screens set away from the ball for a shooter. The shooter runs off both screens, forcing the defender to navigate traffic while weak-side help is occupied.',
+                nodes: [
+                    { id: 'o1', x: 20, y: 20, label: '1' },
+                    { id: 'o4', x: 45, y: 45, label: '4' },
+                    { id: 'o5', x: 65, y: 35, label: '5' },
+                    { id: 'o2', x: 85, y: 75, label: '2' }
+                ],
+                lines: [
+                    { x1: 85, y1: 75, x2: 65, y2: 35, type: 'cut' },
+                    { x1: 65, y1: 35, x2: 45, y2: 45, type: 'cut' },
+                    { x1: 45, y1: 45, x2: 35, y2: 30, type: 'cut' },
+                    { x1: 20, y1: 20, x2: 35, y2: 30, type: 'pass' }
+                ],
+                reads: {
+                    handler: 'Shooter reads the defender. If trailing, curl tightly. If cheating over the top, fade. If shooting the gap, pop straight out.',
+                    screener: 'First screener can slip if their defender helps. Second screener makes solid contact and may pop.'
+                },
+                counters: 'Lock and trail, top-locking, and switching the screens.',
+                examples: [
+                    { team: 'Usage', text: 'Use to free a shooter and occupy help defenders.' },
+                    { team: 'Teaching Point', text: 'Screeners must hold legal angles long enough for the shooter to brush shoulders.' },
+                    { team: 'Player Read', text: 'The shooter chooses curl, fade, or pop based on the defender path.' }
+                ],
+                frames: [move({p4:[44,45],p5:[66,35],p2:[80,70]},[],{ball:'p1'}), move({p2:[28,22]},[[80,70,66,35,'cut'],[66,35,28,22,'cut'],[50,18,28,22,'pass']],{ball:[28,22]})]
+            },
+            {
+                id: 'backdoor',
+                title: 'Princeton Back-door Cut',
+                tag: 'Counter Pressure',
+                desc: 'When a defender aggressively overplays the passing lane, the offensive player fakes a step out and sharply cuts to the basket.',
+                nodes: [
+                    { id: 'o1', x: 50, y: 15, label: '1' },
+                    { id: 'o2', x: 15, y: 40, label: '2' }
+                ],
+                lines: [
+                    { x1: 15, y1: 40, x2: 10, y2: 35, type: 'cut' },
+                    { x1: 10, y1: 35, x2: 35, y2: 75, type: 'cut' },
+                    { x1: 50, y1: 15, x2: 35, y2: 75, type: 'pass' }
+                ],
+                reads: {
+                    handler: 'Passer waits for eye contact and throws to space, preferably with a bounce pass away from the dropping defender.',
+                    screener: 'Cutter sells the perimeter catch, creates contact, drops the hips, and explodes to the rim.'
+                },
+                counters: 'Defensive discipline, jumping to the ball, and weak-side low rotation.',
+                examples: [
+                    { team: 'Usage', text: 'Use as a pressure-release counter.' },
+                    { team: 'Teaching Point', text: 'Cut behind the defender shoulder, not around the defender body.' },
+                    { team: 'Player Read', text: 'If help steps up, finish the cut by relocating to the open corner or dunker spot.' }
+                ],
+                frames: [base({ball:'p1',p2:[18,38]}), move({p2:[36,75]},[[18,38,36,75,'cut'],[50,18,36,75,'pass']],{ball:[36,75]})]
+            },
+            {
+                id: 'horns',
+                title: 'Horns (A-Set)',
+                tag: 'Alignment/P&R',
+                desc: 'An alignment featuring the point guard up top, two players at the elbows, and two shooters deep in the corners. It empties the paint and offers multiple screening options.',
+                nodes: [
+                    { id: 'o1', x: 50, y: 15, label: '1' },
+                    { id: 'o4', x: 35, y: 40, label: '4' },
+                    { id: 'o5', x: 65, y: 40, label: '5' },
+                    { id: 'o2', x: 10, y: 85, label: '2' },
+                    { id: 'o3', x: 90, y: 85, label: '3' }
+                ],
+                lines: [
+                    { x1: 35, y1: 40, x2: 40, y2: 25, type: 'screen' },
+                    { x1: 65, y1: 40, x2: 60, y2: 25, type: 'screen' },
+                    { x1: 50, y1: 15, x2: 30, y2: 50, type: 'cut' },
+                    { x1: 65, y1: 40, x2: 80, y2: 25, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'Read the defense alignment and attack the screen on the side with the best matchup or least help.',
+                    screener: 'The screening player rolls hard. The opposite elbow player pops or lifts to keep spacing.'
+                },
+                counters: 'Switching, squeezing the screens, and stunting from the opposite elbow defender.',
+                examples: [
+                    { team: 'Usage', text: 'Use when you want clear spacing and multiple entries from one alignment.' },
+                    { team: 'Teaching Point', text: 'Corner players must stay deep to keep the lane open.' },
+                    { team: 'Player Read', text: 'If the screen side is loaded, reject or swing into the opposite elbow action.' }
+                ],
+                frames: [move({p4:[34,38],p5:[66,38]},[],{ball:'p1'}), move({p1:[28,48],p4:[28,60]},[[34,38,50,18,'screen'],[50,18,28,48,'drive'],[34,38,28,60,'cut']],{ball:[28,48]})]
+            },
+            {
+                id: 'spain-pnr',
+                title: 'Spain Pick & Roll (Stack)',
+                tag: 'Advanced P&R',
+                desc: 'As the primary screen is set, a third offensive player sets a back screen on the defending post player attempting to guard the roll.',
+                nodes: [
+                    { id: 'o1', x: 50, y: 10, label: '1' },
+                    { id: 'o5', x: 50, y: 25, label: '5' },
+                    { id: 'o2', x: 50, y: 45, label: '2' }
+                ],
+                lines: [
+                    { x1: 50, y1: 25, x2: 40, y2: 15, type: 'screen' },
+                    { x1: 50, y1: 10, x2: 25, y2: 40, type: 'cut' },
+                    { x1: 50, y1: 45, x2: 50, y2: 30, type: 'screen' },
+                    { x1: 50, y1: 45, x2: 70, y2: 20, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'Attack the primary screen with patience. Look for the roll first. If the defense collapses, hit the back-screener popping out.',
+                    screener: 'Primary screener rolls to the rim. Back-screener makes contact with the post defender, then pops to the perimeter.'
+                },
+                counters: 'Peel switching, zone principles, and strong defensive communication.',
+                examples: [
+                    { team: 'Usage', text: 'Use as a counter when standard pick and roll coverage is stable.' },
+                    { team: 'Teaching Point', text: 'The back screen must be timed late enough to surprise the post defender.' },
+                    { team: 'Player Read', text: 'The ball handler cannot rush. The action needs the roll and pop to develop.' }
+                ],
+                frames: [move({p5:[50,30],p2:[50,46]},[],{ball:'p1'}), move({p1:[30,38],p5:[38,58],p2:[64,44]},[[50,30,50,20,'screen'],[50,18,30,38,'drive'],[50,46,50,32,'screen'],[50,46,64,44,'cut']],{ball:[30,38]})]
+            },
+            {
+                id: 'split-cuts',
+                title: 'Post Split Cuts',
+                tag: 'Post Play',
+                desc: 'When the ball is entered into the post, the passer immediately sets a screen for the nearest perimeter player. This occupies help and punishes double-teams.',
+                nodes: [
+                    { id: 'o5', x: 30, y: 60, label: '5' },
+                    { id: 'o1', x: 20, y: 25, label: '1' },
+                    { id: 'o2', x: 40, y: 15, label: '2' }
+                ],
+                lines: [
+                    { x1: 20, y1: 25, x2: 30, y2: 60, type: 'pass' },
+                    { x1: 20, y1: 25, x2: 35, y2: 20, type: 'screen' },
+                    { x1: 40, y1: 15, x2: 25, y2: 45, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'Post player reads the double team. If no double, attack. If the split creates an opening, pass immediately.',
+                    screener: 'Passer screens the wing. If defenders switch, the cutter dives. If not, the cutter flares.'
+                },
+                counters: 'Switching the split action and playing the post straight up.',
+                examples: [
+                    { team: 'Usage', text: 'Use when a post touch draws attention or when guards need movement after entry.' },
+                    { team: 'Teaching Point', text: 'The passer must move immediately after entry. No standing and watching.' },
+                    { team: 'Player Read', text: 'The post player holds the ball where both cutters and defenders are visible.' }
+                ],
+                frames: [move({p5:[30,60],p1:[20,25],p2:[44,18]},[],{ball:'p5'}), move({p5:[30,60],p1:[38,22],p2:[28,44]},[[20,25,30,60,'pass'],[20,25,38,22,'screen'],[44,18,28,44,'cut']],{ball:[30,60]})]
+            },
+            {
+                id: 'zoom',
+                title: 'Zoom Action (Pindown to DHO)',
+                tag: 'Multi-Action',
+                desc: 'A compound action where a player receives a pindown screen, sprints toward the top, and immediately receives a dribble handoff from a post or trail player.',
+                nodes: [
+                    { id: 'o5', x: 50, y: 30, label: '5' },
+                    { id: 'o1', x: 20, y: 50, label: '1' },
+                    { id: 'o2', x: 10, y: 80, label: '2' }
+                ],
+                lines: [
+                    { x1: 20, y1: 50, x2: 15, y2: 65, type: 'screen' },
+                    { x1: 10, y1: 80, x2: 40, y2: 35, type: 'cut' },
+                    { x1: 50, y1: 30, x2: 40, y2: 35, type: 'cut' }
+                ],
+                reads: {
+                    handler: 'Cutter reads the pindown defender. If trailing, sprint to the handoff. If cheating over the top, reject and cut back-door.',
+                    screener: 'Time the dribble to meet the cutter. Set a wide base on the handoff, then roll.'
+                },
+                counters: 'Top-locking the pindown, switching, and disrupting the handoff timing.',
+                examples: [
+                    { team: 'Usage', text: 'Use to create momentum for a shooter or downhill driver.' },
+                    { team: 'Teaching Point', text: 'The pindown and handoff must feel like one connected action.' },
+                    { team: 'Player Read', text: 'If the defense jumps the handoff, the receiver cuts back and the ball handler keeps it.' }
+                ],
+                frames: [move({p5:[50,32],p1:[22,50],p2:[14,80]},[],{ball:'p5'}), move({p2:[42,35],p5:[44,55],p1:[26,58]},[[22,50,26,58,'screen'],[14,80,42,35,'cut'],[50,32,42,35,'cut'],[50,32,44,55,'cut']],{ball:[42,35]})]
+            }
+        ];
+
+        const players = ['p1','p2','p3','p4','p5'];
+        let gbbAction = null;
+        let gbbTimers = [];
+        let gbbAnimationFrame = null;
+
+        function setGbbPlayer(id, xy) {
+            const el = document.getElementById('g' + id);
+            if (el) { el.style.left = xy[0] + '%'; el.style.top = xy[1] + '%'; }
+        }
+        function setGbbBall(xy) {
+            const el = document.getElementById('gball');
+            if (el) { el.style.left = xy[0] + '%'; el.style.top = xy[1] + '%'; }
+        }
+        function drawGbbRoutes(routes, limit = routes.length) {
+            const group = document.getElementById('gbb-routes');
+            group.innerHTML = '';
+            const visible = routes.slice(0, limit);
+            visible.forEach(([x1,y1,x2,y2,type], index) => {
+                const sx1 = x1 * 4, sy1 = y1 * 3, sx2 = x2 * 4, sy2 = y2 * 3;
+                const colors = { pass:'#f59e0b', drive:'#f97316', dribble:'#f97316', screen:'#1c1917', trap:'#2563eb', chase:'#ef4444', switch:'#16a34a' };
+                const movementTypes = ['cut','move','fill','rotate','shift','sprint','crash','shot','close','match'];
+                const color = colors[type] || '#64748b';
+                const isMovement = movementTypes.includes(type);
+                const isDrive = type === 'drive' || type === 'dribble';
+                const dx = sx2 - sx1, dy = sy2 - sy1;
+                const length = Math.sqrt(dx * dx + dy * dy) || 1;
+                const ux = dx / length, uy = dy / length;
+                const nx = -uy, ny = ux;
+                if (isDrive) {
+                    let d = 'M ' + sx1 + ' ' + sy1;
+                    const steps = 18;
+                    for (let i = 1; i <= steps; i++) {
+                        const t = i / steps;
+                        const wave = Math.sin(t * Math.PI * 6) * 5;
+                        d += ' L ' + (sx1 + dx * t + nx * wave).toFixed(1) + ' ' + (sy1 + dy * t + ny * wave).toFixed(1);
+                    }
+                    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+                    path.setAttribute('d', d);
+                    path.setAttribute('stroke', color);
+                    path.setAttribute('fill', 'none');
+                    group.appendChild(path);
+                } else {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+                    line.setAttribute('x1', sx1); line.setAttribute('y1', sy1);
+                    line.setAttribute('x2', sx2); line.setAttribute('y2', sy2);
+                    line.setAttribute('stroke', color);
+                    if (type === 'pass' || isMovement || type === 'trap' || type === 'chase') line.setAttribute('stroke-dasharray', '7 5');
+                    group.appendChild(line);
+                    if (type === 'screen') {
+                        const tbar = document.createElementNS('http://www.w3.org/2000/svg','line');
+                        tbar.setAttribute('x1', sx2 - nx * 9); tbar.setAttribute('y1', sy2 - ny * 9);
+                        tbar.setAttribute('x2', sx2 + nx * 9); tbar.setAttribute('y2', sy2 + ny * 9);
+                        tbar.setAttribute('stroke', color);
+                        group.appendChild(tbar);
+                    }
+                }
+                if (type !== 'screen') {
+                    const arrow = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+                    arrow.setAttribute('points', [
+                        [sx2, sy2],
+                        [sx2 - ux * 12 + nx * 5, sy2 - uy * 12 + ny * 5],
+                        [sx2 - ux * 12 - nx * 5, sy2 - uy * 12 - ny * 5]
+                    ].map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' '));
+                    arrow.setAttribute('fill', color);
+                    group.appendChild(arrow);
+                }
+                const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+                label.setAttribute('x', (sx1 + sx2) / 2);
+                label.setAttribute('y', (sy1 + sy2) / 2 - 6);
+                label.setAttribute('fill', color);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'route-step-label');
+                label.textContent = index + 1;
+                group.appendChild(label);
+            });
+        }
+        function renderGbbFrame(frame, routeLimit = frame.routes ? frame.routes.length : 0) {
+            players.forEach(id => setGbbPlayer(id, frame.positions[id]));
+            setGbbBall(frame.ball);
+            drawGbbRoutes(frame.routes || [], routeLimit);
+        }
+        function gbbLerp(a, b, t) { return a + (b - a) * t; }
+        function gbbEase(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+        function interpolateGbbFrame(from, to, amount) {
+            const positions = {};
+            players.forEach(id => {
+                positions[id] = [
+                    gbbLerp(from.positions[id][0], to.positions[id][0], amount),
+                    gbbLerp(from.positions[id][1], to.positions[id][1], amount)
+                ];
+            });
+            return {
+                positions,
+                ball: [gbbLerp(from.ball[0], to.ball[0], amount), gbbLerp(from.ball[1], to.ball[1], amount)],
+                routes: to.routes || []
+            };
+        }
+        function animateGbbFrames(frames, index = 0) {
+            if (index >= frames.length - 1) { gbbAnimationFrame = null; renderGbbFrame(frames[frames.length - 1]); return; }
+            const from = frames[index], to = frames[index + 1], duration = 950, start = performance.now();
+            function step(now) {
+                const t = Math.min((now - start) / duration, 1);
+                renderGbbFrame(interpolateGbbFrame(from, to, gbbEase(t)));
+                if (t < 1) gbbAnimationFrame = requestAnimationFrame(step);
+                else animateGbbFrames(frames, index + 1);
+            }
+            gbbAnimationFrame = requestAnimationFrame(step);
+        }
+        function clearGbbTimers() { gbbTimers.forEach(clearTimeout); gbbTimers = []; if (gbbAnimationFrame) { cancelAnimationFrame(gbbAnimationFrame); gbbAnimationFrame = null; } }
+
+        function selectAction(data) {
+            clearGbbTimers();
+            gbbAction = data;
+            document.getElementById('gbb-action-title').textContent = data.title;
+            document.getElementById('gbb-action-tag').textContent = data.tag;
+            document.getElementById('gbb-action-desc').textContent = data.desc;
+            document.getElementById('gbb-read-handler').textContent = data.reads.handler;
+            document.getElementById('gbb-read-screener').textContent = data.reads.screener;
+            document.getElementById('gbb-counters').textContent = data.counters;
+            const exSec = document.getElementById('gbb-examples-section');
+            const exEl = document.getElementById('gbb-examples');
+            exEl.innerHTML = data.examples.map(ex => `<div class="p-4 bg-stone-50 rounded-lg border border-stone-100"><span class="text-xs font-bold uppercase tracking-wider text-orange-600 block mb-1">${ex.team}</span><p class="text-sm text-stone-700">${ex.text}</p></div>`).join('');
+            exSec.classList.remove('hidden');
+            document.querySelectorAll('.gbb-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.id === data.id));
+            renderGbbFrame(data.frames[0], 0);
+            if (history.pushState) history.pushState(null,'','#'+data.id);
+        }
+
+        function showGbbSequence() {
+            if (!gbbAction) return;
+            clearGbbTimers();
+            const frames = gbbAction.frames;
+            renderGbbFrame(frames[0], 0);
+            const routes = frames.slice(1).flatMap(frame => frame.routes || []);
+            routes.forEach((_, index) => gbbTimers.push(setTimeout(() => drawGbbRoutes(routes, index + 1), 320 * (index + 1))));
+        }
+        function playGbbSequence() {
+            if (!gbbAction) return;
+            clearGbbTimers();
+            const frames = gbbAction.frames;
+            renderGbbFrame(frames[0], 0);
+            gbbTimers.push(setTimeout(() => animateGbbFrames(frames), 650));
+        }
+
+        function initGbb() {
+            const list = document.getElementById('gbb-action-list');
+            list.innerHTML = playbookData.map((play, i) => `<button class="gbb-btn action-choice" data-id="${play.id}"><strong>${i+1}. ${play.title}</strong><span>${play.tag}</span></button>`).join('');
+            document.querySelectorAll('.gbb-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const data = playbookData.find(p => p.id === btn.dataset.id);
+                    if (data) selectAction(data);
+                });
+            });
+            document.getElementById('gbb-show').addEventListener('click', showGbbSequence);
+            document.getElementById('gbb-play').addEventListener('click', playGbbSequence);
+            document.getElementById('gbb-reset').addEventListener('click', () => { if (gbbAction) { clearGbbTimers(); renderGbbFrame(gbbAction.frames[0], 0); } });
+            const hash = location.hash.replace('#','');
+            const initial = playbookData.find(p => p.id === hash) || playbookData[0];
+            selectAction(initial);
+        }
+
+        window.addEventListener('load', initGbb);
+    </script>
+    <div data-shared-footer></div>
+    
+<script>
+(function () {
+  const isSubpage = /\/(offensive-key-actions|grinnell-tracker|offense-guide|defense-guide|key-terms|recruiting)\//.test(location.pathname);
+  const pathPrefix = isSubpage ? '../' : '';
+  const nav = document.querySelector('[data-shared-nav]');
+  if (nav) {
+    nav.innerHTML = '<nav class="shared-nav" aria-label="Primary navigation">' +
+      '<a class="shared-brand" href="' + pathPrefix + '">Wake Up &amp; Produce</a>' +
+      '<div class="shared-nav-links">' +
+        '<a href="' + pathPrefix + '">Home</a>' +
+        '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
+        '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
+        '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
+        '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
+        '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
+        '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
+      '</div>' +
+    '</nav>';
+  }
+  const footer = document.querySelector('[data-shared-footer]');
+  if (footer) {
+    footer.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Baxter</span></footer>';
+  }
+}());
+</script>
+</body>
+</html>

@@ -40,6 +40,99 @@ body:not(.site-home) {
   font-family: var(--site-font);
 }
 
+.shared-nav {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px clamp(16px, 4vw, 40px);
+  border-bottom: 1px solid var(--site-border);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  font-family: var(--site-font);
+}
+
+.shared-brand {
+  color: var(--site-text);
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.shared-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.shared-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: var(--site-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.shared-nav-links a:hover,
+.shared-nav-links a:focus-visible {
+  color: var(--site-accent-strong);
+  background: #fff7ed;
+  outline: none;
+}
+
+.shared-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 20px;
+  border-top: 1px solid var(--site-border);
+  color: var(--site-muted);
+  background: rgba(255, 255, 255, 0.72);
+  font-family: var(--site-font);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.shared-footer a {
+  color: var(--site-text);
+  text-decoration: none;
+}
+
+.shared-footer a:hover,
+.shared-footer a:focus-visible {
+  color: var(--site-accent-strong);
+}
+
+.shared-footer span::before {
+  content: "·";
+  margin-right: 8px;
+  color: var(--site-subtle);
+}
+
+@media (max-width: 720px) {
+  .shared-nav {
+    position: relative;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .shared-nav-links {
+    justify-content: flex-start;
+  }
+}
+
+
 .site-header,
 .site-main,
 .site-footer,
@@ -84,6 +177,15 @@ body:not(.site-home) {
   letter-spacing: 0;
   line-height: 1.55;
   text-transform: none;
+}
+
+.site-byline {
+  margin: 12px 0 0;
+  color: var(--site-subtle);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .site-divider {
@@ -265,120 +367,20 @@ body:not(.site-home) {
 }
 
 
-/* Extracted from mvhs-gbb-playbook/index.html */
-.chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        @media (max-width: 768px) { .chart-container { height: 250px; } }
+.court-bg {
+  background-color: #f5f5f4;
+  border: 2px solid #d6d3d1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
 
-        .court-container {
-            background-color: #f5f0e6;
-            border: 2px solid #d6d3d1;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            max-width: 500px;
-            aspect-ratio: 1 / 1;
-            margin: 0 auto;
-        }
-        .paint {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 32%;
-            height: 40%;
-            border: 2px solid #d6d3d1;
-            border-bottom: none;
-            background-color: rgba(214, 211, 209, 0.2);
-        }
-        .free-throw-circle {
-            position: absolute;
-            bottom: 40%;
-            left: 50%;
-            transform: translateX(-50%) translateY(50%);
-            width: 32%;
-            aspect-ratio: 1/1;
-            border: 2px solid #d6d3d1;
-            border-radius: 50%;
-        }
-        .three-point-line {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(30%);
-            width: 90%;
-            aspect-ratio: 1/1;
-            border: 2px solid #d6d3d1;
-            border-radius: 50%;
-        }
-        .player-node {
-            position: absolute;
-            width: 28px;
-            height: 28px;
-            margin-left: -14px;
-            margin-top: -14px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .offense { background-color: #3b82f6; color: white; border: 2px solid #2563eb; }
-        .defense { background-color: #ef4444; color: white; border: 2px solid #dc2626; }
-
-        .nav-item.active { background-color: #f3f4f6; border-left: 4px solid #f97316; font-weight: 600; color: #ea580c; }
-
-        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
-        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f5f5f4; }
+::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
 
 
-/* Extracted from basketball-systems-interactive-guide/index.html */
-.chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container { height: 400px; }
-        }
-        .court-bg {
-            background-color: #f5f5f4;
-            border: 2px solid #d6d3d1;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        .court-line {
-            position: absolute;
-            border: 2px solid #e7e5e4;
-        }
-        .player-dot {
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f5f5f4; }
-        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
-
-
-/* Extracted from systems-comparisons-tracker/index.html */
-.court-wood {
-      background-color: #0b1329;
-      background-image: radial-gradient(#1c2541 1px, transparent 1px);
-      background-size: 24px 24px;
-    }
-    .tab-active { background: #ea580c; color: white; }
-    .tab-idle { color: #94a3b8; }
-    .tab-idle:hover { color: white; }
-
-/* Expanded court diagram styles for basketball-systems-interactive-guide/index.html */
 .court-baseline {
   position: absolute;
   bottom: 0;
@@ -450,4 +452,173 @@ body:not(.site-home) {
 .rr-layer-btn,
 .g-principle-btn {
   border-radius: 8px !important;
+}
+
+.system-player,
+.system-ball {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  z-index: 20;
+}
+
+.system-player {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  background: #1c1917;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 900;
+  box-shadow: 0 6px 16px rgba(28, 25, 23, 0.18);
+}
+
+.system-primary {
+  background: var(--site-accent);
+}
+
+.system-ball {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  border: 1px solid #c2410c;
+  background: #f59e0b;
+  box-shadow: 0 4px 10px rgba(194, 65, 12, 0.24);
+}
+
+.action-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--site-text);
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.action-choice span {
+  color: var(--site-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.action-choice.active,
+.action-choice:hover,
+.action-choice:focus-visible {
+  border-color: rgba(249, 115, 22, 0.45);
+  background: #fff7ed;
+  outline: none;
+}
+
+.system-info-card {
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  padding: 18px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+}
+
+.system-info-card h3 {
+  margin: 0 0 10px;
+  color: var(--site-text);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.system-info-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--site-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.route-key {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  margin-top: 14px;
+  color: var(--site-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.route-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.route-swatch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+.route-swatch::before,
+.route-swatch::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+}
+.route-swatch.pass::before {
+  border-top: 3px dashed #f59e0b;
+}
+.route-swatch.move::before,
+.route-swatch.cut::before,
+.route-swatch.fill::before,
+.route-swatch.rotate::before,
+.route-swatch.shift::before {
+  border-top: 3px dashed #64748b;
+}
+.route-swatch.dribble::before,
+.route-swatch.drive::before {
+  top: 1px;
+  height: 12px;
+  transform: none;
+  background-repeat: no-repeat;
+  background-size: 32px 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='12' viewBox='0 0 32 12'%3E%3Cpath d='M1 6 C5 0,9 12,13 6 S21 0,25 6 S29 12,31 6' fill='none' stroke='%23f97316' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.route-swatch.screen::before {
+  border-top: 4px solid #1c1917;
+}
+.route-swatch.screen::after {
+  left: auto;
+  right: 0;
+  top: 1px;
+  width: 4px;
+  height: 12px;
+  background: #1c1917;
+  transform: none;
+}
+.route-swatch.trap::before {
+  border-top: 3px dashed #2563eb;
+}
+.route-swatch.chase::before {
+  border-top: 3px dashed #ef4444;
+}
+.route-swatch.switch::before {
+  border-top: 3px solid #16a34a;
+}
+.route-step-label {
+  font-size: 10px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }

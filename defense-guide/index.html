@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defense Guide | Wake Up and Produce</title>
+  <meta name="description" content="Interactive defense guide covering man, zone, press, and junk defenses with diagrams, cues, counters, and recommendations.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+    .def-page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 34px 0 56px; }
+    .def-hero { margin-bottom: 24px; }
+    .eyebrow { color: var(--site-accent-strong); font-size: .74rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .def-hero h1 { max-width: 900px; margin: 10px 0; font-size: 1.875rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+    .byline { margin: 0 0 12px; color: var(--site-muted); font-size: 0.875rem; font-weight: 500; }
+    .lede { max-width: 760px; margin: 0; color: var(--site-muted); font-size: 0.9rem; line-height: 1.65; }
+    .family-tabs, .filter-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .family-tab, .filter-tab, .defense-button, .control-button, .choice-pill { border: 1px solid var(--site-border); border-radius: 8px; background: #fff; color: var(--site-muted); font: inherit; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+    .family-tab, .filter-tab { min-height: 36px; padding: 0 14px; }
+    .family-tab.active, .filter-tab.active { border-color: var(--site-accent); background: var(--site-accent); color: #fff; }
+    .defense-button.active, .choice-pill.active { border-color: rgba(249,115,22,.48); background: #fff7ed; color: var(--site-accent-strong); }
+    .def-layout { display: grid; grid-template-columns: 280px 1fr; gap: 22px; align-items: start; }
+    .def-sidebar, .def-card, .decision-guide { border: 1px solid var(--site-border); border-radius: 8px; background: #fff; box-shadow: 0 1px 2px rgba(28,25,23,.04); }
+    .def-sidebar { padding: 14px; position: sticky; top: 84px; }
+    .def-sidebar h2 { margin: 0 0 10px; font-size: .78rem; color: var(--site-subtle); text-transform: uppercase; letter-spacing: .12em; }
+    .defense-button { display: block; width: 100%; margin-bottom: 8px; padding: 12px; text-align: left; }
+    .defense-button span { display: block; margin-top: 3px; color: var(--site-muted); font-size: .78rem; font-weight: 500; line-height: 1.4; }
+    .def-card { padding: clamp(18px, 3vw, 28px); }
+    .def-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr); gap: 24px; align-items: start; }
+    .def-title-row { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 14px; }
+    .def-title-row h2 { margin: 0; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.1; font-weight: 800; }
+    .def-tag { border: 1px solid #fed7aa; border-radius: 999px; background: #ffedd5; color: #ea580c; padding: 6px 10px; font-size: .7rem; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+    .court-shell { border: 1px solid var(--site-border-strong); border-radius: 8px; background: #f5f5f4; padding: 12px; }
+    .court-svg { display: block; width: 100%; aspect-ratio: 4/3; }
+    .controls { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+    .control-button { min-height: 40px; padding: 0 18px; }
+    .control-button.primary { background: #1c1917; color: #fff; border-color: #1c1917; }
+    .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; max-height: 420px; overflow-y: auto; }
+    .info-panel { border: 1px solid var(--site-border); border-radius: 8px; padding: 14px; background: #fff; }
+    .info-panel h3 { margin: 0 0 8px; font-size: .78rem; color: var(--site-accent-strong); letter-spacing: .1em; text-transform: uppercase; }
+    .info-panel ul { margin: 0; padding-left: 18px; color: var(--site-muted); font-size: .88rem; line-height: 1.55; }
+    .decision-guide { margin-top: 28px; padding: clamp(18px,3vw,28px); }
+    .decision-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .9fr); gap: 24px; }
+    .input-group { margin-bottom: 18px; }
+    .input-group h3 { margin: 0 0 9px; font-size: .86rem; color: var(--site-text); }
+    .choice-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .choice-pill { padding: 9px 11px; font-size: .82rem; }
+    .recommendation { border: 1px solid #fed7aa; border-radius: 8px; background: #fff7ed; padding: 18px; }
+    .recommendation h3 { margin: 0 0 8px; }
+    .recommendation-list { display: grid; gap: 10px; margin-top: 14px; }
+    .rec-card { border: 1px solid rgba(249,115,22,.28); border-radius: 8px; background: #fff; padding: 12px; }
+    .rec-card strong { color: var(--site-accent-strong); }
+    @media (max-width: 920px) { .def-layout, .def-grid, .decision-grid { grid-template-columns: 1fr; } .def-sidebar { position: static; } .panel-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div data-shared-nav></div>
+  <main class="def-page">
+    <header class="def-hero">
+      <p class="eyebrow">Defense guide</p>
+      <h1>Basketball Defensive Systems</h1>
+      <p class="byline">By Baxter · Mountain View HS Girls Basketball</p>
+      <p class="lede">Explore man, zone, press, and junk defenses through animated alignments, teaching cues, counters, and a roster-based decision guide.</p>
+    </header>
+    <nav class="family-tabs" id="family-tabs" aria-label="Defense families"></nav>
+
+    <section id="panel-overview" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:8px">
+        <div class="def-card" style="padding:20px"><p class="eyebrow">Man Defenses</p><h3 style="margin:8px 0 6px;font-size:1.2rem">Man Coverage</h3><p style="color:var(--site-muted);font-size:.88rem;line-height:1.5">Assignment-based defense. Includes man-to-man, pack-line, and switching schemes. Best when you have athletic matchups.</p><button class="control-button" style="margin-top:12px" onclick="switchFamily('man')">Explore Man →</button></div>
+        <div class="def-card" style="padding:20px"><p class="eyebrow">Zone Defenses</p><h3 style="margin:8px 0 6px;font-size:1.2rem">Zone Coverage</h3><p style="color:var(--site-muted);font-size:.88rem;line-height:1.5">Area-based shells that protect the paint and force perimeter decisions. 2-3, 3-2, and 1-3-1 schemes.</p><button class="control-button" style="margin-top:12px" onclick="switchFamily('zone')">Explore Zone →</button></div>
+        <div class="def-card" style="padding:20px"><p class="eyebrow">Press Defenses</p><h3 style="margin:8px 0 6px;font-size:1.2rem">Full-Court Press</h3><p style="color:var(--site-muted);font-size:.88rem;line-height:1.5">Tempo-changing pressure applied before the offense sets. 2-2-1, 1-2-2, and diamond press shapes.</p><button class="control-button" style="margin-top:12px" onclick="switchFamily('press')">Explore Press →</button></div>
+        <div class="def-card" style="padding:20px"><p class="eyebrow">Junk Defenses</p><h3 style="margin:8px 0 6px;font-size:1.2rem">Junk &amp; Hybrid</h3><p style="color:var(--site-muted);font-size:.88rem;line-height:1.5">Changeup defenses that blend man and zone to neutralize specific offensive threats. Box-and-1, triangle-and-2, matchup zone.</p><button class="control-button" style="margin-top:12px" onclick="switchFamily('junk')">Explore Junk →</button></div>
+      </div>
+    </section>
+
+    <section id="panel-defense" class="def-layout">
+      <aside class="def-sidebar"><h2 id="sidebar-title">Defenses</h2><div id="defense-list"></div></aside>
+      <article class="def-card">
+        <div class="def-title-row"><div><h2 id="defense-title"></h2><p id="defense-summary" class="lede"></p></div><span id="defense-tag" class="def-tag"></span></div>
+        <div class="def-grid">
+          <div>
+            <div class="court-shell">
+              <svg class="court-svg" viewBox="0 0 400 300" aria-label="Animated defensive court diagram">
+                <rect x="20" y="10" width="360" height="280" rx="4" fill="#f5f5f4" stroke="#d6d3d1" stroke-width="2"></rect>
+                <path d="M80 290 V236 C80 160 320 160 320 236 V290" fill="none" stroke="#d6d3d1" stroke-width="2"></path>
+                <rect x="140" y="190" width="120" height="100" fill="none" stroke="#d6d3d1" stroke-width="2"></rect>
+                <circle cx="200" cy="190" r="38" fill="none" stroke="#d6d3d1" stroke-width="2"></circle>
+                <line x1="170" y1="276" x2="230" y2="276" stroke="#78716c" stroke-width="3"></line>
+                <circle cx="200" cy="264" r="10" fill="none" stroke="#f97316" stroke-width="3"></circle>
+                <g id="route-layer" stroke-width="3" stroke-linecap="round" fill="none"></g>
+                <g id="player-layer"></g>
+                <circle id="ball-node" cx="200" cy="60" r="7" fill="#f59e0b" stroke="#c2410c" stroke-width="2"></circle>
+              </svg>
+              <div class="route-key" aria-label="Animation key">
+                <span><i class="route-swatch pass"></i>Pass</span>
+                <span><i class="route-swatch shift"></i>Rotation</span>
+                <span><i class="route-swatch trap"></i>Trap</span>
+                <span><i class="route-swatch chase"></i>Chase</span>
+                <span><i class="route-swatch switch"></i>Switch</span>
+              </div>
+            </div>
+            <div class="controls"><button id="show-defense" class="control-button">Show Sequence</button><button id="play-defense" class="control-button primary">Play Animation</button><button id="reset-defense" class="control-button">Reset</button></div>
+          </div>
+          <div class="panel-grid">
+            <section class="info-panel"><h3>Structure</h3><p id="structure" style="margin:0;color:var(--site-muted);font-size:.88rem;line-height:1.55"></p></section>
+            <section class="info-panel"><h3>Strengths</h3><ul id="strengths"></ul></section>
+            <section class="info-panel"><h3>Weaknesses</h3><ul id="weaknesses"></ul></section>
+            <section class="info-panel"><h3>Teaching Cues</h3><ul id="cues"></ul></section>
+            <section class="info-panel"><h3>Best Against</h3><ul id="bestAgainst"></ul></section>
+            <section class="info-panel"><h3>Counters</h3><ul id="counters"></ul></section>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="panel-decision" style="display:none">
+      <div class="decision-guide" style="margin-top:0">
+        <p class="eyebrow">Interactive Decision Guide</p>
+        <h2>Choose a defensive direction</h2>
+        <div class="filter-tabs"><button class="filter-tab active" data-mode="roster">My Roster</button><button class="filter-tab" data-mode="opponent">My Opponent</button></div>
+        <div class="decision-grid">
+          <div id="decision-inputs"></div>
+          <div class="recommendation"><h3>Recommended Defense(s)</h3><p id="recommendation-copy">Choose filters to see a recommendation.</p><div class="recommendation-list" id="recommendation-list"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-shared-footer></div>
+  <script>
+    const families = {
+      man: { label: 'Man', defenses: ['man-to-man','pack-line','switching-man'] },
+      zone: { label: 'Zone', defenses: ['2-3-zone','3-2-zone','1-3-1-zone'] },
+      press: { label: 'Press', defenses: ['2-2-1-press','1-2-2-press','diamond-press'] },
+      junk: { label: 'Junk', defenses: ['box-and-1','triangle-and-2','matchup-zone'] }
+    };
+    const defenses = {
+      'man-to-man': d('Man-to-Man','Base shell','Assignment-based defense with help rules, gap positioning, and accountability on every matchup.','man','Five defenders in a shell, each locked to a designated opponent. Help defenders gap at one pass away.', ['Clear matchups and rebounding jobs.','Easy to scout and adjust.','Strong late-game base.'],['Can be exposed by elite drivers.','Requires point-of-attack containment.','Foul pressure can build quickly.'],['Jump to the ball.','See ball and player.','Help early, recover on airtime.'],['Spread pick and roll teams.','Isolation-first offenses.','Teams without multiple ball handlers.'],['Spread pick and roll.','Slip screens.','Attack weak individual matchups.'],[[200,64],[112,106],[288,106],[132,210],[268,210]],[[190,72],[126,112],[274,112],[154,196],[246,196]],[[200,60,300,106,'pass'],[288,106,274,112,'shift'],[268,210,246,196,'tag']]),
+      'pack-line': d('Pack-Line','Gap man','A compact man defense that protects the paint first and forces contested perimeter shots.','man','Defenders shade one step off their man into driving gaps, eliminating straight-line penetration while conceding perimeter space.',['Excellent paint protection.','Reduces straight-line drives.','Great for teams without elite speed.'],['Can allow rhythm threes.','Closeouts must be disciplined.','Less disruptive against patient teams.'],['One foot in the pack.','Close out short with high hands.','No middle drives.'],['Teams without reliable three-point shooters.','Motion offenses that need inside-out creation.','Slower half-court offenses.'],['Drive and kick threes.','Quick reversals.','Stretch bigs.'],[[200,70],[150,120],[250,120],[160,200],[240,200]],[[200,88],[165,132],[235,132],[172,198],[228,198]],[[200,70,300,110,'pass'],[250,120,235,132,'shift']]),
+      'switching-man': d('Switching Man','Versatile man','A switch-heavy man defense designed to keep the ball in front and flatten screening actions.','man','Defenders call and execute switches on every screen action, removing confusion and keeping fresh bodies on the ball.',['Neutralizes screening teams.','Simplifies communication.','Keeps pressure on the ball.'],['Mismatch hunting.','Requires similar-sized defenders.','Box-outs can get scrambled.'],['Call the switch early.','Touch bodies on screens.','Peel out of bad mismatches.'],['Teams with heavy screening actions.','Ball-screen dominant offenses.','Teams with similar-sized players.'],['Slip screens.','Post mismatches.','Ghost screens.'],[[200,64],[112,106],[288,106],[132,210],[268,210]],[[212,100],[155,82],[275,116],[132,210],[248,196]],[[112,106,155,82,'switch'],[200,64,212,100,'switch']]),
+      '2-3-zone': d('2-3 Zone','Paint zone','Two guards up top and three defenders low to protect the lane, corners, and blocks.','zone','Two guards float near the arc while three defenders align at the lane, blocks, and short corner to protect the paint.',['Protects rim and post.','Helps with foul trouble.','Simple base for young teams.'],['High post and corners.','Offensive rebounding risk.','Can be slow to shooters.'],['Move on the pass.','High hands on catches.','Bottom talks short corner.'],['Teams that post up.','Drives-first offenses.','Teams without reliable perimeter shooters.'],['High-post flash.','Skip to corner.','Overload one side.'],[[155,95],[245,95],[100,210],[200,230],[300,210]],[[245,105],[300,132],[112,214],[200,222],[310,214]],[[200,60,305,120,'pass'],[245,95,300,132,'shift'],[300,210,310,214,'close']]),
+      '3-2-zone': d('3-2 Zone','Shooter zone','Three defenders across the top take away slots and wings while two protect baseline and corners.','zone','Three defenders link across the arc to contest three-point looks while two baseline defenders anchor the paint and corners.',['Better against shooters.','Natural wing traps.','Clogs perimeter passing lanes.'],['Corners and short corner.','Weak-side rebounding.','Middle can become open.'],['Top line moves together.','Bottom two rebound first.','X-out on corner passes.'],['Perimeter shooting teams.','Wing-heavy offenses.','Teams with a dominant point guard.'],['Corner overloads.','Baseline runner.','Duck-in behind top line.'],[[100,110],[200,90],[300,110],[145,225],[255,225]],[[120,120],[220,98],[305,132],[155,220],[275,230]],[[200,60,305,125,'pass'],[300,110,305,132,'close'],[255,225,275,230,'shift']]),
+      '1-3-1-zone': d('1-3-1 Zone','Trap zone','One top defender, three across the middle, and one baseline rover create length and sideline traps.','zone','A chaser at the top forces sideline, three defenders span the midline to intercept passes, and a rover owns the baseline.',['Disruptive angles.','Great sideline traps.','Hard to simulate in practice.'],['Vulnerable corners.','Needs a long top defender.','Baseline rover must be tireless.'],['Top forces side.','Wing and top trap together.','Rover owns both corners.'],['Teams uncomfortable with sideline pressure.','Deliberate half-court offenses.','Teams with a dominant single ball handler.'],['Corner skip.','Middle flash.','Short corner seal.'],[[200,70],[112,150],[200,150],[288,150],[200,245]],[[210,84],[292,136],[210,160],[286,166],[310,240]],[[200,60,315,130,'pass'],[200,70,210,84,'trap'],[288,150,292,136,'trap']]),
+      '2-2-1-press': d('2-2-1 Press','Tempo press','Two up, two across midcourt, and one safety funnel the ball to the sideline for traps.','press','Two front defenders influence the inbound catch to a sideline, two midcourt defenders set a second trap, and one safety protects the rim.',['Burns clock.','Forces sideline catches.','Creates rushed decisions.'],['Middle catches break it.','Back line must sprint.','Can give up layups.'],['Influence sideline.','Trap only with angle.','Sprint to next line.'],['Teams with a single primary ball handler.','Inexperienced point guards under pressure.','Teams slow to push in transition.'],['Middle flash.','Reverse before trap.','Diagonal pass behind second line.'],[[140,55],[260,55],[130,130],[270,130],[200,230]],[[112,72],[145,86],[220,132],[300,145],[205,230]],[[200,44,105,72,'pass'],[140,55,112,72,'trap'],[260,55,145,86,'trap']]),
+      '1-2-2-press': d('1-2-2 Press','Contain press','A top chaser steers the ball while two interceptors and two safeties protect the next pass.','press','One defender guides the ball handler into a pocket, two interceptors read the first pass, and two safeties protect against overruns.',['Good against weak guards.','Protects middle better than gambling presses.','Creates soft traps.'],['Less aggressive if top is passive.','Requires anticipation.','Can be passed around.'],['Top turns the ball twice.','Wings bait sideline.','Back line stays deeper than deepest.'],['Teams that struggle to hit skip passes.','Offenses relying on one primary initiator.','Teams with poor spacing against pressure.'],['Pass fake middle.','Screen the top.','Attack before trap sets.'],[[200,48],[125,105],[275,105],[145,205],[255,205]],[[190,70],[118,92],[245,112],[145,205],[255,205]],[[200,44,120,80,'pass'],[200,48,190,70,'turn'],[125,105,118,92,'trap']]),
+      'diamond-press': d('Diamond Press','Run-and-jump','A 1-2-1-1 pressure shape that attacks inbound catches and looks for quick steals.','press','Defender denies the first inbound, two wings trap at the catch, a roamer reads the next pass, and a safety anchors the rim.',['High turnover upside.','Great surprise pressure.','Speeds up hesitant teams.'],['High risk behind the trap.','Needs speed and confidence.','Fouls can pile up.'],['Deny easy inbound.','First trap must be violent.','Safety never gambles.'],['Teams rattled by denials.','Offenses that rely on easy inbounds.','Teams with hesitant passers under duress.'],['Deep diagonal.','Screen the inbound defender.','Flash to center.'],[[200,42],[130,92],[270,92],[200,150],[200,240]],[[204,62],[128,76],[245,94],[210,150],[210,238]],[[200,44,125,72,'pass'],[200,42,204,62,'trap'],[130,92,128,76,'trap']]),
+      'box-and-1': d('Box-and-1','One-star junk','Four defenders form a box zone while one chaser face-guards the opponent\'s best scorer.','junk','Four defenders hold a box zone while a dedicated chaser shadows the opponent\'s primary scorer everywhere on the floor.',['Removes one star rhythm.','Keeps help near the paint.','Excellent changeup.'],['Role players can beat it.','Screens hurt the chaser.','Corners can stress the box.'],['Chaser never relaxes.','Box talks overloads.','Hands visible, no grabbing.'],['Teams with one dominant scorer.','Offenses where role players struggle.','Opponents who rarely use screens for their star.'],['Screen the chaser.','Use star as decoy.','Flash middle.'],[[115,120],[285,120],[115,220],[285,220],[205,90]],[[115,120],[285,120],[115,220],[285,220],[245,110]],[[200,60,250,105,'pass'],[205,90,245,110,'chase']]),
+      'triangle-and-2': d('Triangle-and-2','Two-star junk','Three defenders protect the lane in a triangle while two chasers deny two primary scorers.','junk','Three defenders anchor a paint triangle while two chasers trail-deny the opponent\'s two most dangerous perimeter threats.',['Targets two scorers.','Baits weak creators.','Protects middle with three.'],['Role players get space.','Chasers must navigate screens.','Corner rules are tricky.'],['Chasers trail tight.','Triangle rotates as one.','Call every screen.'],['Teams with exactly two clear offensive threats.','Offenses where role players lack confidence.','Teams that run their stars off pindowns.'],['Screen both chasers.','Overload corners.','Let role players attack gaps.'],[[200,120],[130,225],[270,225],[130,95],[270,95]],[[200,138],[142,220],[258,220],[155,110],[245,110]],[[200,60,150,100,'pass'],[130,95,155,110,'chase'],[270,95,245,110,'chase']]),
+      'matchup-zone': d('Matchup Zone','Hybrid zone','Zone shell with man principles after the ball enters a side or matchup area.','junk','Defenders start in a zone shell and attach man-to-man responsibilities when the ball enters their zone, then return to shell on reversal.',['Looks confusing to offenses.','Blends zone help with man pressure.','Good scouting changeup.'],['Can confuse your own team.','Requires communication.','Rebounding assignments shift.'],['Point and talk matchups.','Pass players through zones.','Return to shell on reversal.'],['Teams that rely on set plays.','Motion offenses confused by gap defenders.','Teams that probe before attacking.'],['Quick overloads.','Slip behind matchups.','Crash from weak side.'],[[155,95],[245,95],[105,200],[200,220],[295,200]],[[170,108],[274,116],[128,196],[210,214],[300,190]],[[200,60,300,112,'pass'],[245,95,274,116,'match'],[295,200,300,190,'match']])
+    };
+    function d(title,tag,summary,family,structure,strengths,weaknesses,cues,bestAgainst,counters,start,end,routes){ return {title,tag,summary,family,structure,strengths,weaknesses,cues,bestAgainst,counters,start,end,routes}; }
+    let currentFamily = 'man'; let currentDefense = 'man-to-man'; let currentTab = 'man'; let timer = null; let rafId = null; let routeTimers = [];
+    const colors = { shift:'#64748b', close:'#f97316', trap:'#2563eb', pass:'#f59e0b', switch:'#16a34a', turn:'#ea580c', chase:'#ef4444', match:'#7c3aed' };
+    function svg(name, attrs){ const n = document.createElementNS('http://www.w3.org/2000/svg', name); Object.entries(attrs).forEach(([k,v]) => n.setAttribute(k,v)); return n; }
+    const allTabs = [
+      {id:'overview', label:'Overview'},
+      {id:'man', label:'Man'},
+      {id:'zone', label:'Zone'},
+      {id:'press', label:'Press'},
+      {id:'junk', label:'Junk'},
+      {id:'decision', label:'Decision Guide'}
+    ];
+    function switchFamily(familyId) { currentFamily = familyId; currentTab = familyId; currentDefense = families[familyId].defenses[0]; renderAll(true); }
+    function renderFamilies(){
+      document.getElementById('family-tabs').innerHTML = allTabs.map(t => '<button class="family-tab '+(t.id===currentTab?'active':'')+'" data-tab="'+t.id+'">'+t.label+'</button>').join('');
+      document.querySelectorAll('.family-tab').forEach(btn => btn.onclick = () => {
+        currentTab = btn.dataset.tab;
+        if (families[currentTab]) { currentFamily = currentTab; currentDefense = families[currentFamily].defenses[0]; }
+        renderAll(true);
+      });
+    }
+    function renderDefenseList(){ const f = families[currentFamily]; document.getElementById('sidebar-title').textContent = f.label + ' Defenses'; document.getElementById('defense-list').innerHTML = f.defenses.map(id => '<button class="defense-button '+(id===currentDefense?'active':'')+'" data-defense="'+id+'"><strong>'+defenses[id].title+'</strong><span>'+defenses[id].tag+'</span></button>').join(''); document.querySelectorAll('.defense-button').forEach(btn => btn.onclick = () => { currentDefense = btn.dataset.defense; renderAll(true); }); }
+    function list(id, items){ document.getElementById(id).innerHTML = items.map(i => '<li>'+i+'</li>').join(''); }
+    function ensurePlayers(){
+      const layer = document.getElementById('player-layer');
+      if (layer.children.length === 5) return;
+      layer.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const g = svg('g', {transform:'translate(200,150)'});
+        g.appendChild(svg('circle', {r:14, fill:'#2563eb', stroke:'#fff', 'stroke-width':2}));
+        const t = svg('text', {y:4, fill:'#fff', 'font-size':10, 'font-weight':800, 'text-anchor':'middle'});
+        t.textContent = 'D' + (i+1);
+        g.appendChild(t);
+        layer.appendChild(g);
+      }
+    }
+    function setPlayerPositions(pts){
+      const layer = document.getElementById('player-layer');
+      pts.forEach((p, i) => layer.children[i].setAttribute('transform', 'translate('+p[0]+','+p[1]+')'));
+    }
+
+    function drawDefenseRoutes(limit) {
+      const data = defenses[currentDefense];
+      const routes = document.getElementById('route-layer');
+      routes.innerHTML = '';
+      data.routes.slice(0, limit).forEach(function(r, index){
+        const x1=r[0], y1=r[1], x2=r[2], y2=r[3], type=r[4];
+        const color = colors[type] || '#64748b';
+        const line = svg('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:color});
+        if (type === 'pass' || type === 'shift' || type === 'trap' || type === 'chase' || type === 'close' || type === 'match') line.setAttribute('stroke-dasharray','7 5');
+        routes.appendChild(line);
+        if (type !== 'screen' && type !== 'switch') {
+          const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
+          const arrow = svg('polygon',{points:[[x2,y2],[x2-ux*12+nx*5,y2-uy*12+ny*5],[x2-ux*12-nx*5,y2-uy*12-ny*5]].map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '),fill:color});
+          routes.appendChild(arrow);
+        }
+        const label = svg('text',{x:(x1+x2)/2,y:(y1+y2)/2-6,fill:color,'text-anchor':'middle',class:'route-step-label'});
+        label.textContent = index + 1;
+        routes.appendChild(label);
+      });
+    }
+    function clearDefenseTimers(){ clearTimeout(timer); routeTimers.forEach(clearTimeout); routeTimers = []; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
+    function draw(state){
+      ensurePlayers();
+      clearDefenseTimers();
+      const data = defenses[currentDefense];
+      const pts = state === 'end' ? data.end : data.start;
+      setPlayerPositions(pts);
+      const routes = document.getElementById('route-layer');
+      const ball = document.getElementById('ball-node');
+      routes.innerHTML = '';
+      if (state === 'end') {
+        drawDefenseRoutes(data.routes.length);
+        ball.setAttribute('cx', data.routes[0]?data.routes[0][2]:200);
+        ball.setAttribute('cy', data.routes[0]?data.routes[0][3]:60);
+      } else {
+        ball.setAttribute('cx', 200); ball.setAttribute('cy', 60);
+      }
+    }
+    function renderDefense(pushHash){ const data = defenses[currentDefense]; document.getElementById('defense-title').textContent = data.title; document.getElementById('defense-summary').textContent = data.summary; document.getElementById('defense-tag').textContent = data.tag; document.getElementById('structure').textContent = data.structure; list('strengths', data.strengths); list('weaknesses', data.weaknesses); list('cues', data.cues); list('bestAgainst', data.bestAgainst); list('counters', data.counters); draw('start'); if (pushHash) history.replaceState(null, '', '#' + currentDefense); }
+    function renderAll(pushHash=false){
+      clearDefenseTimers();
+      renderFamilies();
+      const isDefenseTab = !!families[currentTab];
+      document.getElementById('panel-overview').style.display = currentTab === 'overview' ? 'block' : 'none';
+      document.getElementById('panel-defense').style.display = isDefenseTab ? 'grid' : 'none';
+      document.getElementById('panel-decision').style.display = currentTab === 'decision' ? 'block' : 'none';
+      if (isDefenseTab) { renderDefenseList(); renderDefense(pushHash); }
+      if (currentTab === 'decision' || isDefenseTab) updateRecommendations();
+    }
+    function showDefenseSequence(){
+      clearDefenseTimers();
+      const data = defenses[currentDefense];
+      ensurePlayers();
+      setPlayerPositions(data.start);
+      document.getElementById('route-layer').innerHTML = '';
+      const ball = document.getElementById('ball-node');
+      ball.setAttribute('cx', 200); ball.setAttribute('cy', 60);
+      data.routes.forEach(function(_, index){
+        routeTimers.push(setTimeout(function(){ drawDefenseRoutes(index + 1); }, 320 * (index + 1)));
+      });
+    }
+    function play(){
+      clearDefenseTimers();
+      const data = defenses[currentDefense];
+      ensurePlayers();
+      setPlayerPositions(data.start);
+      document.getElementById('route-layer').innerHTML = '';
+      const ball = document.getElementById('ball-node');
+      ball.setAttribute('cx', 200); ball.setAttribute('cy', 60);
+      timer = setTimeout(function(){
+        const bx0=200, by0=60;
+        const bx1=data.routes[0]?data.routes[0][2]:200, by1=data.routes[0]?data.routes[0][3]:60;
+        const from=data.start.map(function(p){return[p[0],p[1]];}), to=data.end, duration=950, t0=performance.now();
+        drawDefenseRoutes(data.routes.length);
+        (function step(now){
+          const t=Math.min((now-t0)/duration,1), e=t<0.5?2*t*t:-1+(4-2*t)*t;
+          setPlayerPositions(to.map(function(p,i){return[from[i][0]+(p[0]-from[i][0])*e,from[i][1]+(p[1]-from[i][1])*e];}));
+          ball.setAttribute('cx',bx0+(bx1-bx0)*e);
+          ball.setAttribute('cy',by0+(by1-by0)*e);
+          if(t<1) rafId=requestAnimationFrame(step); else rafId=null;
+        })(performance.now());
+      }, 650);
+    }
+    function reset(){ clearDefenseTimers(); draw('start'); }
+    const decision = { mode:'roster', rim:'no', wings:'no', bench:'no', stopper:'no', stars:'one', style:'shooters' };
+    function renderInputs(){ const root = document.getElementById('decision-inputs'); if (decision.mode === 'roster') { root.innerHTML = input('rim','Rim protector',['yes','no']) + input('wings','Long wings',['yes','no']) + input('bench','Deep bench',['yes','no']) + input('stopper','Shutdown defender',['yes','no']); } else { root.innerHTML = input('stars','Opponent scoring profile',['one','two','balanced']) + input('style','Opponent tendency',['shooters','drivers']); } document.querySelectorAll('.choice-pill').forEach(btn => btn.onclick = () => { decision[btn.dataset.key] = btn.dataset.value; renderInputs(); updateRecommendations(); }); }
+    function input(key,label,vals){ return '<div class="input-group"><h3>'+label+'</h3><div class="choice-row">'+vals.map(v => '<button class="choice-pill '+(decision[key]===v?'active':'')+'" data-key="'+key+'" data-value="'+v+'">'+v+'</button>').join('')+'</div></div>'; }
+    function updateRecommendations(){ renderInputs(); let recs=[]; if(decision.mode==='roster'){ if(decision.stopper==='yes') recs.push(['Box-and-1','Use the stopper to erase a primary scorer while the box protects the lane.']); if(decision.rim==='yes') recs.push(['2-3 Zone','Keep your rim protector near the basket and force outside shots.']); if(decision.wings==='yes') recs.push(['1-3-1 Zone','Length on top and wings makes sideline traps bigger.']); if(decision.bench==='yes') recs.push(['2-2-1 Press','Depth lets you pressure without saving legs.']); if(!recs.length) recs.push(['Pack-Line','Compact gaps protect teams without elite length or rim protection.']); } else { if(decision.stars==='one') recs.push(['Box-and-1','Make the supporting players initiate offense.']); if(decision.stars==='two') recs.push(['Triangle-and-2','Take away the two players who drive opponent efficiency.']); if(decision.stars==='balanced') recs.push(['Man-to-Man','Stay accountable against multiple threats.']); if(decision.style==='shooters') recs.push(['3-2 Zone','Three across the top helps contest slots and wings.']); if(decision.style==='drivers') recs.push(['2-3 Zone','Pack the paint and make drivers finish through bodies.']); } document.getElementById('recommendation-copy').textContent = decision.mode === 'roster' ? 'Based on your roster traits, start with:' : 'Based on your opponent profile, start with:'; document.getElementById('recommendation-list').innerHTML = recs.map(r => '<div class="rec-card"><strong>'+r[0]+'</strong><p>'+r[1]+'</p></div>').join(''); }
+    document.getElementById('show-defense').onclick = showDefenseSequence; document.getElementById('play-defense').onclick = play; document.getElementById('reset-defense').onclick = reset;
+    document.querySelectorAll('.filter-tab').forEach(btn => btn.onclick = () => { decision.mode = btn.dataset.mode; document.querySelectorAll('.filter-tab').forEach(b => b.classList.toggle('active', b === btn)); renderInputs(); updateRecommendations(); });
+    function initFromHash(){ const id = location.hash.replace('#',''); if(defenses[id]) { currentDefense = id; currentFamily = defenses[id].family; currentTab = defenses[id].family; } renderAll(false); }
+    window.addEventListener('hashchange', initFromHash); initFromHash();
+  </script>
+  <script>
+(function () {
+  const isSubpage = /\/(offensive-key-actions|grinnell-tracker|offense-guide|defense-guide|key-terms|recruiting)\//.test(location.pathname);
+  const pathPrefix = isSubpage ? '../' : '';
+  const nav = document.querySelector('[data-shared-nav]');
+  if (nav) {
+    nav.innerHTML = '<nav class="shared-nav" aria-label="Primary navigation">' +
+      '<a class="shared-brand" href="' + pathPrefix + '">Wake Up &amp; Produce</a>' +
+      '<div class="shared-nav-links">' +
+        '<a href="' + pathPrefix + '">Home</a>' +
+        '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
+        '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
+        '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
+        '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
+        '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
+        '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
+      '</div>' +
+    '</nav>';
+  }
+  const footer = document.querySelector('[data-shared-footer]');
+  if (footer) {
+    footer.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Baxter</span></footer>';
+  }
+}());
+  </script>
+</body>
+</html>

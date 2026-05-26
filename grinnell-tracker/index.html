@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grinnell Tracker | Wake Up and Produce</title>
+  <meta name="description" content="Interactive Grinnell System metrics tracker and win-probability calculator for pace, pressure, shot volume, and possession advantage.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col">
+  <div data-shared-nav></div>
+
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+    <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Grinnell Tracker</p>
+    <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight mb-1">System Success Calculator</h1>
+    <p class="text-stone-500 text-sm">Estimate how well your team meets the Grinnell System's statistical markers for pressure, pace, and scoring.</p>
+  </div>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
+
+    <!-- Hero -->
+    <div class="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+      <h2 class="text-2xl font-extrabold tracking-tight text-stone-900 mb-3">System Success Calculator</h2>
+      <p class="text-stone-500 leading-relaxed text-sm mb-2">Use Grinnell System principles to estimate how well your team is meeting the statistical markers that drive pressure, pace, possessions, and scoring opportunities.</p>
+      <p class="text-stone-500 leading-relaxed text-sm">Adjust the key performance metrics below to see how shot volume, three-point rate, offensive rebounding, forced turnovers, and possession advantage impact the projected success probability.</p>
+    </div>
+
+    <!-- Win Probability Calculator -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 bg-white border border-stone-200 rounded-2xl p-6 shadow-sm space-y-6">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <h3 class="font-bold text-lg text-stone-900">"The System" Win Probability Calculator</h3>
+            <p class="text-xs text-stone-400">Based on David Arseneault's statistical winning parameters</p>
+          </div>
+          <button id="reset-sliders" class="text-xs text-stone-400 hover:text-stone-800 font-semibold transition">Reset Metrics</button>
+        </div>
+        <div class="space-y-5">
+          <label class="space-y-2 block">
+            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">1. Total Shot Attempts (Goal: 94)</span><span id="val-attempts" class="font-bold text-orange-400">94 Shots</span></div>
+            <input type="range" id="slide-attempts" min="60" max="130" value="82" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+          </label>
+          <label class="space-y-2 block">
+            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">2. Three-Point Selection Percentage (Goal: 50%)</span><span id="val-threes" class="font-bold text-orange-400">50%</span></div>
+            <input type="range" id="slide-threes" min="20" max="80" value="38" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+          </label>
+          <label class="space-y-2 block">
+            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">3. Offensive Rebounding Rate (Goal: 33.3%)</span><span id="val-rebounds" class="font-bold text-orange-400">33%</span></div>
+            <input type="range" id="slide-rebounds" min="10" max="60" value="24" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+          </label>
+          <label class="space-y-2 block">
+            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">4. Opponent Turnovers Forced (Goal: 32)</span><span id="val-turnovers" class="font-bold text-orange-400">32 TOs</span></div>
+            <input type="range" id="slide-turnovers" min="10" max="50" value="21" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+          </label>
+          <label class="space-y-2 block">
+            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">5. Shot Attempts Differential (Goal: +25)</span><span id="val-differential" class="font-bold text-orange-400">+25 Shots</span></div>
+            <input type="range" id="slide-differential" min="-20" max="50" value="8" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+          </label>
+        </div>
+      </div>
+
+      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div class="space-y-2">
+          <h3 class="font-bold text-stone-700 text-sm tracking-wide uppercase">Calculated Output</h3>
+          <p class="text-xs text-stone-400">Historical modeling projects a 95% win likelihood if all 5 pillars are secured.</p>
+        </div>
+        <div class="flex flex-col items-center justify-center py-6">
+          <div class="relative w-40 h-40 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+              <circle cx="50" cy="50" r="40" stroke="#e7e5e4" stroke-width="8" fill="transparent"></circle>
+              <circle id="prob-ring" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-width="8" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="12.5" class="transition-all duration-300 ease-out"></circle>
+            </svg>
+            <div class="absolute text-center">
+              <span id="prob-percentage" class="text-4xl font-extrabold text-stone-900">64%</span>
+              <p class="text-[10px] text-stone-400 font-semibold uppercase tracking-wider mt-1">Win Probability</p>
+            </div>
+          </div>
+          <div id="gauge-status" class="mt-4 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">Adjust metrics to discover the 95% state</div>
+        </div>
+        <div class="border-t border-stone-100 pt-4 space-y-2 text-xs">
+          <div class="check flex justify-between items-center text-stone-400" id="chk-attempts"><span>Shot Attempts >= 94</span><span class="status-icon">○</span></div>
+          <div class="check flex justify-between items-center text-stone-400" id="chk-threes"><span>Three-Point Volume >= 50%</span><span class="status-icon">○</span></div>
+          <div class="check flex justify-between items-center text-stone-400" id="chk-rebounds"><span>Offensive Rebounds >= 33.3%</span><span class="status-icon">○</span></div>
+          <div class="check flex justify-between items-center text-stone-400" id="chk-turnovers"><span>Forced Turnovers >= 32</span><span class="status-icon">○</span></div>
+          <div class="check flex justify-between items-center text-stone-400" id="chk-differential"><span>Shot Attempts Differential >= +25</span><span class="status-icon">○</span></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    function calculateProbability() {
+      const attempts = Number(document.getElementById('slide-attempts').value);
+      const threes = Number(document.getElementById('slide-threes').value);
+      const rebounds = Number(document.getElementById('slide-rebounds').value);
+      const turnovers = Number(document.getElementById('slide-turnovers').value);
+      const diff = Number(document.getElementById('slide-differential').value);
+
+      document.getElementById('val-attempts').innerText = attempts + ' Shots';
+      document.getElementById('val-threes').innerText = threes + '%';
+      document.getElementById('val-rebounds').innerText = rebounds + '%';
+      document.getElementById('val-turnovers').innerText = turnovers + ' TOs';
+      document.getElementById('val-differential').innerText = (diff >= 0 ? '+' : '') + diff + ' Shots';
+
+      const goals = [
+        ['chk-attempts', attempts >= 94],
+        ['chk-threes', threes >= 50],
+        ['chk-rebounds', rebounds >= 33],
+        ['chk-turnovers', turnovers >= 32],
+        ['chk-differential', diff >= 25]
+      ];
+      const goalsMet = goals.filter(function(g) { return g[1]; }).length;
+      goals.forEach(function(g) { updateChecklist(g[0], g[1]); });
+
+      let prob = 40;
+      prob += (attempts - 60) * 0.15;
+      prob += (threes - 20) * 0.15;
+      prob += (rebounds - 10) * 0.3;
+      prob += (turnovers - 10) * 0.4;
+      prob += (diff + 20) * 0.35;
+      prob = goalsMet === 5 ? 95 : Math.round(Math.min(99, Math.max(15, prob)));
+
+      const status = document.getElementById('gauge-status');
+      if (goalsMet === 5) {
+        status.className = 'mt-4 px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200';
+        status.innerText = 'Optimum Parameters Achieved (95% win likelihood)';
+      } else if (goalsMet >= 3) {
+        status.className = 'mt-4 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200';
+        status.innerText = 'Warning: Only ' + goalsMet + '/5 Metrics Met';
+      } else {
+        status.className = 'mt-4 px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-200';
+        status.innerText = 'Under-performing System: ' + goalsMet + '/5 Metrics Met';
+      }
+
+      const ring = document.getElementById('prob-ring');
+      ring.style.strokeDashoffset = 251.2 - (prob / 100) * 251.2;
+      ring.setAttribute('stroke', prob >= 80 ? '#10b981' : prob >= 60 ? '#f59e0b' : '#ef4444');
+      document.getElementById('prob-percentage').innerText = prob + '%';
+    }
+
+    function updateChecklist(id, isMet) {
+      const chk = document.getElementById(id);
+      chk.classList.toggle('text-green-600', isMet);
+      chk.classList.toggle('font-semibold', isMet);
+      chk.classList.toggle('text-stone-400', !isMet);
+      chk.querySelector('.status-icon').innerText = isMet ? '✓' : '○';
+    }
+
+    function resetSliders() {
+      document.getElementById('slide-attempts').value = 82;
+      document.getElementById('slide-threes').value = 38;
+      document.getElementById('slide-rebounds').value = 24;
+      document.getElementById('slide-turnovers').value = 21;
+      document.getElementById('slide-differential').value = 8;
+      calculateProbability();
+    }
+
+    document.querySelectorAll('.metric').forEach(function(input) {
+      input.addEventListener('input', calculateProbability);
+    });
+    document.getElementById('reset-sliders').addEventListener('click', resetSliders);
+    calculateProbability();
+  </script>
+
+  <div data-shared-footer></div>
+
+<script>
+(function () {
+  const isSubpage = /\/(offensive-key-actions|grinnell-tracker|offense-guide|defense-guide|key-terms|recruiting)\//.test(location.pathname);
+  const pathPrefix = isSubpage ? '../' : '';
+  const nav = document.querySelector('[data-shared-nav]');
+  if (nav) {
+    nav.innerHTML = '<nav class="shared-nav" aria-label="Primary navigation">' +
+      '<a class="shared-brand" href="' + pathPrefix + '">Wake Up &amp; Produce</a>' +
+      '<div class="shared-nav-links">' +
+        '<a href="' + pathPrefix + '">Home</a>' +
+        '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
+        '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
+        '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
+        '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
+        '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
+        '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
+      '</div>' +
+    '</nav>';
+  }
+  const footer = document.querySelector('[data-shared-footer]');
+  if (footer) {
+    footer.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Baxter</span></footer>';
+  }
+}());
+</script>
+</body>
+</html>
