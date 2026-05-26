@@ -48,6 +48,10 @@
                     <div id="p3" class="system-player">3</div>
                     <div id="p4" class="system-player">4</div>
                     <div id="p5" class="system-player">5</div>
+                    <div id="court-overlay" class="absolute inset-0 z-50 hidden flex-col items-center justify-center bg-stone-50/97 rounded-lg px-6 py-5 text-center">
+                        <p id="court-overlay-msg" class="text-sm font-semibold text-stone-600 mb-4 max-w-xs leading-relaxed"></p>
+                        <ul id="court-overlay-points" class="text-left space-y-2 max-w-xs"></ul>
+                    </div>
                 <div class="route-key" aria-label="Animation key">
                     <span><i class="route-swatch drive"></i>Dribble/Drive</span>
                     <span><i class="route-swatch pass"></i>Pass</span>
@@ -70,7 +74,10 @@
                     <div id="action-list" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
                 </div>
                 <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
-                    <h3 id="action-title" class="text-xl font-bold text-stone-900 mb-2"></h3>
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <h3 id="action-title" class="text-xl font-bold text-stone-900"></h3>
+                        <span id="action-type-badge" class="hidden flex-shrink-0 text-xs font-extrabold uppercase tracking-wider text-stone-500 bg-stone-100 border border-stone-200 rounded-full px-2 py-0.5 mt-1"></span>
+                    </div>
                     <p id="action-desc" class="text-sm text-stone-600"></p>
                 </div>
             </aside>
@@ -87,15 +94,15 @@
 
         <section id="grinnell-metrics" class="bg-white border border-stone-200 rounded-lg p-6 shadow-sm mb-6 hidden">
             <h2 class="text-2xl font-extrabold text-stone-900 mb-1">Grinnell Target Metrics</h2>
-            <p class="text-sm text-stone-500 mb-5">Per-game benchmarks that define a successful Grinnell performance. Meeting all four means the system is working as designed.</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <p class="text-sm text-stone-500 mb-5">Per-game benchmarks that define a successful Grinnell performance. If the numbers are right, the system is working — regardless of whether every possession looks clean.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                 <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
                     <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Shot Attempts</span><span class="text-sm font-bold text-orange-600">94+ per game</span></div>
                     <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:94%"></div></div>
                     <p class="text-xs text-stone-500 mt-2">Volume is the foundation. Force the game into a numbers battle where depth and conditioning compound.</p>
                 </div>
                 <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
-                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">3-Point Rate</span><span class="text-sm font-bold text-orange-600">50%+ of shots</span></div>
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">3-Point Attempts</span><span class="text-sm font-bold text-orange-600">47–50+ per game</span></div>
                     <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:50%"></div></div>
                     <p class="text-xs text-stone-500 mt-2">Only threes and layups. No midrange. The math favors the team that eliminates the 2-point pull-up.</p>
                 </div>
@@ -108,6 +115,16 @@
                     <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Forced Turnovers</span><span class="text-sm font-bold text-orange-600">32+ per game</span></div>
                     <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:80%"></div></div>
                     <p class="text-xs text-stone-500 mt-2">Press after every make and miss. More turnovers = more possessions = more shots.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-100">
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Shot Attempt Differential</span><span class="text-sm font-bold text-orange-600">+25 to +30</span></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-orange-500 h-2 rounded-full" style="width:75%"></div></div>
+                    <p class="text-xs text-stone-500 mt-2">Create significantly more attempts than the opponent. Shot differential is the real measure of whether the system is generating an advantage.</p>
+                </div>
+                <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
+                    <div class="flex justify-between mb-1"><span class="text-sm font-bold text-stone-700">Midrange Attempts</span><span class="text-sm font-bold text-orange-600">Near Zero</span></div>
+                    <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-stone-400 h-2 rounded-full" style="width:2%"></div></div>
+                    <p class="text-xs text-stone-500 mt-2">The midrange shot is actively discouraged. Any midrange attempt is a failed possession — hunt threes or attack the rim.</p>
                 </div>
             </div>
             <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
@@ -422,17 +439,70 @@
                     })]
             },
             grinnell: {
-                title: 'The Grinnell System', subtitle: 'Mathematical pressure offense built on pace, threes, rebounds, and turnovers.', tag: 'Tempo',
-                strengths: ['Weaponizes depth and conditioning.', 'Creates extra possessions through pressure.', 'Forces opponents into uncomfortable tempo.'],
-                weaknesses: ['Can give up layups and open-court chances.', 'Requires deep bench buy-in.', 'Shot quality can swing wildly.'],
-                cues: ['First open three is a good shot.', 'Crash four to the glass.', 'Trap immediately after makes and misses.'],
-                counters: ['Press break middle flashes', 'Patient layups over rushed threes', 'Strong outlet passing'],
+                title: 'The Grinnell System', subtitle: 'A possession-volume system built on pace, threes, offensive rebounding, full-court pressure, and short-shift substitution patterns.', tag: 'System Math',
+                strengths: ['Creates more possessions than opponents.', 'Forces teams to play faster than they want.', 'Uses depth and conditioning as weapons.', 'Makes success measurable through clear game targets.'],
+                weaknesses: ['Gives up layups if the press is broken.', 'Requires deep roster buy-in.', 'Can create rushed shots if players confuse pace with panic.', 'Needs disciplined shot selection despite the green light.'],
+                cues: ['Sprint to spacing before the defense is set.', 'First great shot, not first reckless shot.', 'Trap with purpose, then rotate behind it.', 'Crash hard — misses are part of the math.', 'Short shifts, maximum effort.'],
+                counters: ['Strong press break organization', 'Patient teams that value the ball', 'Rim attacks after broken traps', 'Defensive rebounding discipline', 'Guard play that avoids sideline traps'],
                 actions: [
-                    { id: 'firstshot', title: 'First Available Shot', desc: 'Principle 1: Shoot within the first 12 seconds of a possession. Take any open three-pointer without waiting for a secondary option — volume and pace are the weapons.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'middleLane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner' }, { type: 'sprint', player: 'p3', to: 'deepRightCorner' }, { type: 'pass', from: 'p1', to: 'p3' } ] })},
-                    { id: 'press', title: '1-2-2 Double-Team Press', desc: 'Principle 2: A relentless trap after every score and miss. Two players double-team the ball immediately, sacrificing paint defense on purpose to force turnovers and rushed shots.', frames: buildActionFrames({ setup: { players: { p1: 'leftSlot', p2: 'rightSlot', p3: 'rightWing', p4: 'middleLane', p5: 'rim' }, ball: 'p1' }, steps: [ { type: 'trap', player: 'p1', to: 'pressTrapLeft' }, { type: 'trap', player: 'p2', to: 'pressTrapRight' } ] })},
-                    { id: 'platoon', title: '90-Second Platoon Swap', desc: 'Principle 3: Rotate five fresh players every 45–90 seconds to maintain maximum defensive intensity. Depth is a tactical weapon that compounds conditioning advantages over 40 minutes.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'sprint', player: 'p2', to: 'platoonLeftWing' }, { type: 'sprint', player: 'p3', to: 'platoonRightWing' }, { type: 'sprint', player: 'p4', to: 'platoonLeftCorner' }, { type: 'sprint', player: 'p5', to: 'platoonRightCorner' } ] })},
-                    { id: 'lanes', title: 'Numbered Fast Break', desc: 'Principle 4: Specific lanes are assigned on every break. The point guard runs the center lane, wings sprint to the corners, and the trailer spots up on the arc for a deep three.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'middleLane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner' }, { type: 'sprint', player: 'p3', to: 'deepRightCorner' }, { type: 'sprint', player: 'p4', to: 'leftElbow' }, { type: 'sprint', player: 'p5', to: 'rightElbow' } ] })},
-                    { id: 'math', title: 'Shot Volume Mathematics', desc: 'Principle 5: Target 94+ shot attempts per game using only threes and layups — eliminate every midrange shot. Generate more attempts than opponents via glass crashes and full-court traps.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [ { type: 'drive', player: 'p1', to: 'middleLane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner' }, { type: 'pass', from: 'p1', to: 'p2' } ] })}]
+                    { id: 'firstshot', displayType: 'animated', typeLabel: 'Court Action',
+                      title: 'First Available Shot',
+                      desc: 'Grinnell wants a quality shot before the defense is organized. The first great three or layup is the goal, but pace should not become panic.',
+                      frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [
+                          { actions: [ { type: 'drive', player: 'p1', to: 'middleLane', label: '1 pushes the middle' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner', label: '2 sprints wide' }, { type: 'sprint', player: 'p3', to: 'deepRightCorner', label: '3 sprints wide' } ], label: 'Push pace — get ahead of the defense' },
+                          { type: 'pass', from: 'p1', to: 'p3', label: '1 hits 3 for the first open three' }
+                      ]})
+                    },
+                    { id: 'lanes', displayType: 'animated', typeLabel: 'Court Action',
+                      title: 'Numbered Fast Break / Lane Running',
+                      desc: 'Players sprint assigned lanes so the offense creates early threes, layups, and offensive rebounding angles before the defense is set.',
+                      frames: buildActionFrames({ setup: { players: { p1: 'highSafety', p2: 'leftWide', p3: 'rightWide', p4: 'leftSlotHigh', p5: 'rightSlotHigh' }, ball: 'p1' }, steps: [
+                          { actions: [ { type: 'drive', player: 'p1', to: 'middleLane', label: '1 runs the center lane' }, { type: 'sprint', player: 'p2', to: 'deepLeftCorner', label: '2 sprints the left lane' }, { type: 'sprint', player: 'p3', to: 'deepRightCorner', label: '3 sprints the right lane' }, { type: 'sprint', player: 'p4', to: 'leftElbow', label: '4 fills the rim lane' }, { type: 'sprint', player: 'p5', to: 'rightElbow', label: '5 fills the trail lane' } ], label: 'Sprint assigned lanes before defense is set' },
+                          { type: 'pass', from: 'p1', to: 'p2', label: '1 advances to the open side' }
+                      ]})
+                    },
+                    { id: 'shotprofile', displayType: 'static', typeLabel: 'Shot Rule',
+                      title: 'Threes and Layups Shot Profile',
+                      desc: 'The shot diet is extreme by design. The system wants threes, layups, and near-zero midrange attempts because the math depends on shot value and volume.',
+                      courtMessage: 'This principle is a shot-selection rule, not a court animation.',
+                      points: ['Hunt open threes.', 'Attack layups at the rim.', 'Avoid midrange shots entirely.', 'Do not confuse freedom with bad shots.']
+                    },
+                    { id: 'oreb', displayType: 'animated', typeLabel: 'Rebounding Rule',
+                      title: 'Offensive Rebound and Kick-Out',
+                      desc: 'Misses are part of the system. Three players crash the offensive glass to create second shots, preferably kick-out threes instead of forced putbacks.',
+                      frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [
+                          { type: 'pass', from: 'p1', to: 'p3', label: '1 kicks ahead to 3 for a three' },
+                          { actions: [ { type: 'crash', player: 'p2', to: 'leftBlock', label: '2 crashes the glass' }, { type: 'crash', player: 'p4', to: 'rim', label: '4 crashes hard' }, { type: 'crash', player: 'p5', to: 'rightBlock', label: '5 crashes the glass' } ], label: 'Three players crash every shot' },
+                          { type: 'pass', from: 'p3', to: 'p1', label: '3 secures and kicks out for another three' }
+                      ]})
+                    },
+                    { id: 'press', displayType: 'animated', typeLabel: 'Pressure Concept',
+                      title: 'Full-Court Pressure / 1-2-2 Trap',
+                      desc: 'The press is part of the offensive math. It creates turnovers, rushed shots, and extra possessions, even when it gives up space behind the trap.',
+                      frames: buildActionFrames({ setup: { players: { p1: 'leftSlot', p2: 'rightSlot', p3: 'leftWing', p4: 'top', p5: 'rightElbow' }, ball: 'p1' }, steps: [
+                          { actions: [ { type: 'trap', player: 'p1', to: 'pressTrapLeft', label: '1 traps from the left' }, { type: 'trap', player: 'p2', to: 'pressTrapRight', label: '2 closes from the right' } ], label: 'Double-team the ball — force a rushed pass' },
+                          { actions: [ { type: 'fill', player: 'p3', to: 'leftElbow', label: '3 takes the left passing lane' }, { type: 'fill', player: 'p4', to: 'middleLane', label: '4 clogs the middle' } ], label: 'Others rotate to protect passing lanes' }
+                      ]})
+                    },
+                    { id: 'tradeoffs', displayType: 'tradeoff', typeLabel: 'System Tradeoff',
+                      title: 'Accepted Tradeoffs',
+                      desc: 'Grinnell intentionally accepts risk. If the press is broken, the opponent may get layups. The tradeoff is more pace, more possessions, more threes, and a shot differential in Grinnell\'s favor.',
+                      courtMessage: 'This is a system tradeoff, not a play. The model accepts some easy opponent baskets in exchange for pace, pressure, and possession volume.',
+                      points: ['The press may give up open layups.', 'Fast opponent shots return the ball quickly, which is fine.', 'More possessions favor the deeper, faster team.', 'The system values shot differential over defensive neatness.', 'The chaos is part of the math.']
+                    },
+                    { id: 'platoon', displayType: 'static', typeLabel: 'Rotation Rule',
+                      title: 'Platoon Substitution Pattern',
+                      desc: 'Five-player units rotate every 45 to 90 seconds to keep pressure, running, and shot volume high. Players are expected to sprint because shifts are short.',
+                      courtMessage: 'This is a rotation rule, not a court animation.',
+                      points: ['Fresh five every 45 to 90 seconds.', 'Sustain full-court pressure for the entire game.', 'Normalize short, maximal-effort shifts.', 'Use depth as a weapon — the 10th player matters.', 'Remove the need for players to pace themselves.']
+                    },
+                    { id: 'targets', displayType: 'metrics', typeLabel: 'Performance Benchmark',
+                      title: 'System Targets / Success Formula',
+                      desc: 'The system is measured by game targets, not by whether every possession looks clean. The core question is whether the team created the math advantage.',
+                      courtMessage: 'This principle is measured through game targets. See the benchmark cards below.',
+                      points: ['94+ field goal attempts per game.', '47–50+ three-point attempts.', '33%+ offensive rebound rate.', '32+ forced turnovers.', '+25 to +30 shot attempt differential.', 'Near-zero midrange attempts.']
+                    }
+                ]
             },
             motion: {
                 title: 'Traditional Motion Offense', subtitle: 'Disciplined screening, cutting, and spacing without relying on called plays.', tag: 'Screening',
@@ -572,9 +642,42 @@
             }
             animationFrame = requestAnimationFrame(step);
         }
+        function supportsAnimation(action) {
+            return !action.displayType || action.displayType === 'animated';
+        }
+        function setAnimationButtons(enabled) {
+            ['play-system','detail-system','show-system','reset-system'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                btn.disabled = !enabled;
+                if (enabled) { btn.classList.remove('opacity-30','cursor-not-allowed','pointer-events-none'); }
+                else { btn.classList.add('opacity-30','cursor-not-allowed','pointer-events-none'); }
+            });
+        }
+        function renderNonAnimatedState(action) {
+            document.getElementById('routes').innerHTML = '';
+            setCue('');
+            const overlay = document.getElementById('court-overlay');
+            if (!overlay) return;
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            const msg = document.getElementById('court-overlay-msg');
+            if (msg) msg.textContent = action.courtMessage || '';
+            const pointsEl = document.getElementById('court-overlay-points');
+            if (pointsEl) {
+                pointsEl.innerHTML = action.points
+                    ? action.points.map(p => `<li class="flex gap-2 text-xs text-stone-600"><span class="text-orange-500 flex-shrink-0 font-bold">—</span>${p}</li>`).join('')
+                    : '';
+            }
+            if (action.displayType === 'metrics') {
+                const metrics = document.getElementById('grinnell-metrics');
+                if (metrics) setTimeout(() => metrics.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+            }
+        }
         function renderSystem(systemKey, actionIndex = 0) {
             clearTimers(); currentSystem = systemKey; currentAction = actionIndex;
             const system = systems[systemKey];
+            const action = system.actions[actionIndex];
             document.getElementById('system-title').textContent = system.title;
             document.getElementById('system-subtitle').textContent = system.subtitle;
             document.getElementById('system-tag').textContent = system.tag;
@@ -583,26 +686,37 @@
                 const active = btn.dataset.system === systemKey;
                 btn.className = active ? 'system-tab px-4 py-2 rounded-lg text-sm font-bold bg-orange-600 text-white' : 'system-tab px-4 py-2 rounded-lg text-sm font-bold bg-white border border-stone-200 text-stone-600';
             });
-            document.getElementById('action-list').innerHTML = system.actions.map((action, index) => `<button class="action-choice ${index === actionIndex ? 'active' : ''}" data-index="${index}"><strong>${action.title}</strong><span>${action.desc}</span></button>`).join('');
+            document.getElementById('action-list').innerHTML = system.actions.map((a, index) => `<button class="action-choice ${index === actionIndex ? 'active' : ''}" data-index="${index}"><strong>${a.title}</strong><span>${a.desc}</span></button>`).join('');
             document.querySelectorAll('.action-choice').forEach(btn => btn.addEventListener('click', () => renderSystem(currentSystem, Number(btn.dataset.index))));
-            document.getElementById('action-title').textContent = system.actions[actionIndex].title;
-            document.getElementById('action-desc').textContent = system.actions[actionIndex].desc;
-            renderFrame(system.actions[actionIndex].frames[0], 0, false);
+            document.getElementById('action-title').textContent = action.title;
+            document.getElementById('action-desc').textContent = action.desc;
+            const badge = document.getElementById('action-type-badge');
+            if (badge) { if (action.typeLabel) { badge.textContent = action.typeLabel; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
             const metrics = document.getElementById('grinnell-metrics');
             if (metrics) metrics.classList.toggle('hidden', systemKey !== 'grinnell');
+            const overlay = document.getElementById('court-overlay');
+            if (overlay) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
+            const animated = supportsAnimation(action);
+            setAnimationButtons(animated);
+            if (animated && action.frames) { renderFrame(action.frames[0], 0, false); }
+            else { renderNonAnimatedState(action); }
         }
         function clearTimers() { timers.forEach(clearTimeout); timers = []; if (animationFrame) { cancelAnimationFrame(animationFrame); animationFrame = null; } }
         function showSequence() {
+            const action = systems[currentSystem].actions[currentAction];
+            if (!supportsAnimation(action) || !action.frames) return;
             clearTimers();
-            const frames = systems[currentSystem].actions[currentAction].frames;
+            const frames = action.frames;
             renderFrame(frames[0], 0, false);
             frames.slice(1).forEach((frame, index) => {
                 timers.push(setTimeout(() => renderFrame(frame, frame.routes.length, true), 850 * (index + 1)));
             });
         }
         function playSequence(showRoutes = false) {
+            const action = systems[currentSystem].actions[currentAction];
+            if (!supportsAnimation(action) || !action.frames) return;
             clearTimers();
-            const frames = systems[currentSystem].actions[currentAction].frames;
+            const frames = action.frames;
             renderFrame(frames[0], 0, false);
             timers.push(setTimeout(() => animateSystemFrames(frames, 0, showRoutes), 450));
         }
