@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Differential Learning | Wake Up and Produce</title>
+  <meta name="description" content="Differential learning principles for basketball — how variability, self-organization, and constraint interaction build adaptable, game-ready players.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+    .dl-page { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 34px 0 56px; }
+    .dl-hero { margin-bottom: 28px; }
+    .eyebrow { color: var(--site-accent-strong); font-size: .74rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .dl-hero h1 { max-width: 900px; margin: 10px 0; font-size: 1.875rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+    .byline { margin: 0 0 12px; color: var(--site-muted); font-size: 0.875rem; font-weight: 500; }
+    .lede { max-width: 760px; margin: 0; color: var(--site-muted); font-size: 0.9rem; line-height: 1.65; }
+    .dl-layout { display: grid; grid-template-columns: 240px 1fr; gap: 22px; align-items: start; }
+    .dl-sidebar { border: 1px solid var(--site-border); border-radius: 8px; background: rgba(255,255,255,.86); box-shadow: 0 1px 2px rgba(28,25,23,.04); padding: 14px; position: sticky; top: 84px; }
+    .dl-sidebar h2 { margin: 0 0 10px; font-size: .78rem; color: var(--site-subtle); text-transform: uppercase; letter-spacing: .12em; }
+    .dl-nav-btn { display: block; width: 100%; margin-bottom: 4px; padding: 10px 12px; border: 1px solid transparent; border-radius: 8px; background: none; color: var(--site-muted); font: inherit; font-size: .84rem; font-weight: 800; text-align: left; cursor: pointer; text-decoration: none; }
+    .dl-nav-btn:hover { background: #fff7ed; color: var(--site-accent-strong); border-color: rgba(249,115,22,.2); }
+    .dl-nav-btn.active { background: #fff7ed; color: var(--site-accent-strong); border-color: rgba(249,115,22,.4); }
+    .dl-sections { display: flex; flex-direction: column; gap: 20px; }
+    .dl-card { border: 1px solid var(--site-border); border-radius: 8px; background: rgba(255,255,255,.86); box-shadow: 0 1px 2px rgba(28,25,23,.04); padding: clamp(18px, 3vw, 28px); scroll-margin-top: 96px; }
+    .dl-card-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--site-border); }
+    .dl-card-header h2 { margin: 0; font-size: clamp(1.2rem, 3vw, 1.55rem); line-height: 1.1; }
+    .dl-tag { border: 1px solid #fed7aa; border-radius: 999px; background: #ffedd5; color: #ea580c; padding: 5px 10px; font-size: .68rem; font-weight: 900; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
+    .dl-principles { display: flex; flex-direction: column; }
+    .dl-principle { padding: 14px 0; border-bottom: 1px solid var(--site-border); }
+    .dl-principle:last-child { border-bottom: none; padding-bottom: 0; }
+    .dl-principle-name { color: var(--site-text); font-size: .92rem; font-weight: 900; margin: 0 0 5px; }
+    .dl-principle-def { color: var(--site-muted); font-size: .88rem; line-height: 1.65; margin: 0; }
+    @media (max-width: 820px) { .dl-layout { grid-template-columns: 1fr; } .dl-sidebar { position: static; } }
+  </style>
+</head>
+<body>
+  <div data-shared-nav></div>
+  <main class="dl-page">
+    <header class="dl-hero">
+      <p class="eyebrow">Coaching philosophy</p>
+      <h1>Differential Learning Principles</h1>
+      <p class="byline">By Baxter · Mountain View HS Girls Basketball</p>
+      <p class="lede">How variability, self-organization, and constraint interaction build adaptable, game-ready players — rather than repeating one ideal form in isolation.</p>
+    </header>
+
+    <div class="dl-layout">
+      <aside class="dl-sidebar">
+        <h2>Sections</h2>
+        <a class="dl-nav-btn" href="#core-philosophy">Core Philosophy</a>
+        <a class="dl-nav-btn" href="#practical-application">Practical Application</a>
+        <a class="dl-nav-btn" href="#constraints-led">Constraints-Led Approach</a>
+        <a class="dl-nav-btn" href="#development-outcomes">Development Outcomes</a>
+      </aside>
+
+      <div class="dl-sections">
+
+        <section class="dl-card" id="core-philosophy">
+          <div class="dl-card-header">
+            <h2>Core Philosophy</h2>
+            <span class="dl-tag">Foundation</span>
+          </div>
+          <div class="dl-principles">
+            <div class="dl-principle">
+              <p class="dl-principle-name">No repetition without variation</p>
+              <p class="dl-principle-def">The differential learning approach takes advantage of fluctuations by increasing them through "no repetition" and "constantly changing movement tasks" that add stochastic perturbations to the learning process.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Destabilization to promote self-organization</p>
+              <p class="dl-principle-def">Rather than manipulating task constraints to guide movement, differential learning destabilizes existing movement solutions to encourage athletes to self-organize and discover new, more effective solutions aligned with their individual constraints.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Exploration of the solution space</p>
+              <p class="dl-principle-def">The primary goal is allowing players to gain information about the solution space — the different ways they can coordinate their body to perform a skill — rather than repeating one "ideal" form.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Learning without corrections</p>
+              <p class="dl-principle-def">Differential learning is characterized by skill acquisition without movement repetitions and without corrections during the process, allowing fluctuations to drive learning.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="dl-card" id="practical-application">
+          <div class="dl-card-header">
+            <h2>Practical Application Principles</h2>
+            <span class="dl-tag">On the Floor</span>
+          </div>
+          <div class="dl-principles">
+            <div class="dl-principle">
+              <p class="dl-principle-name">Maximum variability in every repetition</p>
+              <p class="dl-principle-def">Every rep should be different — shooters vary stance (feet wide, narrow, staggered, one leg), release speed, arc height, range, and location between shots.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Environmental and contextual variation</p>
+              <p class="dl-principle-def">Passers should pass from different angles, locations, and with varying velocities and spins; shooters should continually change range and location, even taking one or two steps between every shot.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Unconventional practice methods</p>
+              <p class="dl-principle-def">Incorporate closed-eyes shooting, varying release points, unconventional stances, different pickups, behind-the-backboard shots, long-range shots, different dribbling combinations, and "grenade shooting" (shooting as fast as possible).</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Active exploration of limits</p>
+              <p class="dl-principle-def">Players should actively seek out the limits of their shot and movement capabilities, testing boundaries rather than staying in comfortable ranges.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Novelty prevents autopilot</p>
+              <p class="dl-principle-def">When exercises are repeated too much, the brain thinks it knows the answers. Adding newness — attacking from different angles, shooting different shots, adding defense, or forcing problem-solving during execution — keeps the brain engaged.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="dl-card" id="constraints-led">
+          <div class="dl-card-header">
+            <h2>Integration with Constraints-Led Approach</h2>
+            <span class="dl-tag">Framework</span>
+          </div>
+          <div class="dl-principles">
+            <div class="dl-principle">
+              <p class="dl-principle-name">Task, environmental, and individual constraints</p>
+              <p class="dl-principle-def">Movement solutions emerge from the interaction of individual constraints (size, wingspan, fatigue), task constraints (time on clock, spacing), and environmental constraints (location of defense and teammates).</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Self-organization through constraint interaction</p>
+              <p class="dl-principle-def">Players self-organize their movement solutions based on interacting constraints rather than being prescribed a "right" way of doing things.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Goal-directed variability</p>
+              <p class="dl-principle-def">Variability should be purposeful and goal-directed, not random chaos — coaches guide players to explore new functional solutions through carefully selected constraints.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Challenge point optimization</p>
+              <p class="dl-principle-def">Manipulate variability, complexity, and constraints until players work at the optimal challenge point where learning is maximized — balancing nominal difficulty (hard for everyone) and functional difficulty (hard for this specific player).</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="dl-card" id="development-outcomes">
+          <div class="dl-card-header">
+            <h2>Development Outcomes</h2>
+            <span class="dl-tag">Results</span>
+          </div>
+          <div class="dl-principles">
+            <div class="dl-principle">
+              <p class="dl-principle-name">Adaptability over perfection</p>
+              <p class="dl-principle-def">Excellence in performance comes from taking different shots and experiencing variety, not from perfecting one ideal form in isolation.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Robust and flexible technique</p>
+              <p class="dl-principle-def">Exposure to a wide variety of experiences develops more flexible and robust technique capable of adjusting to unpredictable game demands.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Decision-making emphasis</p>
+              <p class="dl-principle-def">Random and variable learning opportunities simulate competitive conditions better than blocked practice, improving decision-making skills alongside technical skills.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Creative problem-solving</p>
+              <p class="dl-principle-def">Novel learning environments that encourage mistakes and give players responsibility for their learning develop better decision-makers with enhanced cognitive-perceptual skills.</p>
+            </div>
+            <div class="dl-principle">
+              <p class="dl-principle-name">Transfer from practice to competition</p>
+              <p class="dl-principle-def">Random practice consistently proves more effective for long-term retention and competitive performance than blocked, repetitive practice.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+  <footer class="shared-footer">
+    <span>Wake Up and Produce</span>
+    <span><a href="..">Home</a></span>
+    <span><a href="../offense-guide">Offense</a></span>
+    <span><a href="../defense-guide">Defense</a></span>
+    <span><a href="../key-terms">Key Terms</a></span>
+  </footer>
+  <script>
+    // Shared nav injection
+    fetch('../shared-nav.html').then(r => r.ok ? r.text() : null).then(html => {
+      if (!html) return;
+      document.querySelectorAll('[data-shared-nav]').forEach(el => el.outerHTML = html);
+    }).catch(() => {});
+
+    // Active sidebar highlight on scroll
+    const sections = document.querySelectorAll('.dl-card');
+    const navBtns = document.querySelectorAll('.dl-nav-btn');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navBtns.forEach(btn => btn.classList.remove('active'));
+          const active = document.querySelector(`.dl-nav-btn[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
