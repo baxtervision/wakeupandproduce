@@ -17,8 +17,8 @@
           '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
           '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
           '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
-          '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
           '<a href="' + pathPrefix + 'learning/">Learning</a>' +
+          '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
         '</div>' +
       '</nav>';
 
