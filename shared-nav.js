@@ -16,23 +16,50 @@
           '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
           '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
           '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
-          '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
           '<a href="' + pathPrefix + 'learning/">Learning</a>' +
-          '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +
+          '<div class="nav-resource-group">' +
+            '<button class="nav-resource-toggle" type="button" aria-expanded="false" aria-controls="other-resources-menu">Other Resources<span aria-hidden="true">v</span></button>' +
+            '<div class="nav-resource-menu" id="other-resources-menu">' +
+              '<a href="#producer-community">The Producer Community</a>' +
+              '<a href="#video-library">Video Library</a>' +
+              '<a href="https://pocketcoach.training" target="_blank" rel="noopener">Pocket Coach <span>Coming Soon</span></a>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
       '</nav>';
 
     var sharedNav = navEl.querySelector('.shared-nav');
     var hamburger = navEl.querySelector('.nav-hamburger');
+    var resourceToggle = navEl.querySelector('.nav-resource-toggle');
+    var resourceGroup = navEl.querySelector('.nav-resource-group');
+
+    function closeResources() {
+      if (resourceGroup && resourceToggle) {
+        resourceGroup.classList.remove('open');
+        resourceToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    if (resourceToggle && resourceGroup) {
+      resourceToggle.addEventListener('click', function () {
+        var open = resourceGroup.classList.toggle('open');
+        resourceToggle.setAttribute('aria-expanded', open);
+      });
+    }
+
     if (hamburger) {
       hamburger.addEventListener('click', function () {
         var open = sharedNav.classList.toggle('open');
         hamburger.setAttribute('aria-expanded', open);
+        if (!open) {
+          closeResources();
+        }
       });
       document.addEventListener('click', function (e) {
         if (!sharedNav.contains(e.target)) {
           sharedNav.classList.remove('open');
           hamburger.setAttribute('aria-expanded', 'false');
+          closeResources();
         }
       });
     }
