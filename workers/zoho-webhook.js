@@ -17,13 +17,18 @@
  * signing secret, then base64-encodes the result. The signature is sent in the
  * "x-zoho-signature" request header. Verify before trusting the payload.
  *
+ * Product:
+ *   Grinnell System Tracker one-time access
+ *   item_id: 2978138000002946005
+ *   amount: 19.00 USD
+ *
  * Payload shape (Zoho Payments one-time):
  *   {
  *     "event": "payment.captured",
  *     "payload": {
  *       "payment": {
  *         "id": "pay_xxx",
- *         "amount": 2900,
+ *         "amount": 19.00,
  *         "currency": "USD",
  *         "status": "captured",
  *         "customer_email": "coach@school.edu",
@@ -70,8 +75,8 @@ export default {
 
     const eventType = event.event;
 
-    // PAYMENT CAPTURED — grant access
-    if (eventType === 'payment.captured') {
+    // PAYMENT CAPTURED/SUCCESS — grant access
+    if (eventType === 'payment.captured' || eventType === 'payment.success') {
       const email = extractEmail(event);
 
       if (email) {
@@ -80,6 +85,7 @@ export default {
           paid_at: new Date().toISOString(),
           payment_id: payment.id || null,
           amount: payment.amount || null,
+          item_id: extractItemId(event),
           mode: 'payment',
         };
         await env.PAID_USERS.put(email, JSON.stringify(record));
@@ -140,4 +146,14 @@ function extractEmail(event) {
     event.payload?.customer?.email ||
     '';
   return raw.toLowerCase().trim() || null;
+}
+
+function extractItemId(event) {
+  const payment = event.payload?.payment ?? {};
+  const meta = payment.meta_data || payment.metadata || event.payload?.meta_data || [];
+  if (Array.isArray(meta)) {
+    const item = meta.find(entry => entry.key === 'item_id');
+    if (item) return item.value || null;
+  }
+  return payment.item_id || event.payload?.hosted_page_parameters?.udf1 || null;
 }

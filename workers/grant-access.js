@@ -3,7 +3,7 @@
  * Deploy as a Cloudflare Worker at:
  *   https://wakeupandproduce.com/api/grant-access
  *
- * Required KV binding (same namespace as stripe-webhook):
+ * Required KV binding (same namespace as the Zoho checkout/webhook workers):
  *   Variable name: PAID_USERS
  *
  * Required environment variable (encrypted secret):

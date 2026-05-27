@@ -3,17 +3,16 @@
 ## Architecture
 
 ```
-Coach visits protected page
-  → Cloudflare Access intercepts
-  → Email OTP login prompt (no account required)
-  → Access Evaluator Worker checks KV: is this email paid?
-  → YES: serve page  |  NO: redirect to /access/
+Coach visits /grinnell-tracker/
+  → Calculator loads behind visual paywall overlay
+  → /api/zoho-callback/session checks Cloudflare Access session, passcode, or KV
+  → YES: overlay is removed  |  NO: Zoho checkout widget is shown
 
 On purchase:
-  Zoho Payments Checkout → webhook fires → Webhook Worker writes email to KV
+  Zoho Payments Checkout Widget → /api/zoho-callback confirms payment → KV access
 
 Free (no gate):  Key Actions, Key Terms
-Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
+Paid (visual paywall): Grinnell Tracker
 ```
 
 ---
@@ -21,16 +20,18 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 ## Step 1 — Zoho Payments Setup
 
 1. Go to https://payments.zoho.com (or your regional Zoho Payments dashboard)
-2. Create a **Payment Link**
-   - Product name: "Wake Up & Produce — Full Access"
-   - Amount: $29 one-time
-   - Redirect / Success URL: `https://wakeupandproduce.com/access/thank-you/`
-3. Copy the Payment Link URL and paste it into `access/index.html`,
-   replacing `https://payments.zoho.com/YOUR_PAYMENT_LINK`
+2. Create/configure a one-time product item:
+   - Product name: "Wake Up & Produce — Grinnell System Tracker"
+   - Item ID: `2978138000002946005`
+   - Amount: $19 one-time
+3. In Developer Space, note:
+   - Payments Account ID
+   - Public widget API key
+   - OAuth token with `ZohoPay.payments.CREATE` and `ZohoPay.payments.READ`
 4. Go to Settings > Webhooks > Add Webhook
    - URL: `https://wakeupandproduce.com/api/zoho-webhook`
-   - Events: `payment.captured`, `payment.failed`
-5. Copy the **Signing Secret** — needed in Step 3
+   - Events: `payment.success`, `payment.captured`, `payment.failed`
+5. Copy the **Signing Secret** — needed by the webhook worker
 
 > **Note:** After deploying the webhook worker (Step 3), trigger a test payment
 > and inspect Cloudflare Worker logs to confirm the payload field names match
@@ -46,7 +47,24 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 
 ---
 
-## Step 3 — Deploy the Webhook Worker
+## Step 3 — Deploy the Checkout Callback Worker
+
+1. Cloudflare Dashboard > Workers & Pages > Create Worker
+2. Name it: `zoho-callback`
+3. Paste the contents of `workers/zoho-callback.js`
+4. Settings > Variables > KV Namespace Bindings:
+   - Variable name: `PAID_USERS` → select your namespace
+5. Settings > Variables > Environment Variables > Add (Encrypt where secret):
+   - `ZOHO_OAUTH_TOKEN` = your Zoho Payments OAuth token
+   - `ZOHO_PAYMENTS_ACCOUNT_ID` = your Zoho Payments account id
+   - `ZOHO_PUBLIC_API_KEY` = your Zoho Payments public widget API key
+   - `COACH_PASSCODE` = optional manual passcode
+6. Settings > Triggers > Add Route:
+   - `wakeupandproduce.com/api/zoho-callback*` → this worker
+
+---
+
+## Step 4 — Deploy the Webhook Worker
 
 1. Cloudflare Dashboard > Workers & Pages > Create Worker
 2. Name it: `zoho-webhook`
@@ -60,7 +78,7 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 
 ---
 
-## Step 4 — Deploy the Access Evaluator Worker
+## Step 5 — Deploy the Access Evaluator Worker
 
 1. Create another Worker, name it: `access-evaluator`
 2. Paste the contents of `workers/access-evaluator.js`
@@ -69,7 +87,7 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 
 ---
 
-## Step 5 — Deploy the Grant Access Worker
+## Step 6 — Deploy the Grant Access Worker
 
 1. Create another Worker, name it: `grant-access`
 2. Paste the contents of `workers/grant-access.js`
@@ -80,7 +98,7 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 
 ---
 
-## Step 6 — Cloudflare Access Configuration
+## Step 7 — Cloudflare Access Configuration
 
 1. Cloudflare Dashboard > Zero Trust > Access > Applications
 2. **Create Application:**
@@ -90,13 +108,13 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 3. **Add protected domains** (one path per line — these are the paid pages):
    - `wakeupandproduce.com/offense-guide`
    - `wakeupandproduce.com/defense-guide`
-   - `wakeupandproduce.com/grinnell-tracker`
    - `wakeupandproduce.com/learning`
    - `wakeupandproduce.com/recruiting`
 
    **Leave unprotected (free):**
    - `wakeupandproduce.com/offensive-key-actions`
    - `wakeupandproduce.com/key-terms`
+   - `wakeupandproduce.com/grinnell-tracker` (visual paywall handles this page)
 
 4. **Login method:** Email OTP (one-time PIN — no account, just email)
 5. **Create Policy:**
@@ -122,7 +140,7 @@ Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 
 ---
 
-## Step 7 — Test End-to-End
+## Step 8 — Test End-to-End
 
 1. Visit `/offense-guide/` — should prompt for email (now a paid page)
 2. Visit `/offensive-key-actions/` — should load freely (no prompt)
@@ -159,8 +177,8 @@ KV value: {"paid_at":"2026-01-01","mode":"manual","note":"comp"}
 
 ## Price Point Note
 
-$29 one-time lifetime access. The Zoho webhook grants access on `payment.captured`
-and does not expire automatically — use the admin panel to revoke if needed.
+$19 one-time Grinnell System Tracker access. The Zoho callback/webhook grants access
+after payment confirmation and does not expire automatically — use the admin panel to revoke if needed.
 
 If you bundle with pocketcoach.training later, the pocketcoach webhook can write
 to the same `PAID_USERS` namespace, granting cross-site access automatically.
