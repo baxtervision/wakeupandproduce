@@ -28,63 +28,79 @@
     </div>
 
     <!-- Win Probability Calculator -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div class="lg:col-span-2 bg-white border border-stone-200 rounded-2xl p-6 shadow-sm space-y-6">
-        <div class="flex items-center justify-between gap-4">
-          <div>
-            <h3 class="font-bold text-lg text-stone-900">"The System" Win Probability Calculator</h3>
-            <p class="text-xs text-stone-400">Based on David Arseneault's statistical winning parameters</p>
-          </div>
-          <button id="reset-sliders" class="text-xs text-stone-400 hover:text-stone-800 font-semibold transition">Reset Metrics</button>
-        </div>
-        <div class="space-y-5">
-          <label class="space-y-2 block">
-            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">1. Total Shot Attempts (Goal: 94)</span><span id="val-attempts" class="font-bold text-orange-400">94 Shots</span></div>
-            <input type="range" id="slide-attempts" min="60" max="130" value="82" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
-          </label>
-          <label class="space-y-2 block">
-            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">2. Three-Point Selection Percentage (Goal: 50%)</span><span id="val-threes" class="font-bold text-orange-400">50%</span></div>
-            <input type="range" id="slide-threes" min="20" max="80" value="38" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
-          </label>
-          <label class="space-y-2 block">
-            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">3. Offensive Rebounding Rate (Goal: 33.3%)</span><span id="val-rebounds" class="font-bold text-orange-400">33%</span></div>
-            <input type="range" id="slide-rebounds" min="10" max="60" value="24" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
-          </label>
-          <label class="space-y-2 block">
-            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">4. Opponent Turnovers Forced (Goal: 32)</span><span id="val-turnovers" class="font-bold text-orange-400">32 TOs</span></div>
-            <input type="range" id="slide-turnovers" min="10" max="50" value="21" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
-          </label>
-          <label class="space-y-2 block">
-            <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">5. Shot Attempts Differential (Goal: +25)</span><span id="val-differential" class="font-bold text-orange-400">+25 Shots</span></div>
-            <input type="range" id="slide-differential" min="-20" max="50" value="8" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
-          </label>
-        </div>
+    <div class="relative min-h-[550px]">
+      <div class="absolute inset-0 bg-stone-50/40 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-stone-200/50 shadow-inner">
+        <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Coaches Only / $5/mo</p>
+        <h2 class="text-2xl font-extrabold text-stone-900 tracking-tight mb-3">Unlock the Success Calculator</h2>
+        <p class="text-stone-500 text-sm max-w-md leading-relaxed mb-6">
+          Gain full access to the interactive formula used to evaluate system performance, track possession advantage, and project your winning probability based on David Arseneault's historical statistical parameters.
+        </p>
+        <a href="YOUR_ZOHO_PAYMENT_LINK_HERE" target="_blank" class="bg-orange-600 text-white px-6 py-3 font-bold rounded-xl hover:bg-orange-700 transition shadow-sm text-sm">
+          Unlock Full Access — $5/mo
+        </a>
+        <p class="text-xs text-stone-400 mt-4">
+          Already have a coach passcode? <a href="https://wakeupandproduce.cloudflareaccess.com" class="underline hover:text-stone-600">Log In</a>
+        </p>
       </div>
 
-      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-        <div class="space-y-2">
-          <h3 class="font-bold text-stone-700 text-sm tracking-wide uppercase">Calculated Output</h3>
-          <p class="text-xs text-stone-400">Historical modeling projects a 95% win likelihood if all 5 pillars are secured.</p>
-        </div>
-        <div class="flex flex-col items-center justify-center py-6">
-          <div class="relative w-40 h-40 flex items-center justify-center">
-            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
-              <circle cx="50" cy="50" r="40" stroke="#e7e5e4" stroke-width="8" fill="transparent"></circle>
-              <circle id="prob-ring" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-width="8" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="12.5" class="transition-all duration-300 ease-out"></circle>
-            </svg>
-            <div class="absolute text-center">
-              <span id="prob-percentage" class="text-4xl font-extrabold text-stone-900">64%</span>
-              <p class="text-[10px] text-stone-400 font-semibold uppercase tracking-wider mt-1">Win Probability</p>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 bg-white border border-stone-200 rounded-2xl p-6 shadow-sm space-y-6">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <h3 class="font-bold text-lg text-stone-900">"The System" Win Probability Calculator</h3>
+              <p class="text-xs text-stone-400">Based on David Arseneault's statistical winning parameters</p>
             </div>
+            <button id="reset-sliders" class="text-xs text-stone-400 hover:text-stone-800 font-semibold transition">Reset Metrics</button>
           </div>
-          <div id="gauge-status" class="mt-4 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">Adjust metrics to discover the 95% state</div>
+          <div class="space-y-5">
+            <label class="space-y-2 block">
+              <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">1. Total Shot Attempts (Goal: 94)</span><span id="val-attempts" class="font-bold text-orange-400">94 Shots</span></div>
+              <input type="range" id="slide-attempts" min="60" max="130" value="82" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+            </label>
+            <label class="space-y-2 block">
+              <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">2. Three-Point Selection Percentage (Goal: 50%)</span><span id="val-threes" class="font-bold text-orange-400">50%</span></div>
+              <input type="range" id="slide-threes" min="20" max="80" value="38" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+            </label>
+            <label class="space-y-2 block">
+              <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">3. Offensive Rebounding Rate (Goal: 33.3%)</span><span id="val-rebounds" class="font-bold text-orange-400">33%</span></div>
+              <input type="range" id="slide-rebounds" min="10" max="60" value="24" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+            </label>
+            <label class="space-y-2 block">
+              <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">4. Opponent Turnovers Forced (Goal: 32)</span><span id="val-turnovers" class="font-bold text-orange-400">32 TOs</span></div>
+              <input type="range" id="slide-turnovers" min="10" max="50" value="21" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+            </label>
+            <label class="space-y-2 block">
+              <div class="flex justify-between text-xs"><span class="font-semibold text-stone-600">5. Shot Attempts Differential (Goal: +25)</span><span id="val-differential" class="font-bold text-orange-400">+25 Shots</span></div>
+              <input type="range" id="slide-differential" min="-20" max="50" value="8" class="metric w-full h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+            </label>
+          </div>
         </div>
-        <div class="border-t border-stone-100 pt-4 space-y-2 text-xs">
-          <div class="check flex justify-between items-center text-stone-400" id="chk-attempts"><span>Shot Attempts >= 94</span><span class="status-icon">○</span></div>
-          <div class="check flex justify-between items-center text-stone-400" id="chk-threes"><span>Three-Point Volume >= 50%</span><span class="status-icon">○</span></div>
-          <div class="check flex justify-between items-center text-stone-400" id="chk-rebounds"><span>Offensive Rebounds >= 33.3%</span><span class="status-icon">○</span></div>
-          <div class="check flex justify-between items-center text-stone-400" id="chk-turnovers"><span>Forced Turnovers >= 32</span><span class="status-icon">○</span></div>
-          <div class="check flex justify-between items-center text-stone-400" id="chk-differential"><span>Shot Attempts Differential >= +25</span><span class="status-icon">○</span></div>
+
+        <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+          <div class="space-y-2">
+            <h3 class="font-bold text-stone-700 text-sm tracking-wide uppercase">Calculated Output</h3>
+            <p class="text-xs text-stone-400">Historical modeling projects a 95% win likelihood if all 5 pillars are secured.</p>
+          </div>
+          <div class="flex flex-col items-center justify-center py-6">
+            <div class="relative w-40 h-40 flex items-center justify-center">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="40" stroke="#e7e5e4" stroke-width="8" fill="transparent"></circle>
+                <circle id="prob-ring" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-width="8" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="12.5" class="transition-all duration-300 ease-out"></circle>
+              </svg>
+              <div class="absolute text-center">
+                <span id="prob-percentage" class="text-4xl font-extrabold text-stone-900">64%</span>
+                <p class="text-[10px] text-stone-400 font-semibold uppercase tracking-wider mt-1">Win Probability</p>
+              </div>
+            </div>
+            <div id="gauge-status" class="mt-4 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">Adjust metrics to discover the 95% state</div>
+          </div>
+          <div class="border-t border-stone-100 pt-4 space-y-2 text-xs">
+            <div class="check flex justify-between items-center text-stone-400" id="chk-attempts"><span>Shot Attempts >= 94</span><span class="status-icon">○</span></div>
+            <div class="check flex justify-between items-center text-stone-400" id="chk-threes"><span>Three-Point Volume >= 50%</span><span class="status-icon">○</span></div>
+            <div class="check flex justify-between items-center text-stone-400" id="chk-rebounds"><span>Offensive Rebounds >= 33.3%</span><span class="status-icon">○</span></div>
+            <div class="check flex justify-between items-center text-stone-400" id="chk-turnovers"><span>Forced Turnovers >= 32</span><span class="status-icon">○</span></div>
+            <div class="check flex justify-between items-center text-stone-400" id="chk-differential"><span>Shot Attempts Differential >= +25</span><span class="status-icon">○</span></div>
+          </div>
         </div>
       </div>
     </div>
