@@ -12,11 +12,13 @@
         '</button>' +
         '<div class="shared-nav-links">' +
           '<a href="' + pathPrefix + '">Home</a>' +
-          '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
-          '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
           '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
           '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
-          '<a href="' + pathPrefix + 'learning/">Learning</a>' +
+          '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
+          '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
+          '<a href="' + pathPrefix + 'learning/">The Lab</a>' +
+          '<a href="' + pathPrefix + 'standard/">The Standard</a>' +
+          '<a href="' + pathPrefix + 'grinnell-tracker/">Calculator</a>' +
           '<div class="nav-resource-group">' +
             '<button class="nav-resource-toggle" type="button" aria-expanded="false" aria-controls="other-resources-menu">Other Resources<span aria-hidden="true">v</span></button>' +
             '<div class="nav-resource-menu" id="other-resources-menu">' +
