@@ -13,9 +13,9 @@
         '<div class="shared-nav-links">' +
           '<a href="' + pathPrefix + '">Home</a>' +
           '<a href="' + pathPrefix + 'offensive-key-actions/">Key Actions</a>' +
+          '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
           '<a href="' + pathPrefix + 'offense-guide/">Offense</a>' +
           '<a href="' + pathPrefix + 'defense-guide/">Defense</a>' +
-          '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
           '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Tracker</a>' +
           '<a href="' + pathPrefix + 'learning/">Learning</a>' +
           '<a href="' + pathPrefix + 'recruiting/">Recruiting</a>' +

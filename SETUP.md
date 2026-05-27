@@ -10,24 +10,31 @@ Coach visits protected page
   → YES: serve page  |  NO: redirect to /access/
 
 On purchase:
-  Stripe Checkout → webhook fires → Webhook Worker writes email to KV
+  Zoho Payments Checkout → webhook fires → Webhook Worker writes email to KV
+
+Free (no gate):  Key Actions, Key Terms
+Paid (gated):    Offense, Defense, Grinnell Tracker, Learning, Recruiting
 ```
 
 ---
 
-## Step 1 — Stripe Setup
+## Step 1 — Zoho Payments Setup
 
-1. Go to https://dashboard.stripe.com
-2. Create a **Payment Link** (Products > Payment Links > Create)
+1. Go to https://payments.zoho.com (or your regional Zoho Payments dashboard)
+2. Create a **Payment Link**
    - Product name: "Wake Up & Produce — Full Access"
-   - Price: $29 one-time
-   - Success URL: `https://wakeupandproduce.com/access/thank-you/`
+   - Amount: $29 one-time
+   - Redirect / Success URL: `https://wakeupandproduce.com/access/thank-you/`
 3. Copy the Payment Link URL and paste it into `access/index.html`,
-   replacing `https://buy.stripe.com/YOUR_PAYMENT_LINK`
-4. Go to Developers > Webhooks > Add endpoint
-   - URL: `https://wakeupandproduce.com/api/stripe-webhook`
-   - Events: `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`
+   replacing `https://payments.zoho.com/YOUR_PAYMENT_LINK`
+4. Go to Settings > Webhooks > Add Webhook
+   - URL: `https://wakeupandproduce.com/api/zoho-webhook`
+   - Events: `payment.captured`, `payment.failed`
 5. Copy the **Signing Secret** — needed in Step 3
+
+> **Note:** After deploying the webhook worker (Step 3), trigger a test payment
+> and inspect Cloudflare Worker logs to confirm the payload field names match
+> those in `workers/zoho-webhook.js`. Adjust `extractEmail()` if needed.
 
 ---
 
@@ -42,14 +49,14 @@ On purchase:
 ## Step 3 — Deploy the Webhook Worker
 
 1. Cloudflare Dashboard > Workers & Pages > Create Worker
-2. Name it: `stripe-webhook`
-3. Paste the contents of `workers/stripe-webhook.js`
+2. Name it: `zoho-webhook`
+3. Paste the contents of `workers/zoho-webhook.js`
 4. Settings > Variables > KV Namespace Bindings:
    - Variable name: `PAID_USERS` → select your namespace
 5. Settings > Variables > Environment Variables > Add (Encrypt):
-   - `STRIPE_WEBHOOK_SECRET` = your Stripe signing secret from Step 1
+   - `ZOHO_WEBHOOK_SECRET` = your Zoho Payments signing secret from Step 1
 6. Settings > Triggers > Add Route:
-   - `wakeupandproduce.com/api/stripe-webhook*` → this worker
+   - `wakeupandproduce.com/api/zoho-webhook*` → this worker
 
 ---
 
@@ -81,15 +88,15 @@ On purchase:
    - Name: Wake Up & Produce — Protected Tools
    - Session duration: 720 hours (30 days)
 3. **Add protected domains** (one path per line — these are the paid pages):
+   - `wakeupandproduce.com/offense-guide`
    - `wakeupandproduce.com/defense-guide`
-   - `wakeupandproduce.com/offensive-key-actions`
    - `wakeupandproduce.com/grinnell-tracker`
-   - `wakeupandproduce.com/key-terms`
    - `wakeupandproduce.com/learning`
+   - `wakeupandproduce.com/recruiting`
 
    **Leave unprotected (free):**
-   - `wakeupandproduce.com/offense-guide`
-   - `wakeupandproduce.com/recruiting`
+   - `wakeupandproduce.com/offensive-key-actions`
+   - `wakeupandproduce.com/key-terms`
 
 4. **Login method:** Email OTP (one-time PIN — no account, just email)
 5. **Create Policy:**
@@ -117,15 +124,17 @@ On purchase:
 
 ## Step 7 — Test End-to-End
 
-1. Visit `/defense-guide/` — should prompt for email
-2. Enter an email NOT in KV — should get the deny message
-3. Manually add a test email to KV:
+1. Visit `/offense-guide/` — should prompt for email (now a paid page)
+2. Visit `/offensive-key-actions/` — should load freely (no prompt)
+3. Visit `/key-terms/` — should load freely (no prompt)
+4. Enter an email NOT in KV on a paid page — should get the deny message
+5. Manually add a test email to KV:
    - Cloudflare dashboard > KV > PAID_USERS > Add entry
    - Key: `test@youremail.com`
    - Value: `{"paid_at":"2026-01-01","mode":"test"}`
-4. Visit a protected page again with that email — should pass through
-5. Run a Stripe test payment and verify the webhook writes to KV
-   (Stripe dashboard > Webhooks > your endpoint > Send test event)
+6. Visit a protected page again with that email — should pass through
+7. Run a Zoho Payments test payment and check Cloudflare Worker logs to
+   confirm the webhook received the event and wrote the email to KV
 
 ---
 
@@ -150,9 +159,8 @@ KV value: {"paid_at":"2026-01-01","mode":"manual","note":"comp"}
 
 ## Price Point Note
 
-$29 one-time is the current placeholder. The webhook handles both one-time and
-subscription modes — `checkout.session.completed` fires for either, and
-`customer.subscription.deleted` handles subscription lapse.
+$29 one-time lifetime access. The Zoho webhook grants access on `payment.captured`
+and does not expire automatically — use the admin panel to revoke if needed.
 
 If you bundle with pocketcoach.training later, the pocketcoach webhook can write
 to the same `PAID_USERS` namespace, granting cross-site access automatically.
