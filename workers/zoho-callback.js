@@ -81,10 +81,11 @@ async function handlePasscode(request, env) {
 
 async function handleCreatePaymentSession(request, env) {
   requireEnv(env, ['ZOHO_OAUTH_TOKEN', 'ZOHO_PAYMENTS_ACCOUNT_ID', 'ZOHO_PUBLIC_API_KEY']);
+  validateZohoConfig(env);
 
   const body = await readJson(request);
   const email = String(body.email || '').toLowerCase().trim();
-  const name = String(body.name || 'Coach').trim() || 'Coach';
+  const name = normalizeName(body.name || 'Coach');
 
   if (!email || !email.includes('@')) {
     return json({ error: 'Valid email required' }, 400, request);
@@ -124,9 +125,9 @@ async function handleCreatePaymentSession(request, env) {
   });
 
   const session = zoho.payments_session || zoho.payment_session || {};
-  const paymentsSessionId = session.payments_session_id;
+  const paymentsSessionId = String(session.payments_session_id || '').trim();
 
-  if (!paymentsSessionId) {
+  if (!/^\d+$/.test(paymentsSessionId)) {
     console.error('Unexpected Zoho create-session response:', JSON.stringify(zoho));
     return json({ error: 'Zoho did not return a payment session' }, 502, request);
   }
@@ -142,9 +143,9 @@ async function handleCreatePaymentSession(request, env) {
   }), { expirationTtl: 60 * 60 });
 
   return json({
-    account_id: env.ZOHO_PAYMENTS_ACCOUNT_ID,
+    account_id: String(env.ZOHO_PAYMENTS_ACCOUNT_ID).trim(),
     domain: env.ZOHO_PAYMENTS_DOMAIN || 'US',
-    api_key: env.ZOHO_PUBLIC_API_KEY,
+    api_key: String(env.ZOHO_PUBLIC_API_KEY).trim(),
     amount: PRODUCT_AMOUNT,
     currency_code: PRODUCT_CURRENCY,
     currency_symbol: '$',
@@ -275,6 +276,26 @@ function requireEnv(env, keys) {
   if (missing.length) {
     throw new Error(`Missing required environment variable(s): ${missing.join(', ')}`);
   }
+}
+
+function validateZohoConfig(env) {
+  const accountId = String(env.ZOHO_PAYMENTS_ACCOUNT_ID || '').trim();
+  const publicKey = String(env.ZOHO_PUBLIC_API_KEY || '').trim();
+
+  if (!/^\d+$/.test(accountId)) {
+    throw new Error('ZOHO_PAYMENTS_ACCOUNT_ID must be numeric.');
+  }
+
+  if (!/^1000\.[A-Za-z0-9._-]+$/.test(publicKey)) {
+    throw new Error('ZOHO_PUBLIC_API_KEY must be the real widget API key from Zoho Developer Space.');
+  }
+}
+
+function normalizeName(value) {
+  return String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[^A-Za-zÀ-ž' .-]/g, '') || 'Coach';
 }
 
 function safeEqual(a, b) {
