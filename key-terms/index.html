@@ -22,6 +22,12 @@
     .kt-nav-btn:hover { background: #fff7ed; color: var(--site-accent-strong); border-color: rgba(249,115,22,.2); }
     .kt-nav-btn.active { background: #fff7ed; color: var(--site-accent-strong); border-color: rgba(249,115,22,.4); }
     .kt-sections { display: flex; flex-direction: column; gap: 20px; }
+    .kt-cheat.kt-card { border: 1px solid #fed7aa; background: #fff7ed; padding: clamp(16px, 3vw, 22px); }
+    .kt-cheat h2 { margin: 0 0 8px; font-size: 1rem; line-height: 1.2; }
+    .kt-cheat p { margin: 0 0 12px; color: var(--site-muted); font-size: .86rem; line-height: 1.55; }
+    .kt-cheat-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .kt-cheat-links a { border: 1px solid rgba(249,115,22,.24); border-radius: 999px; background: #fff; color: var(--site-accent-strong); padding: 7px 10px; font-size: .76rem; font-weight: 900; text-decoration: none; }
+    .kt-cheat-links a:hover { border-color: rgba(249,115,22,.5); background: #ffedd5; }
     .kt-card { border: 1px solid var(--site-border); border-radius: 8px; background: rgba(255,255,255,.86); box-shadow: 0 1px 2px rgba(28,25,23,.04); padding: clamp(18px, 3vw, 28px); scroll-margin-top: 96px; }
     .kt-card-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--site-border); }
     .kt-card-header h2 { margin: 0; font-size: clamp(1.2rem, 3vw, 1.55rem); line-height: 1.1; }
@@ -30,8 +36,31 @@
     .kt-term { padding: 12px 0; border-bottom: 1px solid var(--site-border); }
     .kt-term:last-child { border-bottom: none; padding-bottom: 0; }
     .kt-term-name { color: var(--site-text); font-size: .92rem; font-weight: 900; margin: 0 0 4px; }
+    .kt-view-btn { display: inline-flex; align-items: center; min-height: 26px; margin-left: 8px; border: 1px solid rgba(249,115,22,.28); border-radius: 999px; background: #fff7ed; color: var(--site-accent-strong); padding: 0 9px; font: inherit; font-size: .67rem; font-weight: 900; text-transform: uppercase; cursor: pointer; vertical-align: middle; }
+    .kt-view-btn:hover, .kt-view-btn:focus-visible { border-color: rgba(249,115,22,.55); background: #ffedd5; outline: none; }
     .kt-term-def { color: var(--site-muted); font-size: .88rem; line-height: 1.6; margin: 0; }
+    .kt-term-detail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; margin-top: 8px; }
+    .kt-term-detail p { margin: 0; color: var(--site-muted); font-size: .78rem; line-height: 1.45; }
+    .kt-term-detail strong { color: var(--site-text); font-weight: 900; }
+    .kt-must .kt-term-name::after { content: " Core"; display: inline-flex; margin-left: 8px; border: 1px solid #fed7aa; border-radius: 999px; background: #ffedd5; color: #ea580c; padding: 2px 6px; font-size: .58rem; font-weight: 900; text-transform: uppercase; vertical-align: middle; }
+    .kt-modal { position: fixed; inset: 0; z-index: 120; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(28,25,23,.52); }
+    .kt-modal.open { display: flex; }
+    .kt-modal-panel { width: min(840px, 100%); max-height: min(760px, calc(100vh - 36px)); overflow: auto; border: 1px solid var(--site-border); border-radius: 8px; background: #fff; box-shadow: 0 24px 80px rgba(28,25,23,.22); }
+    .kt-modal-head { display: flex; align-items: start; justify-content: space-between; gap: 14px; padding: 18px 18px 12px; border-bottom: 1px solid var(--site-border); }
+    .kt-modal-title { margin: 0; color: var(--site-text); font-size: 1.05rem; line-height: 1.2; }
+    .kt-modal-note { margin: 5px 0 0; color: var(--site-muted); font-size: .84rem; line-height: 1.45; }
+    .kt-modal-close { flex: 0 0 auto; width: 34px; height: 34px; border: 1px solid var(--site-border); border-radius: 8px; background: #fff; color: var(--site-text); font-size: 1.25rem; line-height: 1; cursor: pointer; }
+    .kt-modal-close:hover, .kt-modal-close:focus-visible { background: #fff7ed; color: var(--site-accent-strong); outline: none; }
+    .kt-diagram { padding: 14px 18px 18px; }
+    .kt-diagram svg { display: block; width: 100%; height: auto; border: 1px solid var(--site-border); border-radius: 8px; background: #f8fafc; }
+    .kt-diagram-key { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; color: var(--site-muted); font-size: .76rem; font-weight: 800; }
+    .kt-diagram-key span { display: inline-flex; align-items: center; gap: 6px; }
+    .kt-key-dot { width: 11px; height: 11px; border-radius: 999px; background: #2563eb; }
+    .kt-key-dot.offense { background: #ea580c; }
+    .kt-key-line { width: 24px; border-top: 2px dashed #2563eb; }
+    .kt-key-screen { width: 18px; height: 8px; border-radius: 3px; background: #92400e; }
     @media (max-width: 820px) { .kt-layout { grid-template-columns: 1fr; } .kt-sidebar { position: static; } }
+    @media (max-width: 640px) { .kt-term-detail { grid-template-columns: 1fr; } .kt-modal { padding: 10px; } .kt-modal-head { padding: 14px; } .kt-diagram { padding: 12px; } }
   </style>
 </head>
 <body>
@@ -41,17 +70,21 @@
       <p class="eyebrow">Basketball vocabulary</p>
       <h1>Key Terms</h1>
       <p class="byline">By Baxter · Mountain View HS Girls Basketball</p>
-      <p class="lede">A focused vocabulary for teaching systems, calling coverages, and building shared language across your roster — organized by concept, not alphabet.</p>
+      <p class="lede">A focused varsity vocabulary for teaching systems, calling coverages, and building shared language across your roster. Each term is written so players can hear it in practice and apply it on the next possession.</p>
     </header>
 
     <div class="kt-layout">
       <aside class="kt-sidebar">
         <h2>Categories</h2>
-        <a class="kt-nav-btn" href="#core-defense">Core Defense</a>
-        <a class="kt-nav-btn" href="#rebounding">Rebounding</a>
-        <a class="kt-nav-btn" href="#pick-and-roll">Pick &amp; Roll</a>
-        <a class="kt-nav-btn" href="#help-rotations">Help &amp; Rotations</a>
+        <a class="kt-nav-btn" href="#varsity-cheat-sheet">Cheat Sheet</a>
+        <a class="kt-nav-btn" href="#defensive-foundations">Foundations</a>
+        <a class="kt-nav-btn" href="#screen-coverages">Screen Coverages</a>
         <a class="kt-nav-btn" href="#off-ball-screens">Off-Ball Screens</a>
+        <a class="kt-nav-btn" href="#rotations-help">Rotations &amp; Help</a>
+        <a class="kt-nav-btn" href="#pressure-traps">Pressure &amp; Traps</a>
+        <a class="kt-nav-btn" href="#team-schemes">Team Schemes</a>
+        <a class="kt-nav-btn" href="#communication">Communication</a>
+        <a class="kt-nav-btn" href="#rebounding">Rebounding</a>
         <a class="kt-nav-btn" href="#offensive-spacing">Offensive Spacing</a>
         <a class="kt-nav-btn" href="#transition">Transition</a>
         <a class="kt-nav-btn" href="#baseline">Baseline</a>
@@ -59,35 +92,546 @@
 
       <div class="kt-sections">
 
-        <section class="kt-card" id="core-defense">
+        <section class="kt-cheat kt-card" id="varsity-cheat-sheet">
+          <h2>Varsity Cheat Sheet</h2>
+          <p>If you only remember ten defensive terms, remember these. They show up in every system, every scout, and every timeout huddle.</p>
+          <div class="kt-cheat-links">
+            <a href="#contain">Contain</a>
+            <a href="#closeout">Closeout</a>
+            <a href="#help-defense">Help</a>
+            <a href="#gap">Gap</a>
+            <a href="#hedge">Hedge</a>
+            <a href="#switch">Switch</a>
+            <a href="#blitz-trap">Blitz / Trap</a>
+            <a href="#tag-the-roller">Tag the Roller</a>
+            <a href="#x-out">X-out</a>
+            <a href="#no-middle">No-middle</a>
+          </div>
+        </section>
+
+        <section class="kt-card" id="defensive-foundations">
           <div class="kt-card-header">
-            <h2>Core Defensive Positioning</h2>
+            <h2>Defensive Foundations</h2>
             <span class="kt-tag">Defense</span>
           </div>
           <div class="kt-terms">
             <div class="kt-term">
-              <p class="kt-term-name">On-ball</p>
-              <p class="kt-term-def">Primary defender guarding the player with the ball.</p>
+              <p class="kt-term-name">On-ball defense</p>
+              <p class="kt-term-def">Guarding the player with the ball while staying in stance, matching the scout, and making every catch, dribble, and shot uncomfortable.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Distance changes by personnel: crowd shooters, cushion drivers.</p>
+                <p><strong>Player cue:</strong> Ball pressure without a blow-by.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="contain">
+              <p class="kt-term-name">Contain</p>
+              <p class="kt-term-def">Keeping the ball in front and giving ground if needed so the offense does not get a straight-line drive.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The first job is to stop the lane, not win the steal.</p>
+                <p><strong>Player cue:</strong> Chest between ball and rim.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="closeout">
+              <p class="kt-term-name">Closeout</p>
+              <p class="kt-term-def">Sprint-to-short-chop recovery to a shooter, arriving balanced with high hands and no fly-by.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Close short to drivers and long to shooters.</p>
+                <p><strong>Player cue:</strong> High hands, low hips.</p>
+              </div>
             </div>
             <div class="kt-term">
+              <p class="kt-term-name">Stance</p>
+              <p class="kt-term-def">Low, balanced defensive posture with knees bent, hips loaded, chest up, and active hands.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Stance is the floor for every coverage.</p>
+                <p><strong>Player cue:</strong> Sit down before the ball moves.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Slide / Drop step</p>
+              <p class="kt-term-def">Lateral footwork to stay square, with a drop step used to recover, turn, and cut off the ball when beaten.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Slide while square; drop step when the angle is lost.</p>
+                <p><strong>Player cue:</strong> No crossed feet until recovery.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="help-defense">
+              <p class="kt-term-name">Help defense</p>
+              <p class="kt-term-def">Leaving your assignment while seeing ball and player to stop a drive, protect the paint, or buy time for a teammate.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Help early enough that the drive sees a body.</p>
+                <p><strong>Player cue:</strong> See both, shrink first.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="gap">
+              <p class="kt-term-name">Gap</p>
+              <p class="kt-term-def">The space between the ball and your player where you sit one or two steps off to discourage penetration.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> One pass away can help without fully abandoning the pass.</p>
+                <p><strong>Player cue:</strong> One foot in the lane line of the drive.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Deny</p>
+              <p class="kt-term-def">Taking away the next pass by putting your body and hand in the passing lane.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Deny when the catch hurts you; gap when the drive hurts you.</p>
+                <p><strong>Player cue:</strong> Hand on the line, body on the player.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Shell principles</p>
+              <p class="kt-term-def">The basic team rules of guard ball, jump to the ball, help the helper, and move on airtime.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Shell is not a drill only; it is the team defense operating system.</p>
+                <p><strong>Player cue:</strong> Move while the pass is flying.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Pack line / Pressure</p>
+              <p class="kt-term-def">Pack line keeps off-ball defenders inside an imaginary arc to protect the paint; pressure extends defenders into the offense to disrupt rhythm.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Both can work if all five players understand the same risk.</p>
+                <p><strong>Player cue:</strong> Know whether we are shrinking or speeding them up.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="kt-card" id="screen-coverages">
+          <div class="kt-card-header">
+            <h2>Screen &amp; Pick-and-Roll Coverage</h2>
+            <span class="kt-tag">Coverages</span>
+          </div>
+          <div class="kt-terms">
+            <div class="kt-term">
+              <p class="kt-term-name">Ball screen</p>
+              <p class="kt-term-def">An on-ball screen set for the ballhandler, including high, side, flat, drag, and empty-side pick-and-rolls.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Coverage call must come before contact.</p>
+                <p><strong>Player cue:</strong> Talk early, hit first.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="hedge">
+              <p class="kt-term-name">Hedge</p>
+              <p class="kt-term-def">The screener's defender jumps out toward the ball to slow or turn the handler, then recovers back to the screener.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Soft hedge contains; hard hedge turns the ball.</p>
+                <p><strong>Player cue:</strong> Show your chest, then sprint back.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="blitz-trap">
+              <p class="kt-term-name">Blitz / Trap</p>
+              <p class="kt-term-def">Both defenders attack the ballhandler off a screen to force a pickup, rushed pass, or turnover.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Best near sidelines, late clock, or against shaky handlers.</p>
+                <p><strong>Player cue:</strong> No split, no middle, hands high.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="switch">
+              <p class="kt-term-name">Switch</p>
+              <p class="kt-term-def">Two defenders exchange assignments on a screen so the ball stays covered without chasing through contact.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Switch only works with loud talk and instant body contact.</p>
+                <p><strong>Player cue:</strong> Call it, touch it, own it.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Drop coverage</p>
+              <p class="kt-term-def">The screener's defender stays back between roller and rim while the on-ball defender fights over or around the screen.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Protects the rim but can invite pull-up jumpers.</p>
+                <p><strong>Player cue:</strong> Big below the ball, guard back in front.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">ICE / Down</p>
+              <p class="kt-term-def">Side ball-screen coverage that forces the ball away from the middle and down the sideline or baseline, denying use of the screen.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The on-ball defender must angle the handler before the screen arrives.</p>
+                <p><strong>Player cue:</strong> No screen, no middle.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Show and recover</p>
+              <p class="kt-term-def">A quick hedge where the screener's defender shows a body to the ball and immediately snaps back to the original assignment.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Buy the guard one count without giving up the roller.</p>
+                <p><strong>Player cue:</strong> Two steps out, full sprint back.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Under / Over</p>
+              <p class="kt-term-def">The on-ball defender's path on a screen: over the top to stay attached to shooters, under the screen against non-shooters.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Personnel drives the call.</p>
+                <p><strong>Player cue:</strong> Shooter over, driver under.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Late switch / Peel switch</p>
+              <p class="kt-term-def">A delayed exchange after the original coverage breaks down, often used to handle slips, short rolls, or beaten defenders.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Emergency switches still need loud ownership.</p>
+                <p><strong>Player cue:</strong> Next takes ball, old defender peels out.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Short roll</p>
+              <p class="kt-term-def">The screener rolls into the free-throw line or short-corner area instead of all the way to the rim.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Short rolls stress the low man and weak-side rotations.</p>
+                <p><strong>Player cue:</strong> Stop the catch, then fan out.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="kt-card" id="off-ball-screens">
+          <div class="kt-card-header">
+            <h2>Off-Ball Screens &amp; Actions</h2>
+            <span class="kt-tag">Actions</span>
+          </div>
+          <div class="kt-terms">
+            <div class="kt-term">
+              <p class="kt-term-name">Down screen / Pin down</p>
+              <p class="kt-term-def">A screen set from high to low or from the lane area to free a shooter moving up to the perimeter.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Defender decides whether to trail, shoot the gap, switch, or top-lock.</p>
+                <p><strong>Player cue:</strong> Body before the cutter turns the corner.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Flare screen</p>
+              <p class="kt-term-def">A screen that sends a teammate away from the ball toward the sideline or corner for a catch-and-shoot.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Communication must come from the screener's defender.</p>
+                <p><strong>Player cue:</strong> Hear screen, see shooter.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Back screen</p>
+              <p class="kt-term-def">A screen set behind a defender to free a cutter going toward the rim.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The defender guarding the screener must call it early.</p>
+                <p><strong>Player cue:</strong> Open up, protect the rim first.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Cross screen</p>
+              <p class="kt-term-def">A baseline or block-to-block screen, usually used to free a post player near the rim.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Decide whether posts are fighting through, switching, or fronting after contact.</p>
+                <p><strong>Player cue:</strong> Do not get buried under the rim.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Stagger</p>
+              <p class="kt-term-def">Two off-ball screens in a row for the same cutter.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The second screen is where most defenders relax.</p>
+                <p><strong>Player cue:</strong> Chase through both.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Slip</p>
+              <p class="kt-term-def">The screener fakes setting a screen, then cuts hard to space or the rim before establishing contact.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Slips punish over-aggressive switches and traps.</p>
+                <p><strong>Player cue:</strong> See the screener's body, not just the ball.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Top-lock</p>
+              <p class="kt-term-def">A defender jumps to the high side of a shooter to take away the normal route off a screen and force a backdoor cut.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Top-lock requires rim help behind it.</p>
+                <p><strong>Player cue:</strong> Take away the catch, trust the help.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Lock and trail</p>
+              <p class="kt-term-def">A defender chases tight behind a shooter coming off a screen, staying attached while help protects the curl.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Use against movement shooters you cannot let catch clean.</p>
+                <p><strong>Player cue:</strong> Hip to hip, no gap.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Shoot the gap</p>
+              <p class="kt-term-def">A defender cuts between screener and cutter to beat the action to the spot.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Works when the screen angle is loose; risky against tight screeners.</p>
+                <p><strong>Player cue:</strong> Beat the route, then recover square.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Switch off-ball</p>
+              <p class="kt-term-def">Two defenders exchange assignments away from the ball to stay connected through screening action.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The switch is not complete until both matchups are named.</p>
+                <p><strong>Player cue:</strong> Say who you have.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="kt-card" id="rotations-help">
+          <div class="kt-card-header">
+            <h2>Rotations, Help &amp; Paint Protection</h2>
+            <span class="kt-tag">Help-side</span>
+          </div>
+          <div class="kt-terms">
+            <div class="kt-term">
               <p class="kt-term-name">Help-side</p>
-              <p class="kt-term-def">Defenders on the side of the floor away from the ball, in help position closer to the paint.</p>
+              <p class="kt-term-def">The side of the floor away from the ball where defenders shrink toward the lane to protect paint touches and cuts.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Help-side defenders must still know where shooters are.</p>
+                <p><strong>Player cue:</strong> In early, out fast.</p>
+              </div>
             </div>
             <div class="kt-term">
               <p class="kt-term-name">Strong side / Weak side</p>
-              <p class="kt-term-def">Strong side has the ball; weak side is opposite and usually more in help.</p>
+              <p class="kt-term-def">Strong side is the ball side; weak side is the opposite side where the deepest help usually lives.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Use the terms to assign who helps and who recovers first.</p>
+                <p><strong>Player cue:</strong> Ball side pressures, weak side protects.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="tag-the-roller">
+              <p class="kt-term-name">Tag the roller</p>
+              <p class="kt-term-def">A help defender briefly steps into the roller's path to slow the cut, then recovers out to the next threat.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Tag with your body, not a lazy reach.</p>
+                <p><strong>Player cue:</strong> Hit the roll, sprint out.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="x-out">
+              <p class="kt-term-name">X-out</p>
+              <p class="kt-term-def">Two defenders cross and exchange matchups on the fly to cover an open shooter and the next pass after rotation.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> X-outs save possessions after the ball beats the first help.</p>
+                <p><strong>Player cue:</strong> First takes first, second takes next.</p>
+              </div>
             </div>
             <div class="kt-term">
-              <p class="kt-term-name">Gap</p>
-              <p class="kt-term-def">Space between two offensive players. "In the gap" means positioned between your man and the ball to deter drives.</p>
+              <p class="kt-term-name">Scram switch</p>
+              <p class="kt-term-def">An off-ball switch that pulls a small defender out of a post mismatch after an earlier switch created a bad matchup.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Scram before the post entry, not after the catch is deep.</p>
+                <p><strong>Player cue:</strong> Get the guard out.</p>
+              </div>
             </div>
             <div class="kt-term">
-              <p class="kt-term-name">Nail</p>
-              <p class="kt-term-def">Help spot at the middle of the free-throw line where a defender stunts or helps on drives.</p>
+              <p class="kt-term-name">Shrink / Close the gap</p>
+              <p class="kt-term-def">All five defenders pull toward the paint when the ball is above the break, showing bodies to deter drives.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Shrink until the ball moves; do not camp in no-man's land.</p>
+                <p><strong>Player cue:</strong> Show a crowd.</p>
+              </div>
             </div>
             <div class="kt-term">
-              <p class="kt-term-name">Closeout</p>
-              <p class="kt-term-def">Sprinting from help back to your man on the catch, breaking down under control to contest without fouling.</p>
+              <p class="kt-term-name">Pack the paint</p>
+              <p class="kt-term-def">A five-player emphasis on keeping the ball out of the lane and forcing contested shots over the top.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Great against drivers, dangerous if shooters get rhythm threes.</p>
+                <p><strong>Player cue:</strong> No layups, contest out.</p>
+              </div>
+            </div>
+            <div class="kt-term kt-must" id="no-middle">
+              <p class="kt-term-name">No-middle</p>
+              <p class="kt-term-def">Team rule that forces drives toward the sideline or baseline and refuses straight-line attacks to the middle.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Angles matter more than effort; one bad hip opens the middle.</p>
+                <p><strong>Player cue:</strong> Top foot high, send it wide.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Ice the post</p>
+              <p class="kt-term-def">Fronting or three-quartering the post while help is loaded from a designated side to discourage deep catches.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The passer's pressure and backside help make the post ice work.</p>
+                <p><strong>Player cue:</strong> No deep catch.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Wall up</p>
+              <p class="kt-term-def">Verticality at the rim: chest up, arms straight, absorb contact, and contest without swiping down.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Make officials see legal vertical position.</p>
+                <p><strong>Player cue:</strong> Tall hands, still chest.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="kt-card" id="pressure-traps">
+          <div class="kt-card-header">
+            <h2>Pressure, Traps &amp; Full-Court Concepts</h2>
+            <span class="kt-tag">Pressure</span>
+          </div>
+          <div class="kt-terms">
+            <div class="kt-term">
+              <p class="kt-term-name">Contain press</p>
+              <p class="kt-term-def">Full- or three-quarter-court pressure designed to slow the offense and drain clock without heavy gambling.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Winning means pace disruption, not always a steal.</p>
+                <p><strong>Player cue:</strong> Turn them twice.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Run-and-jump</p>
+              <p class="kt-term-def">A full-court trap where the on-ball defender corrals the dribble and a second defender jumps to trap.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The trap must arrive while the dribble is alive.</p>
+                <p><strong>Player cue:</strong> Corral, jump, rotate.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Side trap / Corner trap</p>
+              <p class="kt-term-def">A two-player trap using the sideline or corner as an extra defender.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Feet seal escape routes; hands take away vision.</p>
+                <p><strong>Player cue:</strong> Boundary is our teammate.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Denial press</p>
+              <p class="kt-term-def">Pressure that takes away the inbound or first pass to force rushed entries, five-second calls, or catches in bad spots.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Denial must come with safety help behind it.</p>
+                <p><strong>Player cue:</strong> No easy catch.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Match-up press</p>
+              <p class="kt-term-def">A press that starts with man principles and can morph into a zone shape as the ball advances.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Players need rules for when to stay, pass off, and recover.</p>
+                <p><strong>Player cue:</strong> Match early, pass off clean.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Safety / Center fielder</p>
+              <p class="kt-term-def">The deep defender responsible for long passes behind the press and emergency rim protection.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> The safety prevents one gamble from becoming a layup.</p>
+                <p><strong>Player cue:</strong> Stay deeper than the deepest threat.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="kt-card" id="team-schemes">
+          <div class="kt-card-header">
+            <h2>Team Schemes &amp; Coverages</h2>
+            <span class="kt-tag">Systems</span>
+          </div>
+          <div class="kt-terms">
+            <div class="kt-term">
+              <p class="kt-term-name">Man-to-man</p>
+              <p class="kt-term-def">Each defender guards a specific offensive player, with team help rules behind the matchup.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Man defense still needs help, stunts, tags, and rotations.</p>
+                <p><strong>Player cue:</strong> Guard yours, help ours.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Zone defense</p>
+              <p class="kt-term-def">Defenders guard areas and responsibilities instead of one fixed matchup, such as 2-3, 3-2, 1-3-1, box-and-one, or triangle-and-two.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Zones break when players guard grass instead of threats.</p>
+                <p><strong>Player cue:</strong> Area first, player next.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Match-up zone</p>
+              <p class="kt-term-def">A zone that uses man-to-man principles, matching cutters, handing off assignments, and changing shape as the ball moves.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> It looks like zone but demands man-level communication.</p>
+                <p><strong>Player cue:</strong> Match, talk, pass off.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Ball-side / Weak-side I</p>
+              <p class="kt-term-def">Two help defenders stacked in the lane like an I, protecting the rim and drop-off passes.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Useful language for loaded help against spread drives.</p>
+                <p><strong>Player cue:</strong> High help, low help.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Shell drill</p>
+              <p class="kt-term-def">Core teaching drill for man defense that emphasizes ball pressure, help, closeouts, and communication.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Connect shell rules to live possessions every day.</p>
+                <p><strong>Player cue:</strong> Every pass moves all five.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Kill / Stop</p>
+              <p class="kt-term-def">A defensive possession that ends with no score; many programs call three stops in a row a kill.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Track stops as team momentum, not just opponent misses.</p>
+                <p><strong>Player cue:</strong> Finish the possession.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">No paint touch</p>
+              <p class="kt-term-def">Team standard that the ball cannot be dribbled or passed into the lane without a crowd, contest, or trap.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Paint touches are advantage creators even when they do not become shots.</p>
+                <p><strong>Player cue:</strong> Protect the lane first.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="kt-card" id="communication">
+          <div class="kt-card-header">
+            <h2>Communication &amp; Behavior</h2>
+            <span class="kt-tag">Talk</span>
+          </div>
+          <div class="kt-terms">
+            <div class="kt-term">
+              <p class="kt-term-name">Ball, Help, Gap</p>
+              <p class="kt-term-def">Simple defensive talk that names who is pressuring the ball, who is protecting the paint, and who is sitting in the driving gap.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> These three calls organize the floor before the action starts.</p>
+                <p><strong>Player cue:</strong> Say your job out loud.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Shot, Box out</p>
+              <p class="kt-term-def">The shot-release call that triggers contact first, then pursuit of the rebound.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Rebounding starts on the call, not when the ball hits the rim.</p>
+                <p><strong>Player cue:</strong> Hit, then go get.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Tag, Go, Switch</p>
+              <p class="kt-term-def">Short rotation commands used on screens, rolls, drives, and scramble situations.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> One-syllable calls travel faster during chaos.</p>
+                <p><strong>Player cue:</strong> Command, then move.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Early, Loud, Continuous</p>
+              <p class="kt-term-def">The standard for defensive talking: communicate before the action, with enough volume to be heard, and keep talking through the possession.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Late talk is usually just a description of a mistake.</p>
+                <p><strong>Player cue:</strong> Talk before they cut.</p>
+              </div>
+            </div>
+            <div class="kt-term">
+              <p class="kt-term-name">Next</p>
+              <p class="kt-term-def">Call that the next defender in the rotation is taking a cutter, ballhandler, or open threat in a scramble.</p>
+              <div class="kt-term-detail">
+                <p><strong>Coach point:</strong> Next keeps the defense connected when the first plan breaks.</p>
+                <p><strong>Player cue:</strong> I have the next problem.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -113,93 +657,6 @@
             <div class="kt-term">
               <p class="kt-term-name">Hit-and-go-get</p>
               <p class="kt-term-def">Make contact first (hit), then pursue the ball. Emphasis phrase for contested rebounding situations.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="kt-card" id="pick-and-roll">
-          <div class="kt-card-header">
-            <h2>Pick-and-Roll Defense</h2>
-            <span class="kt-tag">Coverages</span>
-          </div>
-          <div class="kt-terms">
-            <div class="kt-term">
-              <p class="kt-term-name">Ice / Down</p>
-              <p class="kt-term-def">On side ball screens, force the ball handler toward the baseline — away from the screen — with help set to contain. Ice and Down are used interchangeably by most programs.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Drop</p>
-              <p class="kt-term-def">Big stays back near the paint, keeping the ball in front and watching the roller while the guard fights over the screen. The default coverage for most HS programs.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Switch</p>
-              <p class="kt-term-def">Guard and big exchange assignments on the screen. Clean to execute but creates mismatch exposure.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Blitz / Trap</p>
-              <p class="kt-term-def">Two defenders double the ball off the screen to force a quick pass or turnover. High risk, high reward.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Tag the roller</p>
-              <p class="kt-term-def">Help defender bodies the roller to slow their cut to the rim, then recovers back to their assignment.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="kt-card" id="help-rotations">
-          <div class="kt-card-header">
-            <h2>Help, Stunts &amp; Rotations</h2>
-            <span class="kt-tag">Help-side</span>
-          </div>
-          <div class="kt-terms">
-            <div class="kt-term">
-              <p class="kt-term-name">Stunt</p>
-              <p class="kt-term-def">Quick fake help step at the ball — often with a swipe — to slow a drive or pass, then immediate recovery back to your player.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Dig</p>
-              <p class="kt-term-def">Short, hard reach-in from a perimeter defender to disrupt a dribble (usually on post entries), then recover out before the kick-out comes.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Low man</p>
-              <p class="kt-term-def">Lowest weak-side defender responsible for protecting the rim and tagging rollers when help is pulled.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">X-out</p>
-              <p class="kt-term-def">Two defenders rotate and switch on the weak side, crossing paths to cover multiple shooters after a kick-out pass.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Load to the ball</p>
-              <p class="kt-term-def">Whole defense shifts toward the ball side, packing the paint and reducing weak-side threats.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="kt-card" id="off-ball-screens">
-          <div class="kt-card-header">
-            <h2>Off-Ball Screens</h2>
-            <span class="kt-tag">Actions</span>
-          </div>
-          <div class="kt-terms">
-            <div class="kt-term">
-              <p class="kt-term-name">Down screen / Pin down</p>
-              <p class="kt-term-def">Screen set for a teammate moving from low to high — e.g., from the block to the wing.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Back screen</p>
-              <p class="kt-term-def">Screen on a defender's back to free a cutter going toward the rim.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Flare screen</p>
-              <p class="kt-term-def">Screen that sends the cutter away from the ball to the perimeter for a catch-and-shoot.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Cross screen</p>
-              <p class="kt-term-def">Screen across the lane — often big-to-big — to free a post player on the opposite block.</p>
-            </div>
-            <div class="kt-term">
-              <p class="kt-term-name">Slip</p>
-              <p class="kt-term-def">Screener fakes contact and cuts to the rim early when defenders top-lock, switch, or over-help on the screen.</p>
             </div>
           </div>
         </section>
@@ -291,6 +748,18 @@
     </div>
   </main>
   <div data-shared-footer></div>
+  <div class="kt-modal" id="diagram-modal" aria-hidden="true">
+    <div class="kt-modal-panel" role="dialog" aria-modal="true" aria-labelledby="diagram-title">
+      <div class="kt-modal-head">
+        <div>
+          <h2 class="kt-modal-title" id="diagram-title">Term Diagram</h2>
+          <p class="kt-modal-note" id="diagram-note">Static teaching diagram.</p>
+        </div>
+        <button class="kt-modal-close" type="button" aria-label="Close diagram">&times;</button>
+      </div>
+      <div class="kt-diagram" id="diagram-body"></div>
+    </div>
+  </div>
   <script>
     const sections = document.querySelectorAll('.kt-card[id]');
     const navBtns = document.querySelectorAll('.kt-nav-btn');
@@ -302,6 +771,194 @@
       });
     }, { rootMargin: '-10% 0px -75% 0px' });
     sections.forEach(s => observer.observe(s));
+
+    const diagramModal = document.querySelector('#diagram-modal');
+    const diagramTitle = document.querySelector('#diagram-title');
+    const diagramNote = document.querySelector('#diagram-note');
+    const diagramBody = document.querySelector('#diagram-body');
+    const diagramClose = document.querySelector('.kt-modal-close');
+    let lastDiagramButton = null;
+
+    const normalizeTerm = (text) => text.toLowerCase().replace(/\s+/g, ' ').trim();
+
+    const getDiagramType = (term, sectionId) => {
+      const t = normalizeTerm(term);
+      if (/(screen|hedge|blitz|trap|switch|drop|ice|down|under|over|short roll|slip|top-lock|trail|stagger|flare|pin|cross)/.test(t)) return 'screen';
+      if (/(tag|x-out|scram|help|gap|shrink|pack|no-middle|wall|low man|load|strong side|weak side|paint touch)/.test(t)) return 'help';
+      if (/(press|run-and-jump|safety|center fielder|denial)/.test(t)) return 'pressure';
+      if (/(zone|man-to-man|match-up|shell|kill|stop|no paint)/.test(t) || sectionId === 'team-schemes') return 'scheme';
+      if (/(box|crash|release|hit-and-go-get|rebound)/.test(t) || sectionId === 'rebounding') return 'rebound';
+      if (/(transition|break|kick-ahead|advantage|disadvantage)/.test(t) || sectionId === 'transition') return 'transition';
+      if (/(5-out|4-out|drive-and-kick|corner spacing|45)/.test(t) || sectionId === 'offensive-spacing') return 'spacing';
+      return 'foundation';
+    };
+
+    const diagramNoteFor = (type, term) => {
+      const notes = {
+        foundation: 'Static stance and angle picture: defender keeps the ball out of the middle and protects the lane first.',
+        screen: 'Static screen-coverage picture: the thick block is the screen, dashed lines show player paths, and the blue defender line shows the coverage response.',
+        help: 'Static help-and-rotation picture: blue defenders shrink, tag, or exchange while orange offense threatens the paint and kick-out.',
+        pressure: 'Static pressure picture: two defenders use the sideline as an extra defender while the safety protects behind the play.',
+        scheme: 'Static team-shape picture: defenders are arranged by responsibility so players can see spacing, help, and coverage zones.',
+        rebound: 'Static rebounding picture: contact happens first, then players pursue the ball path.',
+        transition: 'Static transition picture: the ball moves ahead, lanes fill wide, and the defense organizes from disadvantage.',
+        spacing: 'Static spacing picture: the offense stretches the floor, then attacks the gap to create a help decision.'
+      };
+      return notes[type] || notes.foundation;
+    };
+
+    const player = (x, y, label, team = 'defense') => {
+      const fill = team === 'offense' ? '#fb923c' : '#60a5fa';
+      const stroke = team === 'offense' ? '#9a3412' : '#1d4ed8';
+      return `<g><circle cx="${x}" cy="${y}" r="18" fill="${fill}" stroke="${stroke}" stroke-width="3"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="13" font-weight="900" fill="#111827">${label}</text></g>`;
+    };
+
+    const label = (x, y, text) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="15" font-weight="900" fill="#1c1917">${text}</text>`;
+    const path = (d, color = '#2563eb', dashed = true) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ${dashed ? 'stroke-dasharray="10 8"' : ''} marker-end="url(#arrow)"/>`;
+    const screen = (x, y, rotate = 0) => `<rect x="${x}" y="${y}" width="12" height="58" rx="5" fill="#92400e" transform="rotate(${rotate} ${x + 6} ${y + 29})"/><path d="M${x - 12} ${y + 9} q10 8 0 16 q-10 8 0 16 q10 8 0 16" fill="none" stroke="#92400e" stroke-width="3" stroke-linecap="round"/>`;
+
+    const courtShell = (inner) => `
+      <svg viewBox="0 0 640 420" role="img" aria-label="Static basketball teaching diagram">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#2563eb"></path>
+          </marker>
+          <pattern id="dashShade" width="8" height="8" patternUnits="userSpaceOnUse">
+            <path d="M0 8 L8 0" stroke="#fed7aa" stroke-width="2"></path>
+          </pattern>
+        </defs>
+        <rect x="20" y="20" width="600" height="380" rx="10" fill="#fff" stroke="#d6d3d1" stroke-width="3"/>
+        <line x1="320" y1="20" x2="320" y2="400" stroke="#e7e5e4" stroke-width="2"/>
+        <rect x="245" y="20" width="150" height="130" fill="none" stroke="#d6d3d1" stroke-width="3"/>
+        <circle cx="320" cy="150" r="58" fill="none" stroke="#e7e5e4" stroke-width="3"/>
+        <path d="M190 20 C210 118 430 118 450 20" fill="none" stroke="#e7e5e4" stroke-width="3"/>
+        <circle cx="320" cy="42" r="21" fill="none" stroke="#d6d3d1" stroke-width="3"/>
+        ${inner}
+      </svg>
+      <div class="kt-diagram-key">
+        <span><i class="kt-key-dot offense"></i>Offense</span>
+        <span><i class="kt-key-dot"></i>Defense</span>
+        <span><i class="kt-key-line"></i>Movement / help path</span>
+        <span><i class="kt-key-screen"></i>Screen</span>
+      </div>`;
+
+    const diagramSvg = (type, term) => {
+      if (type === 'screen') {
+        return courtShell(`
+          ${player(250, 245, 'O1', 'offense')}${player(330, 230, 'O5', 'offense')}${player(238, 285, 'D1')}${player(360, 205, 'D5')}
+          ${screen(306, 210, -20)}
+          ${path('M250 245 C285 220 310 215 350 225', '#ea580c')}
+          ${path('M360 205 C330 210 306 230 292 260', '#2563eb')}
+          ${path('M238 285 C265 260 295 245 332 238', '#2563eb')}
+          ${label(320, 342, 'Screen action: talk early, show the coverage, recover')}
+        `);
+      }
+      if (type === 'help') {
+        return courtShell(`
+          <rect x="245" y="20" width="150" height="130" fill="url(#dashShade)" opacity=".65"/>
+          ${player(170, 235, 'O1', 'offense')}${player(430, 205, 'O2', 'offense')}${player(320, 115, 'O5', 'offense')}
+          ${player(180, 282, 'D1')}${player(350, 205, 'D2')}${player(300, 150, 'D5')}${player(435, 275, 'D3')}
+          ${path('M170 235 C220 195 270 160 320 125', '#ea580c')}
+          ${path('M350 205 C325 185 310 165 300 150', '#2563eb')}
+          ${path('M435 275 C410 235 380 215 350 205', '#2563eb')}
+          ${label(320, 342, 'Help picture: shrink, tag, then recover to the next threat')}
+        `);
+      }
+      if (type === 'pressure') {
+        return courtShell(`
+          ${player(92, 300, 'O1', 'offense')}${player(112, 250, 'D1')}${player(75, 350, 'D2')}${player(270, 95, 'D5')}${player(215, 265, 'O2', 'offense')}
+          <line x1="20" y1="210" x2="250" y2="400" stroke="#fed7aa" stroke-width="9" stroke-linecap="round" opacity=".75"/>
+          ${path('M112 250 C98 270 92 288 92 300', '#2563eb')}
+          ${path('M75 350 C85 330 90 314 92 300', '#2563eb')}
+          ${path('M92 300 C138 280 180 270 215 265', '#ea580c')}
+          ${label(330, 342, 'Trap picture: boundary helps, nearest defenders rotate, safety stays deep')}
+        `);
+      }
+      if (type === 'scheme') {
+        return courtShell(`
+          <path d="M210 65 L430 65 L500 250 L320 340 L140 250 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="3" opacity=".75"/>
+          ${player(320, 90, 'D5')}${player(220, 150, 'D3')}${player(420, 150, 'D4')}${player(225, 285, 'D1')}${player(415, 285, 'D2')}
+          ${player(320, 45, 'O5', 'offense')}${player(170, 220, 'O1', 'offense')}${player(470, 220, 'O2', 'offense')}
+          ${path('M170 220 C230 180 270 120 320 90', '#2563eb')}
+          ${label(320, 365, 'Team shape: guard your area or matchup, then help the next action')}
+        `);
+      }
+      if (type === 'rebound') {
+        return courtShell(`
+          ${player(260, 125, 'O5', 'offense')}${player(285, 165, 'D5')}${player(370, 150, 'O3', 'offense')}${player(392, 190, 'D3')}
+          ${path('M390 70 C370 85 350 98 330 118', '#ea580c')}
+          ${path('M285 165 C278 148 270 134 260 125', '#2563eb', false)}
+          ${path('M392 190 C384 170 376 158 370 150', '#2563eb', false)}
+          ${label(320, 342, 'Rebound picture: hit first, seal space, then pursue the ball')}
+        `);
+      }
+      if (type === 'transition') {
+        return courtShell(`
+          ${player(135, 310, 'O1', 'offense')}${player(250, 245, 'O2', 'offense')}${player(390, 145, 'O3', 'offense')}
+          ${player(210, 300, 'D1')}${player(320, 250, 'D2')}${player(395, 205, 'D3')}
+          ${path('M135 310 C210 265 295 205 390 145', '#ea580c')}
+          ${path('M210 300 C260 270 310 235 395 205', '#2563eb')}
+          ${label(320, 342, 'Transition picture: advance the ball, fill lanes, stop the rim first')}
+        `);
+      }
+      if (type === 'spacing') {
+        return courtShell(`
+          ${player(160, 300, 'O1', 'offense')}${player(205, 80, 'O2', 'offense')}${player(435, 80, 'O3', 'offense')}${player(480, 300, 'O4', 'offense')}${player(320, 185, 'O5', 'offense')}
+          ${player(210, 250, 'D1')}${player(320, 145, 'D5')}${player(430, 245, 'D4')}
+          ${path('M160 300 C215 250 260 210 320 185', '#ea580c')}
+          ${path('M320 145 C290 170 270 195 250 225', '#2563eb')}
+          ${path('M320 185 C365 145 400 105 435 80', '#ea580c')}
+          ${label(320, 352, 'Spacing picture: wide threats create a gap, the drive forces help')}
+        `);
+      }
+      return courtShell(`
+        ${player(235, 260, 'O1', 'offense')}${player(250, 310, 'D1')}${player(390, 185, 'O2', 'offense')}${player(330, 205, 'D2')}
+        <path d="M235 260 C275 225 305 185 320 140" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round" opacity=".28"/>
+        ${path('M250 310 C255 285 250 270 235 260', '#2563eb', false)}
+        ${path('M330 205 C300 195 285 178 275 150', '#2563eb')}
+        ${label(320, 342, 'Foundation picture: contain the ball, close the lane, show early help')}
+      `);
+    };
+
+    const openDiagram = (button, term, sectionId) => {
+      const type = getDiagramType(term, sectionId);
+      lastDiagramButton = button;
+      diagramTitle.textContent = term;
+      diagramNote.textContent = diagramNoteFor(type, term);
+      diagramBody.innerHTML = diagramSvg(type, term);
+      diagramModal.classList.add('open');
+      diagramModal.setAttribute('aria-hidden', 'false');
+      diagramClose.focus();
+    };
+
+    const closeDiagram = () => {
+      diagramModal.classList.remove('open');
+      diagramModal.setAttribute('aria-hidden', 'true');
+      diagramBody.innerHTML = '';
+      if (lastDiagramButton) lastDiagramButton.focus();
+    };
+
+    document.querySelectorAll('.kt-term').forEach((termEl) => {
+      const nameEl = termEl.querySelector('.kt-term-name');
+      if (!nameEl || nameEl.querySelector('.kt-view-btn')) return;
+      const term = nameEl.childNodes[0].textContent.trim();
+      const sectionId = termEl.closest('.kt-card[id]')?.id || '';
+      const button = document.createElement('button');
+      button.className = 'kt-view-btn';
+      button.type = 'button';
+      button.textContent = 'View';
+      button.setAttribute('aria-label', `View diagram for ${term}`);
+      button.addEventListener('click', () => openDiagram(button, term, sectionId));
+      nameEl.appendChild(button);
+    });
+
+    diagramClose.addEventListener('click', closeDiagram);
+    diagramModal.addEventListener('click', (event) => {
+      if (event.target === diagramModal) closeDiagram();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && diagramModal.classList.contains('open')) closeDiagram();
+    });
   </script>
   <script src="../shared-nav.js"></script>
 <!-- cloudflare-pages-refresh: 2026-05-27 -->
