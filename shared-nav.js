@@ -1,6 +1,6 @@
 (function () {
-  const isSubpage = /\/(offensive-key-actions|grinnell-tracker|offense-guide|defense-guide|key-terms|recruiting|learning)\//.test(location.pathname);
-  const pathPrefix = isSubpage ? '../' : '';
+  var depth = location.pathname.split('/').filter(Boolean).length;
+  var pathPrefix = depth > 0 ? '../'.repeat(depth) : '';
 
   const navEl = document.querySelector('[data-shared-nav]');
   if (navEl) {

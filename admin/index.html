@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Wake Up &amp; Produce</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+    .adm-page { width: min(680px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 72px; }
+
+    .adm-eyebrow { color: var(--site-accent-strong); font-size: .74rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .adm-hero { margin-bottom: 32px; }
+    .adm-hero h1 { margin: 8px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+
+    /* Token gate */
+    .adm-gate { border: 1px solid var(--site-border); border-radius: 8px; background: #fff; padding: 32px; box-shadow: 0 1px 4px rgba(28,25,23,.06); }
+    .adm-gate h2 { margin: 0 0 20px; font-size: .9rem; font-weight: 900; }
+
+    /* Shared form elements */
+    .adm-field { margin-bottom: 14px; }
+    .adm-label { display: block; font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--site-subtle); margin-bottom: 5px; }
+    .adm-input { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--site-border-strong); border-radius: 8px; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); font-size: .9rem; outline: none; transition: border-color .15s; }
+    .adm-input:focus { border-color: var(--site-accent); box-shadow: 0 0 0 3px rgba(249,115,22,.12); }
+
+    .adm-btn { display: inline-flex; align-items: center; min-height: 38px; padding: 0 18px; border-radius: 8px; border: none; font-family: var(--site-font); font-size: .82rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background .15s; }
+    .adm-btn-primary { background: var(--site-accent); color: #fff; }
+    .adm-btn-primary:hover { background: var(--site-accent-strong); }
+    .adm-btn-danger { background: transparent; color: #dc2626; border: 1px solid #fca5a5; }
+    .adm-btn-danger:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .adm-btn-ghost { background: #fff; color: var(--site-muted); border: 1px solid var(--site-border-strong); }
+    .adm-btn-ghost:hover { color: var(--site-text); border-color: var(--site-border-strong); }
+
+    .adm-status { font-size: .82rem; margin-top: 10px; padding: 10px 14px; border-radius: 8px; display: none; }
+    .adm-status.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .adm-status.error   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+    /* Main panels */
+    #adm-main { display: none; }
+    .adm-panels { display: flex; flex-direction: column; gap: 16px; }
+    .adm-panel { border: 1px solid var(--site-border); border-radius: 8px; background: #fff; padding: 24px; box-shadow: 0 1px 2px rgba(28,25,23,.04); }
+    .adm-panel-title { font-size: .74rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--site-subtle); margin: 0 0 18px; }
+
+    /* Free access list */
+    .adm-list { margin-top: 16px; display: flex; flex-direction: column; }
+    .adm-list-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--site-border); }
+    .adm-list-item:last-child { border-bottom: none; }
+    .adm-list-email { flex: 1; font-size: .88rem; font-weight: 700; color: var(--site-text); }
+    .adm-list-note { font-size: .78rem; color: var(--site-muted); }
+    .adm-list-date { font-size: .74rem; color: var(--site-subtle); white-space: nowrap; }
+    .adm-list-empty { font-size: .84rem; color: var(--site-muted); padding: 12px 0; }
+
+    .adm-row { display: flex; gap: 10px; align-items: flex-end; }
+    .adm-row .adm-field { flex: 1; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <main class="adm-page">
+
+    <header class="adm-hero">
+      <p class="adm-eyebrow">Wake Up &amp; Produce</p>
+      <h1>Access Admin</h1>
+    </header>
+
+    <!-- Token gate -->
+    <div id="adm-gate" class="adm-gate">
+      <h2>Enter your admin token to continue</h2>
+      <div class="adm-field">
+        <label class="adm-label" for="token-input">Admin Token</label>
+        <input class="adm-input" type="password" id="token-input" placeholder="Paste your admin token" autocomplete="off">
+      </div>
+      <button class="adm-btn adm-btn-primary" onclick="unlock()">Unlock</button>
+      <div id="token-error" class="adm-status error"></div>
+    </div>
+
+    <!-- Main UI (shown after token verified) -->
+    <div id="adm-main">
+      <div class="adm-panels">
+
+        <!-- Grant -->
+        <div class="adm-panel">
+          <p class="adm-panel-title">Grant Free Access</p>
+          <div class="adm-field">
+            <label class="adm-label" for="grant-email">Email Address</label>
+            <input class="adm-input" type="email" id="grant-email" placeholder="coach@example.com">
+          </div>
+          <div class="adm-field">
+            <label class="adm-label" for="grant-note">Note <span style="font-weight:500;text-transform:none;letter-spacing:0">(optional)</span></label>
+            <input class="adm-input" type="text" id="grant-note" placeholder="e.g. ALSD conference, friend, promo">
+          </div>
+          <button class="adm-btn adm-btn-primary" onclick="grantAccess()">Grant Access</button>
+          <div id="grant-status" class="adm-status"></div>
+        </div>
+
+        <!-- Revoke -->
+        <div class="adm-panel">
+          <p class="adm-panel-title">Revoke Access</p>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label" for="revoke-email">Email Address</label>
+              <input class="adm-input" type="email" id="revoke-email" placeholder="coach@example.com">
+            </div>
+            <button class="adm-btn adm-btn-danger" onclick="revokeAccess()" style="flex-shrink:0">Revoke</button>
+          </div>
+          <div id="revoke-status" class="adm-status"></div>
+        </div>
+
+        <!-- List -->
+        <div class="adm-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px">
+            <p class="adm-panel-title" style="margin:0">Free Access Accounts</p>
+            <button class="adm-btn adm-btn-ghost" onclick="loadList()" style="font-size:.72rem;min-height:32px;padding:0 12px">Refresh</button>
+          </div>
+          <div id="free-list" class="adm-list">
+            <p class="adm-list-empty">Loading…</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const API = '/api/grant-access';
+    let ADMIN_TOKEN = '';
+
+    async function unlock() {
+      const token = document.getElementById('token-input').value.trim();
+      if (!token) return;
+
+      const res = await fetch(`${API}?list=1`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status === 401) {
+        showStatus('token-error', 'Invalid token.', 'error');
+        return;
+      }
+
+      ADMIN_TOKEN = token;
+      document.getElementById('adm-gate').style.display = 'none';
+      document.getElementById('adm-main').style.display = 'block';
+      loadList();
+    }
+
+    document.getElementById('token-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') unlock();
+    });
+
+    async function grantAccess() {
+      const email = document.getElementById('grant-email').value.trim();
+      const note  = document.getElementById('grant-note').value.trim();
+      if (!email) return;
+
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ADMIN_TOKEN}` },
+        body: JSON.stringify({ email, note }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        showStatus('grant-status', `Access granted: ${data.email}`, 'success');
+        document.getElementById('grant-email').value = '';
+        document.getElementById('grant-note').value = '';
+        loadList();
+      } else {
+        showStatus('grant-status', data.error || 'Error', 'error');
+      }
+    }
+
+    async function revokeAccess() {
+      const email = document.getElementById('revoke-email').value.trim();
+      if (!email) return;
+
+      const res = await fetch(API, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ADMIN_TOKEN}` },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        showStatus('revoke-status', `Access revoked: ${data.revoked}`, 'success');
+        document.getElementById('revoke-email').value = '';
+        loadList();
+      } else {
+        showStatus('revoke-status', data.error || 'Error', 'error');
+      }
+    }
+
+    async function loadList() {
+      const res = await fetch(`${API}?list=1`, {
+        headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
+      });
+
+      const data = await res.json();
+      const list = document.getElementById('free-list');
+
+      if (!data.free_access || data.free_access.length === 0) {
+        list.innerHTML = '<p class="adm-list-empty">No free access accounts yet.</p>';
+        return;
+      }
+
+      list.innerHTML = data.free_access.map(entry => {
+        const email = entry.email || '';
+        const note = entry.note || '';
+        const date = entry.granted_at ? entry.granted_at.split('T')[0] : '';
+        return `<div class="adm-list-item">
+          <div style="flex:1;min-width:0">
+            <div class="adm-list-email">${escHtml(email)}</div>
+            ${note ? `<div class="adm-list-note">${escHtml(note)}</div>` : ''}
+          </div>
+          <div class="adm-list-date">${escHtml(date)}</div>
+          <button class="adm-btn adm-btn-danger" style="min-height:32px;padding:0 12px;font-size:.72rem" data-email="${escAttr(email)}" onclick="quickRevoke(this)">Revoke</button>
+        </div>`;
+      }).join('');
+    }
+
+    async function quickRevoke(btn) {
+      const email = btn.dataset.email;
+      if (!confirm(`Revoke access for ${email}?`)) return;
+      document.getElementById('revoke-email').value = email;
+      await revokeAccess();
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function escAttr(s) {
+      return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    function showStatus(id, message, type) {
+      const el = document.getElementById(id);
+      el.textContent = message;
+      el.className = `adm-status ${type}`;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Access · Wake Up &amp; Produce</title>
+  <meta name="description" content="Get full access to the Wake Up &amp; Produce interactive basketball coaching tool suite.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+    .ac-page { width: min(900px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 72px; }
+    .eyebrow { color: var(--site-accent-strong); font-size: .74rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .ac-hero { text-align: center; margin-bottom: 48px; }
+    .ac-hero h1 { margin: 10px auto 14px; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.025em; max-width: 640px; }
+    .ac-hero h1 em { color: var(--site-accent); font-style: normal; }
+    .ac-hero p { max-width: 560px; margin: 0 auto; color: var(--site-muted); font-size: 0.95rem; line-height: 1.7; }
+
+    .ac-tools { margin-bottom: 48px; }
+    .ac-tools-label { font-size: .78rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--site-subtle); margin-bottom: 14px; }
+    .ac-tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; border: 1px solid var(--site-border-strong); border-radius: 8px; overflow: hidden; background: var(--site-border-strong); }
+    .ac-tool { background: #fff; padding: 20px 22px; }
+    .ac-tool-tag { font-size: .68rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; }
+    .ac-tool-tag.free { color: #16a34a; }
+    .ac-tool-tag.included { color: var(--site-accent-strong); }
+    .ac-tool-name { font-size: .95rem; font-weight: 800; color: var(--site-text); margin-bottom: 4px; line-height: 1.3; }
+    .ac-tool-sub { font-size: .78rem; color: var(--site-muted); line-height: 1.5; }
+
+    .ac-pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; margin-bottom: 32px; }
+    .ac-price-card { border: 1px solid var(--site-border-strong); border-radius: 8px; background: #fff; padding: 32px; box-shadow: 0 2px 8px rgba(28,25,23,.06); }
+    .ac-price-amount { font-size: 3rem; font-weight: 800; color: var(--site-text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+    .ac-price-amount sup { font-size: 1.4rem; vertical-align: super; font-weight: 700; }
+    .ac-price-term { font-size: .82rem; color: var(--site-muted); font-weight: 600; margin-bottom: 28px; }
+    .ac-cta { display: block; width: 100%; padding: 14px 20px; background: var(--site-accent); color: #fff; font-family: var(--site-font); font-size: .88rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; text-align: center; border-radius: 8px; border: none; cursor: pointer; transition: background 0.15s ease; }
+    .ac-cta:hover { background: var(--site-accent-strong); }
+    .ac-guarantee { margin-top: 16px; font-size: .78rem; color: var(--site-muted); line-height: 1.65; }
+    .ac-guarantee a { color: var(--site-accent-strong); text-decoration: none; }
+    .ac-guarantee a:hover { text-decoration: underline; }
+
+    .ac-what { border: 1px solid var(--site-border); border-radius: 8px; background: #fff; padding: 28px 28px 24px; }
+    .ac-what h2 { margin: 0 0 16px; font-size: 1rem; font-weight: 900; }
+    .ac-what ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .ac-what li { display: flex; gap: 10px; font-size: .88rem; color: var(--site-muted); line-height: 1.5; }
+    .ac-what li::before { content: "—"; color: var(--site-accent); font-weight: 900; flex-shrink: 0; }
+    .ac-what li strong { color: var(--site-text); }
+
+    .ac-free-note { text-align: center; font-size: .82rem; color: var(--site-muted); margin-top: 32px; }
+    .ac-free-note a { color: var(--site-accent-strong); text-decoration: none; }
+    .ac-free-note a:hover { text-decoration: underline; }
+
+    @media (max-width: 720px) {
+      .ac-pricing { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div data-shared-nav></div>
+  <main class="ac-page">
+
+    <header class="ac-hero">
+      <p class="eyebrow">Full Access</p>
+      <h1>Tools for coaches who think in <em>systems</em></h1>
+      <p>Animated court diagrams, layer-by-layer breakdowns, and decision frameworks for offensive and defensive systems. Built for high school and college coaches.</p>
+    </header>
+
+    <div class="ac-tools">
+      <p class="ac-tools-label">What's included</p>
+      <div class="ac-tools-grid">
+        <div class="ac-tool">
+          <div class="ac-tool-tag free">Free</div>
+          <div class="ac-tool-name">Interactive Offense Guide</div>
+          <div class="ac-tool-sub">Read &amp; React · Grinnell · Traditional Motion</div>
+        </div>
+        <div class="ac-tool">
+          <div class="ac-tool-tag included">Included</div>
+          <div class="ac-tool-name">Interactive Defense Guide</div>
+          <div class="ac-tool-sub">Man · Zone · Press · Junk + Decision Guide</div>
+        </div>
+        <div class="ac-tool">
+          <div class="ac-tool-tag included">Included</div>
+          <div class="ac-tool-name">Offensive Key Actions</div>
+          <div class="ac-tool-sub">10 actions · animated schematics · reads &amp; counters</div>
+        </div>
+        <div class="ac-tool">
+          <div class="ac-tool-tag included">Included</div>
+          <div class="ac-tool-name">Grinnell System Tracker</div>
+          <div class="ac-tool-sub">Win probability calculator · pace &amp; possession math</div>
+        </div>
+        <div class="ac-tool">
+          <div class="ac-tool-tag included">Included</div>
+          <div class="ac-tool-name">Key Terms</div>
+          <div class="ac-tool-sub">Shared language for coverages, screens, spacing &amp; transition</div>
+        </div>
+        <div class="ac-tool">
+          <div class="ac-tool-tag included">Included</div>
+          <div class="ac-tool-name">Differential Learning</div>
+          <div class="ac-tool-sub">Principles for building adaptable, game-ready players</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-pricing">
+      <div class="ac-price-card">
+        <div class="ac-price-amount"><sup>$</sup>29</div>
+        <div class="ac-price-term">One-time · Lifetime access · All future tools included</div>
+        <!-- Replace href with your Stripe Payment Link URL -->
+        <a class="ac-cta" href="https://buy.stripe.com/YOUR_PAYMENT_LINK">Get Full Access</a>
+        <p class="ac-guarantee">
+          Pay once. Access everything current and future.<br>
+          Questions? <a href="mailto:hello@wakeupandproduce.com">hello@wakeupandproduce.com</a>
+        </p>
+      </div>
+
+      <div class="ac-what">
+        <h2>How access works</h2>
+        <ul>
+          <li><strong>Enter your email</strong> — Cloudflare sends a one-time login code. No password, no account to create.</li>
+          <li><strong>Code is verified against your purchase</strong> — if your email matches a completed Stripe payment, you're in.</li>
+          <li><strong>30-day session</strong> — you won't be asked to log in again for a month.</li>
+          <li><strong>Any device</strong> — log in from your phone on the bench or your laptop in the film room.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="ac-free-note">
+      Not ready yet? <a href="../offense-guide/">Try the free Interactive Offense Guide first →</a>
+    </p>
+
+  </main>
+  <div data-shared-footer></div>
+  <script src="../shared-nav.js"></script>
+</body>
+</html>

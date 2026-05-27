@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're In · Wake Up &amp; Produce</title>
+  <meta name="description" content="Payment confirmed. You now have full access to Wake Up &amp; Produce.">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+    .ty-page { width: min(640px, calc(100% - 32px)); margin: 0 auto; padding: 72px 0 72px; text-align: center; }
+    .ty-check { width: 56px; height: 56px; border-radius: 999px; background: #dcfce7; border: 2px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: 1.4rem; }
+    .eyebrow { color: var(--site-accent-strong); font-size: .74rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 10px; }
+    .ty-page h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 14px; }
+    .ty-page p { color: var(--site-muted); font-size: .95rem; line-height: 1.7; margin: 0 0 32px; }
+    .ty-note { background: #fff; border: 1px solid var(--site-border); border-radius: 8px; padding: 20px 24px; margin-bottom: 36px; text-align: left; font-size: .88rem; color: var(--site-muted); line-height: 1.65; }
+    .ty-note strong { color: var(--site-text); }
+    .ty-links { display: flex; flex-direction: column; gap: 10px; }
+    .ty-link { display: block; border: 1px solid var(--site-border); border-radius: 8px; background: #fff; padding: 16px 20px; text-decoration: none; color: var(--site-text); text-align: left; transition: border-color 0.15s, background 0.15s; }
+    .ty-link:hover { border-color: rgba(249,115,22,.4); background: #fff7ed; }
+    .ty-link-tag { font-size: .68rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--site-accent-strong); margin-bottom: 4px; }
+    .ty-link-name { font-size: .95rem; font-weight: 800; }
+    .ty-link-sub { font-size: .78rem; color: var(--site-muted); margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <div data-shared-nav></div>
+  <main class="ty-page">
+
+    <div class="ty-check">✓</div>
+    <p class="eyebrow">Payment confirmed</p>
+    <h1>You're in.</h1>
+    <p>Your access is active. The next time you visit a protected tool, enter your email and you'll receive a one-time login code — no password needed.</p>
+
+    <div class="ty-note">
+      <strong>How to log in:</strong> Visit any tool below. Cloudflare will ask for your email address and send a short code. Enter it and you'll have a 30-day session — no repeat logins from the same device.
+    </div>
+
+    <div class="ty-links">
+      <a href="../../defense-guide/" class="ty-link">
+        <div class="ty-link-tag">Start Here</div>
+        <div class="ty-link-name">Interactive Defense Guide</div>
+        <div class="ty-link-sub">Man, zone, press, and junk defenses with animations and a decision guide</div>
+      </a>
+      <a href="../../offensive-key-actions/" class="ty-link">
+        <div class="ty-link-tag">Offense</div>
+        <div class="ty-link-name">Offensive Key Actions</div>
+        <div class="ty-link-sub">10 core actions with animated schematics, reads, and counters</div>
+      </a>
+      <a href="../../grinnell-tracker/" class="ty-link">
+        <div class="ty-link-tag">Tool</div>
+        <div class="ty-link-name">Grinnell System Tracker</div>
+        <div class="ty-link-sub">Win probability calculator built on Grinnell pace and possession principles</div>
+      </a>
+    </div>
+
+  </main>
+  <div data-shared-footer></div>
+  <script src="../../shared-nav.js"></script>
+</body>
+</html>
