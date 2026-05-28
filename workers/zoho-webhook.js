@@ -7,7 +7,8 @@
  *   Variable name: PAID_USERS
  *
  * Required secret (encrypted environment variable):
- *   ZOHO_WEBHOOK_SECRET — from Zoho Payments > Settings > Webhooks > Signing Secret
+ *   ZOHO_WEBHOOK_SECRET — either the native Zoho webhook signing secret, or a
+ *   shared secret you also send as x-wup-webhook-secret from a Zoho workflow action
  *
  * Zoho Payments events to enable on the webhook endpoint:
  *   payment.captured   (successful one-time payment)
@@ -50,14 +51,8 @@ export default {
     }
 
     const body = await request.text();
-    const signature = request.headers.get('x-zoho-signature');
-
-    if (!signature) {
-      return new Response('Missing x-zoho-signature header', { status: 400 });
-    }
-
     try {
-      await verifyZohoWebhook(body, signature, env.ZOHO_WEBHOOK_SECRET);
+      await verifyZohoWebhook(body, request, env.ZOHO_WEBHOOK_SECRET);
     } catch (err) {
       console.error('Webhook verification failed:', err.message);
       return new Response(`Webhook Error: ${err.message}`, { status: 400 });
@@ -111,7 +106,23 @@ export default {
  * Verify Zoho Payments webhook signature.
  * Zoho signs: base64(HMAC-SHA256(rawBody, secret))
  */
-async function verifyZohoWebhook(body, signature, secret) {
+async function verifyZohoWebhook(body, request, secret) {
+  if (!secret) {
+    throw new Error('Missing ZOHO_WEBHOOK_SECRET');
+  }
+
+  const sharedSecret = request.headers.get('x-wup-webhook-secret') ||
+    request.headers.get('x-zoho-webhook-secret');
+
+  if (sharedSecret && safeEqual(sharedSecret, secret)) {
+    return;
+  }
+
+  const signature = request.headers.get('x-zoho-signature');
+  if (!signature) {
+    throw new Error('Missing webhook signature or shared secret header');
+  }
+
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(secret),
@@ -131,6 +142,15 @@ async function verifyZohoWebhook(body, signature, secret) {
   if (expectedSig !== signature) {
     throw new Error('Signature mismatch');
   }
+}
+
+function safeEqual(a, b) {
+  a = String(a || '');
+  b = String(b || '');
+  if (a.length !== b.length) return false;
+  let out = 0;
+  for (let i = 0; i < a.length; i++) out |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return out === 0;
 }
 
 /**

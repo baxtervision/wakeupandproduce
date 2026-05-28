@@ -26,13 +26,20 @@ Paid (visual paywall): Grinnell Tracker
    - Item ID: `2978138000002946005`
    - Amount: $9 one-time
 3. Configure the hosted checkout link:
-   - Checkout URL: `https://zohosecurepay.com/checkout/577e2xm-zzvunp6yp4rr8/Grinnell-Tracker`
+   - Checkout URL: `https://zohosecurepay.com/checkout/3aa4vpu-eei1x64w67hhe/Grinnell-Tracker`
    - Success/return URL: `https://wakeupandproduce.com/access/thank-you/`
    - Cancel/failure URL: `https://wakeupandproduce.com/grinnell-tracker/`
 4. Go to Settings > Webhooks > Add Webhook
    - URL: `https://wakeupandproduce.com/api/zoho-webhook`
    - Events: `payment.success`, `payment.captured`, `payment.succeeded`, `checkout.completed`, `payment.failed`
 5. Copy the **Signing Secret** — needed by the webhook worker
+
+If you are using Zoho Billing's **Automation > Workflow Actions > Webhook** screen instead of a native signed webhook:
+   - Method: `POST`
+   - URL: `https://wakeupandproduce.com/api/zoho-webhook`
+   - Header key: `x-wup-webhook-secret`
+   - Header value: the same value you set as the Cloudflare Worker secret `ZOHO_WEBHOOK_SECRET`
+   - Use the payment/invoice/customer-payment module and a successful payment event, not product added/updated/deleted events.
 
 > **Note:** After deploying the webhook worker (Step 3), trigger a test payment
 > and inspect Cloudflare Worker logs to confirm the payload field names match
