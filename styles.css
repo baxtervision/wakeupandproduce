@@ -488,7 +488,7 @@ body:not(.site-home) {
   gap: 6px;
   padding: 10px 20px;
   background: var(--site-accent-strong);
-  color: #fff;
+  color: #fff !important;
   border-radius: 8px;
   font-family: var(--site-font);
   font-size: 0.88rem;
