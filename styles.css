@@ -411,6 +411,96 @@ body:not(.site-home) {
   padding-block: 34px 64px;
 }
 
+/* Sport tabs */
+.sport-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.sport-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border: 1px solid var(--site-border-strong);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--site-muted);
+  font-family: var(--site-font);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.sport-tab:hover {
+  border-color: var(--site-accent);
+  color: var(--site-accent-strong);
+  background: #fff7ed;
+}
+
+.sport-tab.active {
+  background: var(--site-accent-strong);
+  border-color: var(--site-accent-strong);
+  color: #fff;
+}
+
+/* Coming soon panel */
+.sport-soon-card {
+  border: 1px solid var(--site-border-strong);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+  padding: clamp(28px, 6vw, 48px);
+  max-width: 600px;
+}
+
+.sport-soon-eyebrow {
+  margin: 0 0 10px;
+  color: var(--site-accent-strong);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sport-soon-title {
+  margin: 0 0 14px;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.sport-soon-body {
+  margin: 0 0 24px;
+  color: var(--site-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.sport-soon-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--site-accent-strong);
+  color: #fff;
+  border-radius: 8px;
+  font-family: var(--site-font);
+  font-size: 0.88rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.sport-soon-cta:hover {
+  background: #c2410c;
+}
+
 .site-section-label {
   margin: 0 0 14px;
   color: var(--site-accent-strong);

@@ -21,7 +21,17 @@
     <div class="site-divider"><hr></div>
 
     <main class="site-main">
-        <div class="projects-grid">
+        <div class="sport-tabs" role="tablist" aria-label="Sport">
+          <button class="sport-tab active" role="tab" aria-selected="true"  data-sport="basketball">Basketball</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Football">Football</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Volleyball">Volleyball</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Soccer">Soccer</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Track">Track</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Wrestling">Wrestling</button>
+        </div>
+
+        <div id="sport-panel-basketball">
+          <div class="projects-grid">
             <a href="offense-guide/" class="project-card">
                 <span class="card-tag">Offense</span>
                 <h2 class="card-title">Offense</h2>
@@ -63,11 +73,49 @@
                 <p class="card-desc">The six measurable habits that define a varsity producer: speed, deceleration, next-play reset, discomfort tolerance, communication, and roster trust.</p>
                 <span class="card-arrow" aria-hidden="true">&nearr;</span>
             </a>
+          </div>
+        </div>
+
+        <div id="sport-panel-coming" hidden>
+          <div class="sport-soon-card">
+            <p class="sport-soon-eyebrow">Coming Soon</p>
+            <h2 class="sport-soon-title">We're actively building <span id="sport-soon-name"></span> resources.</h2>
+            <p class="sport-soon-body">Check back soon. In the meantime, the community is where cross-sport conversations are already happening — mental resilience, recruiting, and what it takes to produce at a high level in any sport.</p>
+            <a class="sport-soon-cta" href="https://community.wakeupandproduce.com" target="_blank" rel="noopener">Join the Community &nearr;</a>
+          </div>
         </div>
     </main>
     <div data-shared-footer></div>
     
 <script src="shared-nav.js"></script>
+<script>
+  (function () {
+    var tabs = document.querySelectorAll('.sport-tab');
+    var basketballPanel = document.getElementById('sport-panel-basketball');
+    var comingPanel = document.getElementById('sport-panel-coming');
+    var sportName = document.getElementById('sport-soon-name');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        if (tab.dataset.sport === 'basketball') {
+          basketballPanel.hidden = false;
+          comingPanel.hidden = true;
+        } else {
+          basketballPanel.hidden = true;
+          comingPanel.hidden = false;
+          sportName.textContent = tab.dataset.sport;
+        }
+      });
+    });
+  }());
+</script>
 <!-- cloudflare-pages-refresh: 2026-05-27 -->
 </body>
 </html>
