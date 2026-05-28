@@ -95,6 +95,19 @@ body:not(.site-home) {
   outline: none;
 }
 
+.nav-cta {
+  background: var(--site-accent-strong) !important;
+  color: #fff !important;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.nav-cta:hover,
+.nav-cta:focus-visible {
+  background: #c2410c !important;
+  color: #fff !important;
+}
+
 .nav-resource-group {
   position: relative;
 }
@@ -271,6 +284,11 @@ body:not(.site-home) {
     min-height: 48px;
     padding: 0 12px;
     font-size: 0.9rem;
+  }
+
+  .nav-cta {
+    justify-content: center;
+    margin-top: 4px;
   }
 
   .nav-resource-group {
