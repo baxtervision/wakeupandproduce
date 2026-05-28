@@ -111,13 +111,11 @@ If you are using Zoho Billing's **Automation > Workflow Actions > Webhook** scre
 ## Step 7 — Cloudflare Access Configuration
 
 1. Cloudflare Dashboard > Zero Trust > Access > Applications
-2. **Create Application:**
+2. **Create Application for paid protected pages:**
    - Type: Self-hosted
    - Name: Wake Up & Produce — Protected Tools
    - Session duration: 720 hours (30 days)
 3. **Add protected domains** (one path per line — these are the paid pages):
-   - `wakeupandproduce.com/api/zoho-callback/login`
-   - `wakeupandproduce.com/api/zoho-callback/session`
    - `wakeupandproduce.com/offense-guide`
    - `wakeupandproduce.com/defense-guide`
    - `wakeupandproduce.com/learning`
@@ -138,7 +136,25 @@ If you are using Zoho Billing's **Automation > Workflow Actions > Webhook** scre
 6. **Custom Deny Message:**
    "Access requires a Wake Up & Produce purchase. Get access at wakeupandproduce.com/access/"
 
-**Second application — protect the admin panel:**
+**Second application — identify Grinnell Tracker buyers:**
+
+1. Create another Access Application (Self-hosted)
+2. Name: Wake Up & Produce — Grinnell Login
+3. Add protected domains:
+   - `wakeupandproduce.com/api/zoho-callback/login`
+   - `wakeupandproduce.com/api/zoho-callback/session`
+4. Session duration: 720 hours (30 days)
+5. Login method: Email OTP
+6. Create Policy:
+   - Name: Email Identity
+   - Action: Allow
+   - Include: Everyone
+
+This app should **not** use the external evaluation rule. It only collects and
+verifies the visitor's email so `zoho-callback` can compare that email against
+the `PAID_USERS` KV record created by the Zoho webhook.
+
+**Third application — protect the admin panel:**
 
 1. Create another Access Application (Self-hosted)
 2. Domain: `wakeupandproduce.com/admin`

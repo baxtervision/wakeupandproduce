@@ -84,7 +84,7 @@ async function handleLoginRedirect(request, env) {
   const record = await env.PAID_USERS.get(email.toLowerCase());
   const target = record
     ? `${url.origin}${returnPath}?access=checking`
-    : `${url.origin}/access/?access=missing`;
+    : `${url.origin}${returnPath}?access=missing`;
 
   return Response.redirect(target, 302);
 }

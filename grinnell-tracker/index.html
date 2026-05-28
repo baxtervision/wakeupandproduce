@@ -203,6 +203,14 @@
         updateCheckoutStatus('Checking your purchase email...');
         history.replaceState(null, '', window.location.pathname);
       }
+      if (params.get('access') === 'missing') {
+        updateCheckoutStatus('You are logged in, but no completed purchase was found for that email yet.');
+        history.replaceState(null, '', window.location.pathname);
+      }
+      if (params.get('access') === 'login-required') {
+        updateCheckoutStatus('Log in with the same email you used at checkout.');
+        history.replaceState(null, '', window.location.pathname);
+      }
 
       try {
         const response = await fetch('/api/zoho-callback/session', {
