@@ -32,6 +32,10 @@ export default {
         return handleSessionCheck(request, env);
       }
 
+      if (request.method === 'GET' && url.pathname.endsWith('/login')) {
+        return handleLoginRedirect(request, env);
+      }
+
       if (request.method === 'POST' && url.pathname.endsWith('/passcode')) {
         return handlePasscode(request, env);
       }
@@ -66,6 +70,23 @@ async function handleSessionCheck(request, env) {
 
   const record = await env.PAID_USERS.get(email.toLowerCase());
   return json({ unlocked: Boolean(record), email, mode: record ? 'paid' : 'unpaid' }, 200, request);
+}
+
+async function handleLoginRedirect(request, env) {
+  const url = new URL(request.url);
+  const returnPath = sanitizeReturnPath(url.searchParams.get('return'));
+  const email = getAccessEmail(request);
+
+  if (!email) {
+    return Response.redirect(`${url.origin}${returnPath}?access=login-required`, 302);
+  }
+
+  const record = await env.PAID_USERS.get(email.toLowerCase());
+  const target = record
+    ? `${url.origin}${returnPath}?access=checking`
+    : `${url.origin}/access/?access=missing`;
+
+  return Response.redirect(target, 302);
 }
 
 async function handlePasscode(request, env) {
@@ -110,8 +131,8 @@ async function handleCreatePaymentSession(request, env) {
         name,
         email,
         description: 'Grinnell System Tracker - one-time access',
-        success_url: `${origin}/grinnell-tracker/?paid=1`,
-        failure_url: `${origin}/grinnell-tracker/?paid=0`,
+        success_url: `${origin}/access/thank-you/`,
+        failure_url: `${origin}/grinnell-tracker/`,
         udf1: PRODUCT_ITEM_ID,
         udf2: 'grinnell_tracker',
       },
@@ -303,6 +324,12 @@ function safeEqual(a, b) {
   let out = 0;
   for (let i = 0; i < a.length; i++) out |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return out === 0;
+}
+
+function sanitizeReturnPath(value) {
+  const fallback = '/grinnell-tracker/';
+  if (!value || !value.startsWith('/') || value.startsWith('//')) return fallback;
+  return value;
 }
 
 function corsHeaders(request) {

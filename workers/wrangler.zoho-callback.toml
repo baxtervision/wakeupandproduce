@@ -1,0 +1,12 @@
+name = "zoho-callback"
+main = "zoho-callback.js"
+compatibility_date = "2026-05-27"
+keep_vars = true
+
+routes = [
+  { pattern = "wakeupandproduce.com/api/zoho-callback*", zone_name = "wakeupandproduce.com" }
+]
+
+kv_namespaces = [
+  { binding = "PAID_USERS", id = "3acdba5ac6c4458e8bea3c7ffbdb740a" }
+]

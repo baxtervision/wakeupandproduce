@@ -73,14 +73,14 @@ export default {
     // Log raw event on first deployment so you can inspect field names in Worker logs
     console.log('Zoho event received:', JSON.stringify(event));
 
-    const eventType = event.event;
+    const eventType = String(event.event || event.event_type || event.type || '').toLowerCase();
 
     // PAYMENT CAPTURED/SUCCESS — grant access
-    if (eventType === 'payment.captured' || eventType === 'payment.success') {
+    if (isSuccessfulPaymentEvent(eventType, event)) {
       const email = extractEmail(event);
 
       if (email) {
-        const payment = event.payload?.payment ?? {};
+        const payment = getPaymentObject(event);
         const record = {
           paid_at: new Date().toISOString(),
           payment_id: payment.id || null,
@@ -139,21 +139,67 @@ async function verifyZohoWebhook(body, signature, secret) {
  * check Worker logs after the first real event to confirm.
  */
 function extractEmail(event) {
-  const payment = event.payload?.payment ?? {};
+  const payment = getPaymentObject(event);
+  const payload = event.payload ?? {};
+  const dataObject = event.data?.object ?? {};
   const raw =
     payment.customer_email ||
     payment.email ||
-    event.payload?.customer?.email ||
+    payment.receipt_email ||
+    payment.customer?.email ||
+    payment.customer_details?.email ||
+    payload.customer?.email ||
+    payload.customer_email ||
+    payload.email ||
+    payload.hostedpage?.customer?.email ||
+    payload.hosted_page?.customer?.email ||
+    payload.hosted_page_parameters?.email ||
+    dataObject.customer_email ||
+    dataObject.email ||
+    dataObject.customer?.email ||
+    dataObject.customer_details?.email ||
+    event.customer_email ||
+    event.email ||
     '';
   return raw.toLowerCase().trim() || null;
 }
 
 function extractItemId(event) {
-  const payment = event.payload?.payment ?? {};
-  const meta = payment.meta_data || payment.metadata || event.payload?.meta_data || [];
+  const payment = getPaymentObject(event);
+  const meta = payment.meta_data || payment.metadata || event.payload?.meta_data || event.data?.object?.metadata || [];
   if (Array.isArray(meta)) {
     const item = meta.find(entry => entry.key === 'item_id');
     if (item) return item.value || null;
   }
-  return payment.item_id || event.payload?.hosted_page_parameters?.udf1 || null;
+  return payment.item_id || event.payload?.hosted_page_parameters?.udf1 || event.data?.object?.item_id || null;
+}
+
+function getPaymentObject(event) {
+  return event.payload?.payment ||
+    event.payload?.payment_session?.payment ||
+    event.payload?.payment_session ||
+    event.payload?.hostedpage?.payment ||
+    event.payload?.hosted_page?.payment ||
+    event.data?.object ||
+    {};
+}
+
+function isSuccessfulPaymentEvent(eventType, event) {
+  if ([
+    'payment.captured',
+    'payment.success',
+    'payment.succeeded',
+    'payment.paid',
+    'checkout.completed',
+    'checkout.session.completed',
+    'hostedpage.completed',
+    'hosted_page.completed',
+    'invoice.paid',
+  ].includes(eventType)) {
+    return true;
+  }
+
+  const payment = getPaymentObject(event);
+  const status = String(payment.status || event.payload?.status || event.data?.object?.status || '').toLowerCase();
+  return ['captured', 'success', 'succeeded', 'paid', 'completed'].includes(status);
 }

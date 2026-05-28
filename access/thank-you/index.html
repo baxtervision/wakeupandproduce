@@ -17,6 +17,8 @@
     .ty-page p { color: var(--site-muted); font-size: .95rem; line-height: 1.7; margin: 0 0 32px; }
     .ty-note { background: #fff; border: 1px solid var(--site-border); border-radius: 8px; padding: 20px 24px; margin-bottom: 36px; text-align: left; font-size: .88rem; color: var(--site-muted); line-height: 1.65; }
     .ty-note strong { color: var(--site-text); }
+    .ty-primary { display: inline-block; margin-bottom: 34px; padding: 14px 22px; border-radius: 8px; background: var(--site-accent); color: #fff; font-size: .84rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
+    .ty-primary:hover { background: var(--site-accent-strong); }
     .ty-links { display: flex; flex-direction: column; gap: 10px; }
     .ty-link { display: block; border: 1px solid var(--site-border); border-radius: 8px; background: #fff; padding: 16px 20px; text-decoration: none; color: var(--site-text); text-align: left; transition: border-color 0.15s, background 0.15s; }
     .ty-link:hover { border-color: rgba(249,115,22,.4); background: #fff7ed; }
@@ -32,11 +34,13 @@
     <div class="ty-check">✓</div>
     <p class="eyebrow">Payment confirmed</p>
     <h1>You're in.</h1>
-    <p>Your access is active. The next time you visit a protected tool, enter your email and you'll receive a one-time login code — no password needed.</p>
+    <p>Your payment is complete. Use the same email from checkout to open the Grinnell System Tracker.</p>
 
     <div class="ty-note">
-      <strong>How to log in:</strong> Visit any tool below. Cloudflare will ask for your email address and send a short code. Enter it and you'll have a 30-day session — no repeat logins from the same device.
+      <strong>How to log in:</strong> Click the button below, enter the same email you used at checkout, and Cloudflare will send a short code. Once that email matches your completed purchase, the calculator unlocks on this device.
     </div>
+
+    <a href="/api/zoho-callback/login?return=/grinnell-tracker/" class="ty-primary">Open the Grinnell Tracker</a>
 
     <div class="ty-links">
       <a href="../../defense-guide/" class="ty-link">
@@ -49,7 +53,7 @@
         <div class="ty-link-name">Interactive Offense Guide</div>
         <div class="ty-link-sub">Read &amp; React, Grinnell, and Traditional Motion with animated diagrams</div>
       </a>
-      <a href="../../grinnell-tracker/" class="ty-link">
+      <a href="/api/zoho-callback/login?return=/grinnell-tracker/" class="ty-link">
         <div class="ty-link-tag">Tool</div>
         <div class="ty-link-name">Grinnell System Tracker</div>
         <div class="ty-link-sub">Win probability calculator built on Grinnell pace and possession principles</div>

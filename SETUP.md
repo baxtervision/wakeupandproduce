@@ -5,11 +5,12 @@
 ```
 Coach visits /grinnell-tracker/
   → Calculator loads behind visual paywall overlay
-  → /api/zoho-callback/session checks Cloudflare Access session, passcode, or KV
-  → YES: overlay is removed  |  NO: Zoho checkout widget is shown
+  → /api/zoho-callback/session checks the Cloudflare Access email against KV
+  → YES: overlay is removed  |  NO: hosted Zoho checkout link is shown
 
 On purchase:
-  Zoho Payments Checkout Widget → /api/zoho-callback confirms payment → KV access
+  Hosted Zoho checkout → /api/zoho-webhook stores purchaser email in KV
+  Thank-you page → /api/zoho-callback/login → /grinnell-tracker/
 
 Free (no gate):  Key Actions, Key Terms
 Paid (visual paywall): Grinnell Tracker
@@ -24,13 +25,13 @@ Paid (visual paywall): Grinnell Tracker
    - Product name: "Wake Up & Produce — Grinnell System Tracker"
    - Item ID: `2978138000002946005`
    - Amount: $9 one-time
-3. In Developer Space, note:
-   - Payments Account ID
-   - Public widget API key
-   - OAuth token with `ZohoPay.payments.CREATE` and `ZohoPay.payments.READ`
+3. Configure the hosted checkout link:
+   - Checkout URL: `https://zohosecurepay.com/checkout/577e2xm-zzvunp6yp4rr8/Grinnell-Tracker`
+   - Success/return URL: `https://wakeupandproduce.com/access/thank-you/`
+   - Cancel/failure URL: `https://wakeupandproduce.com/grinnell-tracker/`
 4. Go to Settings > Webhooks > Add Webhook
    - URL: `https://wakeupandproduce.com/api/zoho-webhook`
-   - Events: `payment.success`, `payment.captured`, `payment.failed`
+   - Events: `payment.success`, `payment.captured`, `payment.succeeded`, `checkout.completed`, `payment.failed`
 5. Copy the **Signing Secret** — needed by the webhook worker
 
 > **Note:** After deploying the webhook worker (Step 3), trigger a test payment
@@ -45,9 +46,14 @@ Paid (visual paywall): Grinnell Tracker
 2. Create namespace: `PAID_USERS`
 3. Note the namespace ID — you'll bind it to both workers
 
+> Worker routes only run when the matching DNS record is proxied through Cloudflare
+> (orange cloud). If `https://wakeupandproduce.com/api/zoho-callback/session`
+> returns a GitHub Pages 404, switch the apex `wakeupandproduce.com` record from
+> DNS-only to proxied in Cloudflare DNS.
+
 ---
 
-## Step 3 — Deploy the Checkout Callback Worker
+## Step 3 — Deploy the Access Callback Worker
 
 1. Cloudflare Dashboard > Workers & Pages > Create Worker
 2. Name it: `zoho-callback`
@@ -55,9 +61,6 @@ Paid (visual paywall): Grinnell Tracker
 4. Settings > Variables > KV Namespace Bindings:
    - Variable name: `PAID_USERS` → select your namespace
 5. Settings > Variables > Environment Variables > Add (Encrypt where secret):
-   - `ZOHO_OAUTH_TOKEN` = your Zoho Payments OAuth token
-   - `ZOHO_PAYMENTS_ACCOUNT_ID` = your Zoho Payments account id
-   - `ZOHO_PUBLIC_API_KEY` = your Zoho Payments public widget API key
    - `COACH_PASSCODE` = optional manual passcode
 6. Settings > Triggers > Add Route:
    - `wakeupandproduce.com/api/zoho-callback*` → this worker
@@ -106,6 +109,8 @@ Paid (visual paywall): Grinnell Tracker
    - Name: Wake Up & Produce — Protected Tools
    - Session duration: 720 hours (30 days)
 3. **Add protected domains** (one path per line — these are the paid pages):
+   - `wakeupandproduce.com/api/zoho-callback/login`
+   - `wakeupandproduce.com/api/zoho-callback/session`
    - `wakeupandproduce.com/offense-guide`
    - `wakeupandproduce.com/defense-guide`
    - `wakeupandproduce.com/learning`
@@ -122,7 +127,7 @@ Paid (visual paywall): Grinnell Tracker
    - Action: Allow
    - Rule: External Evaluation
      - Evaluate URL: `https://wakeupandproduce.com/api/access-check`
-     - Keys URL: (leave blank)
+     - Keys URL: `https://wakeupandproduce.com/api/access-check/keys`
 6. **Custom Deny Message:**
    "Access requires a Wake Up & Produce purchase. Get access at wakeupandproduce.com/access/"
 

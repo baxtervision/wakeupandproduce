@@ -40,6 +40,9 @@
             Unlock Full Access — $9
           </button>
           <p id="zoho-checkout-status" class="text-xs text-stone-500 min-h-4" role="status" aria-live="polite">Secure checkout opens through Zoho.</p>
+          <a href="/api/zoho-callback/login?return=/grinnell-tracker/" class="inline-block text-xs font-bold text-stone-500 underline underline-offset-4 hover:text-stone-700">
+            Already paid? Log in with your purchase email
+          </a>
         </div>
       </div>
 
@@ -189,12 +192,49 @@
       calculateProbability();
     }
 
-    function checkCalculatorAccess() {
-      const params = new URLSearchParams(window.location.search);
-      if (sessionStorage.getItem('grinnellCalculatorUnlocked') === '1' || params.get('paid') === '1' || params.get('unlocked') === '1') {
+    async function checkCalculatorAccess() {
+      if (sessionStorage.getItem('grinnellCalculatorUnlocked') === '1') {
         unlockCalculatorInterface();
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('access') === 'checking') {
+        updateCheckoutStatus('Checking your purchase email...');
         history.replaceState(null, '', window.location.pathname);
       }
+
+      try {
+        const response = await fetch('/api/zoho-callback/session', {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+          updateCheckoutStatus('Already paid? Log in with the same email you used at checkout.');
+          return;
+        }
+
+        const data = await response.json();
+        if (data.unlocked) {
+          unlockCalculatorInterface();
+          return;
+        }
+
+        if (data.mode === 'anonymous') {
+          updateCheckoutStatus('Already paid? Log in with the same email you used at checkout.');
+        } else {
+          updateCheckoutStatus('No completed purchase found for this email yet.');
+        }
+      } catch {
+        updateCheckoutStatus('Already paid? Log in with the same email you used at checkout.');
+      }
+    }
+
+    function updateCheckoutStatus(message) {
+      const status = document.getElementById('zoho-checkout-status');
+      if (status) status.textContent = message || '';
     }
 
     checkCalculatorAccess();

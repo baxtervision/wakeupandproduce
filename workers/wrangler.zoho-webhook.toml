@@ -1,0 +1,12 @@
+name = "zoho-webhook"
+main = "zoho-webhook.js"
+compatibility_date = "2026-05-27"
+keep_vars = true
+
+routes = [
+  { pattern = "wakeupandproduce.com/api/zoho-webhook*", zone_name = "wakeupandproduce.com" }
+]
+
+kv_namespaces = [
+  { binding = "PAID_USERS", id = "3acdba5ac6c4458e8bea3c7ffbdb740a" }
+]
