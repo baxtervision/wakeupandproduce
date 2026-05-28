@@ -205,6 +205,11 @@ body:not(.site-home) {
   color: var(--site-accent-strong);
 }
 
+.shared-footer span::before {
+  content: "·";
+  margin-right: 8px;
+  color: var(--site-subtle);
+}
 
 .nav-hamburger {
   display: none;
