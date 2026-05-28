@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Producer Community · Wake Up &amp; Produce</title>
+  <meta name="description" content="Request a free invite to the Wake Up & Produce Producer Community.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+    .community-page { width: min(1020px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 76px; }
+    .community-hero { max-width: 760px; margin-bottom: 42px; }
+    .eyebrow { margin: 0 0 12px; color: var(--site-accent-strong); font-size: .74rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .community-hero h1 { margin: 0 0 16px; font-size: clamp(2rem, 5vw, 4rem); line-height: .98; letter-spacing: -0.045em; font-weight: 900; }
+    .community-hero h1 em { color: var(--site-accent); font-style: normal; }
+    .community-hero p { max-width: 680px; margin: 0; color: var(--site-muted); font-size: 1rem; line-height: 1.75; }
+    .community-layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; }
+    .community-panel, .community-form-card { background: #fff; border: 1px solid var(--site-border-strong); border-radius: 8px; box-shadow: 0 2px 8px rgba(28,25,23,.05); }
+    .community-panel { padding: 28px; }
+    .community-panel h2, .community-form-card h2 { margin: 0 0 14px; font-size: 1rem; font-weight: 900; }
+    .tier-list { display: grid; gap: 1px; margin: 22px 0 0; border: 1px solid var(--site-border); border-radius: 8px; overflow: hidden; background: var(--site-border); }
+    .tier-row { display: grid; grid-template-columns: 120px 1fr; gap: 18px; background: #fff; padding: 18px 20px; }
+    .tier-tag { font-size: .68rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: #16a34a; }
+    .tier-tag.premium { color: var(--site-accent-strong); }
+    .tier-title { margin: 0 0 4px; font-size: .95rem; font-weight: 900; }
+    .tier-copy { margin: 0; color: var(--site-muted); font-size: .84rem; line-height: 1.55; }
+    .community-form-card { padding: 28px; }
+    .community-form { display: grid; gap: 14px; }
+    .community-form label { display: grid; gap: 7px; color: var(--site-text); font-size: .78rem; font-weight: 900; }
+    .community-form input, .community-form textarea { width: 100%; border: 1px solid var(--site-border-strong); border-radius: 8px; padding: 12px 13px; color: var(--site-text); font: inherit; font-size: .9rem; background: #fff; }
+    .community-form textarea { min-height: 104px; resize: vertical; }
+    .community-form input:focus, .community-form textarea:focus { outline: 2px solid rgba(249,115,22,.24); border-color: rgba(249,115,22,.6); }
+    .community-submit { width: 100%; border: 0; border-radius: 8px; padding: 14px 18px; background: var(--site-accent); color: #fff; font: inherit; font-size: .86rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+    .community-submit:hover { background: var(--site-accent-strong); }
+    .community-submit:disabled { opacity: .7; cursor: wait; }
+    .community-status { min-height: 20px; margin: 2px 0 0; color: var(--site-muted); font-size: .8rem; line-height: 1.45; }
+    .community-status.success { color: #15803d; font-weight: 800; }
+    .community-status.error { color: #b91c1c; font-weight: 800; }
+    .form-note { margin: 14px 0 0; color: var(--site-muted); font-size: .78rem; line-height: 1.6; }
+    @media (max-width: 860px) {
+      .community-layout { grid-template-columns: 1fr; }
+      .tier-row { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div data-shared-nav></div>
+  <main class="community-page">
+    <header class="community-hero">
+      <p class="eyebrow">Producer Community</p>
+      <h1>Join the <em>free tier</em>.</h1>
+      <p>Request an invite to the Wake Up &amp; Produce community. The free tier is currently invite-only while the community is being built inside Zoho, so submit your email and Baxter will send the invite manually.</p>
+    </header>
+
+    <div class="community-layout">
+      <section class="community-panel" aria-labelledby="community-include-title">
+        <h2 id="community-include-title">What this gets you</h2>
+        <div class="tier-list">
+          <div class="tier-row">
+            <div class="tier-tag">Free</div>
+            <div>
+              <p class="tier-title">Producer Community access</p>
+              <p class="tier-copy">A place for updates, discussion, coaching notes, and lightweight community access while the full paid community system is still taking shape.</p>
+            </div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-tag premium">Premium Later</div>
+            <div>
+              <p class="tier-title">Paid community features</p>
+              <p class="tier-copy">Premium community tiers will come later when the membership base justifies the upgraded Zoho Community plan.</p>
+            </div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-tag premium">Separate</div>
+            <div>
+              <p class="tier-title">Grinnell System Tracker</p>
+              <p class="tier-copy">The calculator stays its own coaches-only purchase and login flow. Community access does not change that tool.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="community-form-card" aria-labelledby="community-form-title">
+        <h2 id="community-form-title">Request an invite</h2>
+        <form class="community-form" id="community-request-form">
+          <label>
+            Name
+            <input type="text" name="name" autocomplete="name" maxlength="100" placeholder="Coach Baxter">
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" autocomplete="email" required placeholder="coach@school.edu">
+          </label>
+          <label>
+            Role
+            <input type="text" name="role" maxlength="80" placeholder="Coach, parent, player, producer">
+          </label>
+          <label>
+            Note
+            <textarea name="note" maxlength="500" placeholder="Anything useful before I send the invite"></textarea>
+          </label>
+          <button class="community-submit" type="submit">Request Free Invite</button>
+          <p class="community-status" id="community-request-status" role="status" aria-live="polite"></p>
+        </form>
+        <p class="form-note">Submitting this form does not create a Zoho account automatically. It gives Baxter the email address needed to send your community invite.</p>
+      </aside>
+    </div>
+  </main>
+  <div data-shared-footer></div>
+  <script>
+    const form = document.getElementById('community-request-form');
+    const statusEl = document.getElementById('community-request-status');
+
+    form.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const button = form.querySelector('button[type="submit"]');
+      const payload = Object.fromEntries(new FormData(form).entries());
+
+      statusEl.className = 'community-status';
+      statusEl.textContent = 'Sending your invite request...';
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/api/community-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json().catch(function() { return {}; });
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || 'Invite request could not be saved.');
+        }
+        form.reset();
+        statusEl.className = 'community-status success';
+        statusEl.textContent = 'Request received. Watch your inbox for a community invite.';
+      } catch (error) {
+        statusEl.className = 'community-status error';
+        statusEl.textContent = error.message || 'Invite request could not be saved.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+  <script src="../shared-nav.js"></script>
+</body>
+</html>

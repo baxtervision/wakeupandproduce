@@ -21,7 +21,7 @@
           '<div class="nav-resource-group">' +
             '<button class="nav-resource-toggle" type="button" aria-expanded="false" aria-controls="other-resources-menu">Other Resources<span aria-hidden="true">v</span></button>' +
             '<div class="nav-resource-menu" id="other-resources-menu">' +
-              '<a href="https://wakeupandproduce.zohocs.com/" target="_blank" rel="noopener">The Producer Community</a>' +
+              '<a href="' + pathPrefix + 'community/">The Producer Community</a>' +
               '<a href="' + pathPrefix + 'grinnell-tracker/">Grinnell Calculator</a>' +
                             '<a href="https://www.youtube.com/playlist?list=PLpHNJgi9uGrlzcQB8ElVVGjYvUo1mnVDY" target="_blank" rel="noopener">Video Library</a>' +
               '<a href="https://pocketcoach.training" target="_blank" rel="noopener">Pocket Coach</a>' +

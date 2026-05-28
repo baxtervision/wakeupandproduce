@@ -1,0 +1,12 @@
+name = "community-request"
+main = "community-request.js"
+compatibility_date = "2026-05-27"
+keep_vars = true
+
+routes = [
+  { pattern = "wakeupandproduce.com/api/community-request*", zone_name = "wakeupandproduce.com" }
+]
+
+kv_namespaces = [
+  { binding = "COMMUNITY_INVITES", id = "3e723f0748264aff88e86dc2e3c94c6f" }
+]
