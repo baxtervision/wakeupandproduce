@@ -23,7 +23,7 @@ Paid (visual paywall): Grinnell Tracker
 2. Create/configure a one-time product item:
    - Product name: "Wake Up & Produce — Grinnell System Tracker"
    - Item ID: `2978138000002946005`
-   - Amount: $19 one-time
+   - Amount: $9 one-time
 3. In Developer Space, note:
    - Payments Account ID
    - Public widget API key
@@ -177,7 +177,7 @@ KV value: {"paid_at":"2026-01-01","mode":"manual","note":"comp"}
 
 ## Price Point Note
 
-$19 one-time Grinnell System Tracker access. The Zoho callback/webhook grants access
+$9 one-time Grinnell System Tracker access. The Zoho callback/webhook grants access
 after payment confirmation and does not expire automatically — use the admin panel to revoke if needed.
 
 If you bundle with pocketcoach.training later, the pocketcoach webhook can write

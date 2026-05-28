@@ -8,7 +8,6 @@
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="stylesheet" href="../styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://static.zohocdn.com/zpay/zpay-js/v1/zpayments.js"></script>
 </head>
 <body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col">
   <div data-shared-nav></div>
@@ -31,17 +30,16 @@
     <!-- Win Probability Calculator -->
     <div class="relative min-h-[550px]">
       <div id="calculator-paywall-overlay" class="absolute inset-0 bg-stone-50/85 backdrop-blur-[2.5px] z-10 flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-stone-200/50 shadow-inner">
-        <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Temporary Open Access</p>
+        <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Coaches Only / $9 One-Time</p>
         <h2 class="text-2xl font-extrabold text-stone-900 tracking-tight mb-3">Unlock the Success Calculator</h2>
         <p class="text-stone-500 text-sm max-w-md leading-relaxed mb-6">
-          Gain access to the interactive formula used to evaluate system performance, track possession advantage, and project your winning probability based on David Arseneault's historical statistical parameters.
+          Get lifetime access to the interactive formula used to evaluate system performance, track possession advantage, and project your winning probability based on David Arseneault's historical statistical parameters.
         </p>
         <div id="zoho-checkout-panel" class="w-full max-w-md space-y-3">
-          <button id="zoho-unlock-button" type="button" class="w-full bg-orange-600 text-white px-6 py-3 font-bold rounded-xl hover:bg-orange-700 transition shadow-sm text-sm">
-            Unlock Access
+          <button id="zoho-unlock-button" type="button" onclick="window.location.href='https://zohosecurepay.com/checkout/1hhzkcv-ccz37jefjdvvc/Grinnell-Tracker'" class="w-full bg-orange-600 text-white px-6 py-3 font-bold rounded-xl hover:bg-orange-700 transition shadow-sm text-sm">
+            Unlock Full Access — $9
           </button>
-          <div id="zoho-card-container" class="min-h-0 text-left"></div>
-          <p id="zoho-checkout-status" class="text-xs text-stone-500 min-h-4" role="status" aria-live="polite">Payment is temporarily disabled while access is being configured.</p>
+          <p id="zoho-checkout-status" class="text-xs text-stone-500 min-h-4" role="status" aria-live="polite">Secure checkout opens through Zoho.</p>
         </div>
       </div>
 
@@ -184,8 +182,6 @@
   </script>
 
   <script>
-    const ZOHO_CHECKOUT_ENDPOINT = '/api/zoho-callback';
-
     function unlockCalculatorInterface() {
       const overlay = document.getElementById('calculator-paywall-overlay');
       if (overlay) overlay.remove();
@@ -193,83 +189,14 @@
       calculateProbability();
     }
 
-    async function checkCalculatorAccess() {
-      if (sessionStorage.getItem('grinnellCalculatorUnlocked') === '1') {
-        unlockCalculatorInterface();
-        return;
-      }
-
+    function checkCalculatorAccess() {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('paid') === '1' || params.get('unlocked') === '1') {
-        sessionStorage.setItem('grinnellCalculatorUnlocked', '1');
+      if (sessionStorage.getItem('grinnellCalculatorUnlocked') === '1' || params.get('paid') === '1' || params.get('unlocked') === '1') {
         unlockCalculatorInterface();
         history.replaceState(null, '', window.location.pathname);
-        return;
-      }
-
-      updateCheckoutStatus('Payment is temporarily disabled while access is being configured.');
-    }
-
-    async function startZohoCheckout() {
-      updateCheckoutStatus('Access unlocked.');
-      unlockCalculatorInterface();
-    }
-
-    async function submitCoachPasscode() {
-      const passcode = document.getElementById('coach-passcode').value;
-      if (!passcode) {
-        updateCheckoutStatus('Enter your coach passcode.');
-        return;
-      }
-
-      try {
-        const response = await fetch(ZOHO_CHECKOUT_ENDPOINT + '/passcode', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ passcode })
-        });
-        const data = await response.json();
-        if (!response.ok || !data.unlocked) throw new Error(data.error || 'Invalid passcode.');
-        unlockCalculatorInterface();
-      } catch (err) {
-        updateCheckoutStatus(err.message || 'Passcode could not be verified.');
       }
     }
 
-    function updateCheckoutStatus(message) {
-      const status = document.getElementById('zoho-checkout-status');
-      if (status) status.textContent = message || '';
-    }
-
-    function normalizeCoachName(value) {
-      return String(value || '')
-        .trim()
-        .replace(/\s+/g, ' ')
-        .replace(/[^A-Za-zÀ-ž' .-]/g, '') || 'Coach';
-    }
-
-    function isValidEmail(value) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-
-    function validateZohoSession(session) {
-      const accountId = String(session.account_id || '').trim();
-      const apiKey = String(session.api_key || '').trim();
-      const sessionId = String(session.payments_session_id || '').trim();
-
-      if (!/^\d+$/.test(accountId)) {
-        throw new Error('Zoho account id is missing or malformed.');
-      }
-      if (!/^1000\.[A-Za-z0-9._-]+$/.test(apiKey)) {
-        throw new Error('Zoho public API key is missing or malformed.');
-      }
-      if (!/^\d+$/.test(sessionId)) {
-        throw new Error('Zoho payment session id is missing or malformed.');
-      }
-    }
-
-    document.getElementById('zoho-unlock-button').addEventListener('click', startZohoCheckout);
     checkCalculatorAccess();
   </script>
 

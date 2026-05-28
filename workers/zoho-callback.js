@@ -11,12 +11,12 @@
  *
  * Product:
  *   item_id: 2978138000002946005
- *   price:   $19 one-time
+ *   price:   $9 one-time
  */
 
 const ZOHO_API_ORIGIN = 'https://payments.zoho.com';
 const PRODUCT_ITEM_ID = '2978138000002946005';
-const PRODUCT_AMOUNT = '19.00';
+const PRODUCT_AMOUNT = '9.00';
 const PRODUCT_CURRENCY = 'USD';
 
 export default {

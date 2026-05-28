@@ -20,7 +20,7 @@
  * Product:
  *   Grinnell System Tracker one-time access
  *   item_id: 2978138000002946005
- *   amount: 19.00 USD
+ *   amount: 9.00 USD
  *
  * Payload shape (Zoho Payments one-time):
  *   {
@@ -28,7 +28,7 @@
  *     "payload": {
  *       "payment": {
  *         "id": "pay_xxx",
- *         "amount": 19.00,
+ *         "amount": 9.00,
  *         "currency": "USD",
  *         "status": "captured",
  *         "customer_email": "coach@school.edu",
