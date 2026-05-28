@@ -41,7 +41,7 @@
 
   var footerEl = document.querySelector('[data-shared-footer]');
   if (footerEl) {
-    footerEl.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Baxter</span></footer>';
+    footerEl.innerHTML = '<footer class="shared-footer"><span>Wake Up &amp; Produce by Misfit Island, LLC</span></footer>';
   }
 }());
 
