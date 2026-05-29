@@ -18,7 +18,7 @@
           '<a href="' + pathPrefix + 'key-terms/">Key Terms</a>' +
           '<a href="' + pathPrefix + 'learning/">The Lab</a>' +
           '<a href="' + pathPrefix + 'standard/">The Standard</a>' +
-          '<a class="nav-cta" href="https://community.wakeupandproduce.com" target="_blank" rel="noopener">Join the Community</a>' +
+          '<a class="nav-cta" href="https://wake-up-produce-community.zohocs.com" target="_blank" rel="noopener">Join the Community</a>' +
         '</div>' +
       '</nav>';
 
