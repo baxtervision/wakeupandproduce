@@ -411,8 +411,9 @@
                         steps: [
                             { actions: [
                                 { type: 'screen', player: 'p4', to: 'screenLeftWing', label: '4 sets the back screen' },
-                                { type: 'cut', player: 'p2', to: 'rim', label: '2 cuts below the screen' }
+                                { type: 'cut', player: 'p2', to: 'leftBlock', label: '2 cuts below the screen' }
                             ], label: '4 screens as 2 cuts below' },
+                            { type: 'cut', player: 'p2', to: 'rim', label: '2 curls to the rim' },
                             { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2 at the rim' },
                             { type: 'fill', player: 'p4', to: 'leftWing', label: '4 opens back to the wing' }
                         ]
@@ -420,16 +421,20 @@
                     defineAction({
                         id: 'ballscreen',
                         title: 'Layer 10: Ball Screen',
-                        desc: 'A player screens the ball, the handler attacks the screen, and the screener rolls or pops while the other three players space correctly.',
+                        desc: 'A Power Dribble triggers a teammate to set a ball screen. The driver attacks, the screener rolls, and the other three players rotate using Circle Movement.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
-                            { type: 'screen', player: 'p5', to: 'ballScreenLeft', label: '5 sets the ball screen' },
-                            { type: 'drive', player: 'p1', to: 'leftSlot', label: '1 uses the screen' },
-                            { type: 'cut', player: 'p5', to: 'rim', label: '5 rolls to the rim' },
                             { actions: [
-                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
-                                { type: 'fill', player: 'p4', to: 'rightCorner', label: '4 spaces opposite' }
-                            ], label: 'The perimeter spaces behind the roll' }
+                                { type: 'drive', player: 'p1', to: 'rightSlotHigh', label: '1 power dribbles at 5' },
+                                { type: 'screen', player: 'p5', to: 'rightSlot', label: '5 reads and sets the ball screen' }
+                            ], label: '1 power dribbles — 5 sets the ball screen' },
+                            { type: 'drive', player: 'p1', to: 'leftElbow', label: '1 attacks off the screen' },
+                            { actions: [
+                                { type: 'cut', player: 'p5', to: 'rim', label: '5 rolls to the rim' },
+                                { type: 'fill', player: 'p3', to: 'rightCorner', label: '3 circles to the corner' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 lifts to the wing' }
+                            ], label: 'Screener rolls, perimeter circles clockwise' }
                         ]
                     }),
                     defineAction({
