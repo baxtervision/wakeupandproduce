@@ -66,6 +66,13 @@
                     <button id="show-system" class="bg-stone-100 text-stone-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Show Sequence</button>
                     <button id="reset-system" class="bg-stone-100 text-stone-600 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Reset</button>
                 </div>
+                <div id="action-detail" class="mt-4 bg-stone-50 border border-stone-200 rounded-lg p-4">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <h3 id="action-title" class="text-base font-bold text-stone-900"></h3>
+                        <span id="action-type-badge" class="hidden flex-shrink-0 text-xs font-extrabold uppercase tracking-wider text-stone-500 bg-stone-100 border border-stone-200 rounded-full px-2 py-0.5 mt-0.5"></span>
+                    </div>
+                    <p id="action-desc" class="text-sm text-stone-600"></p>
+                </div>
                 <div id="motion-content" class="hidden mt-4 space-y-6 text-sm text-stone-700">
                     <h2 class="text-lg font-bold text-stone-900">Traditional Motion vs. Read &amp; React</h2>
                     <div>
@@ -103,13 +110,6 @@
                 <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
                     <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-3">System Actions</h3>
                     <div id="action-list" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
-                </div>
-                <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
-                    <div class="flex items-start justify-between gap-2 mb-2">
-                        <h3 id="action-title" class="text-xl font-bold text-stone-900"></h3>
-                        <span id="action-type-badge" class="hidden flex-shrink-0 text-xs font-extrabold uppercase tracking-wider text-stone-500 bg-stone-100 border border-stone-200 rounded-full px-2 py-0.5 mt-1"></span>
-                    </div>
-                    <p id="action-desc" class="text-sm text-stone-600"></p>
                 </div>
             </aside>
         </section>
@@ -759,12 +759,14 @@
             const stepCue = document.getElementById('step-cue');
             const courtPanel = document.getElementById('court-panel');
             const aside = document.getElementById('action-aside');
+            const actionDetail = document.getElementById('action-detail');
             const btnRow = courtPanel.querySelector('.flex.flex-wrap.justify-center');
             if (systemKey === 'motion') {
                 if (motionContent) motionContent.classList.remove('hidden');
                 if (courtEl) courtEl.classList.add('hidden');
                 if (stepCue) stepCue.classList.add('hidden');
                 if (btnRow) btnRow.classList.add('hidden');
+                if (actionDetail) actionDetail.classList.add('hidden');
                 if (aside) aside.classList.add('hidden');
                 courtPanel.classList.remove('lg:col-span-7');
                 courtPanel.classList.add('lg:col-span-12');
@@ -774,6 +776,7 @@
             if (courtEl) courtEl.classList.remove('hidden');
             if (stepCue) stepCue.classList.remove('hidden');
             if (btnRow) btnRow.classList.remove('hidden');
+            if (actionDetail) actionDetail.classList.remove('hidden');
             if (aside) aside.classList.remove('hidden');
             courtPanel.classList.remove('lg:col-span-12');
             courtPanel.classList.add('lg:col-span-7');
