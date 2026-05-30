@@ -191,8 +191,8 @@
         bestAgainst: ['Offenses dependent on continuous perimeter screening actions.','Ball-screen dominant structures and heavy pick-and-roll units.','Lineups displaying balanced, uniform size across positions.'],
         counters: ['Utilize hard slip-screens to catch switching defenders mid-transfer.','Exploit interior size mismatches instantly via post-ups.','Incorporate ghost screens to trigger alignment confusion.'],
         keyframes: [
-          { ball: [160, 230], offense: [[140,220], [200,220], [80,180], [320,180], [200,70]], defense: [[155,225], [185,215], [95,180], [305,180], [200,85]] },
-          { ball: [190, 230], offense: [[180,220], [150,220], [80,180], [320,180], [200,70]], defense: [[170,215], [195,225], [95,180], [305,180], [200,85]] }
+          { ball: [160, 230], offense: [[140,220], [200,220], [80,180], [320,180], [200,70]], defense: [[115,240], [200,188], [112,180], [288,180], [200,102]] },
+          { ball: [190, 230], offense: [[180,220], [150,220], [80,180], [320,180], [200,70]], defense: [[130,245], [210,232], [112,180], [288,180], [200,102]] }
         ],
         routes: [{dIdx: 0, type: 'shift'}, {dIdx: 1, type: 'shift'}]
       },
@@ -456,6 +456,18 @@
       const by = f0.ball[1] + (f1.ball[1] - f0.ball[1]) * ease;
       ball.setAttribute('cx', bx);
       ball.setAttribute('cy', by);
+
+      // Highlight the offense player closest to the ball as the ball handler (orange)
+      let ballHandlerIdx = 0, closestDist = Infinity;
+      for (let i = 0; i < 5; i++) {
+        const ox = f0.offense[i][0] + (f1.offense[i][0] - f0.offense[i][0]) * ease;
+        const oy = f0.offense[i][1] + (f1.offense[i][1] - f0.offense[i][1]) * ease;
+        const d = Math.hypot(ox - bx, oy - by);
+        if (d < closestDist) { closestDist = d; ballHandlerIdx = i; }
+      }
+      for (let i = 0; i < 5; i++) {
+        oLayer[i].children[0].setAttribute('fill', i === ballHandlerIdx ? '#f97316' : '#1c1917');
+      }
 
       // Render contextual vector lines matching the specific path limits dynamically
       drawVectorRoutes(ease, defData);
