@@ -14,7 +14,7 @@
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <header class="mb-4">
-            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Offensive systems guide</p>
+            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 mb-2">Offensive system guides</p>
             <h1 class="text-3xl font-extrabold text-stone-900 tracking-tight">Basketball Offensive Systems</h1>
         </header>
 
@@ -269,11 +269,11 @@
                         steps: [
                             { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2' },
                             { type: 'cut', player: 'p1', to: 'rim', label: '1 cuts hard to the rim' },
-                            { type: 'fill', player: 'p1', to: 'rightCorner', label: '1 exits to the empty corner' },
                             { actions: [
                                 { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
                                 { type: 'fill', player: 'p5', to: 'rightWing', label: '5 fills the wing' }
-                            ], label: '3 and 5 fill behind the cut' }
+                            ], label: '3 and 5 fill behind the cut' },
+                            { type: 'fill', player: 'p1', to: 'rightCorner', label: '1 exits to the empty corner' }
                         ]
                     }),
                     defineAction({
