@@ -409,8 +409,10 @@
                         desc: 'A player screens away from the ball to free a teammate on a back cut. The screener reads the defense and the floor maintains spacing.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
-                            { type: 'screen', player: 'p4', to: 'screenLeftWing', label: '4 sets a back screen for 2' },
-                            { type: 'cut', player: 'p2', to: 'rim', label: '2 cuts off the back screen' },
+                            { actions: [
+                                { type: 'screen', player: 'p4', to: 'screenLeftWing', label: '4 sets the back screen' },
+                                { type: 'cut', player: 'p2', to: 'rim', label: '2 cuts below the screen' }
+                            ], label: '4 screens as 2 cuts below' },
                             { type: 'pass', from: 'p1', to: 'p2', label: '1 passes to 2 at the rim' },
                             { type: 'fill', player: 'p4', to: 'leftWing', label: '4 opens back to the wing' }
                         ]
