@@ -217,6 +217,18 @@
             let ballPlayer = definition.setup.ball;
             const frames = [{ positions: clonePositions(positions), ball: playerRoutePoint(positions, ballPlayer), routes: [], cue: 'Setup' }];
             definition.steps.forEach(step => {
+                if (step.type === 'vibrate') {
+                    const player = step.player;
+                    const [cx, cy] = positions[player];
+                    const amp = step.amplitude || 2;
+                    [[-amp, 0], [amp, 0], [0, 0]].forEach(([dx, dy], i) => {
+                        const vp = clonePositions(positions);
+                        vp[player] = [cx + dx, cy + dy];
+                        const vb = ballPlayer === player ? [cx + dx, cy + dy] : (ballPlayer ? playerRoutePoint(positions, ballPlayer) : frames[frames.length - 1].ball);
+                        frames.push({ positions: vp, ball: vb, routes: [], cue: i === 0 ? (step.label || '') : '', duration: 280 });
+                    });
+                    return;
+                }
                 const routes = [];
                 const actions = step.actions || [step];
                 actions.forEach(action => {
@@ -363,7 +375,7 @@
                                 { type: 'fill', player: 'p2', to: 'leftCorner', label: '2 fills the left corner' },
                                 { type: 'fill', player: 'p1', to: 'leftWing', label: '1 rotates to the left wing' }
                             ], label: '2 and 1 rotate away from the screen' },
-                            { type: 'pass', from: 'p3', to: 'p2', label: '3 skips the ball to 2' },
+                            { type: 'pass', from: 'p3', to: 'p1', label: '3 skips the ball to 1' },
                             { type: 'fill', player: 'p4', to: 'top', label: '4 releases to the top' }
                         ]
                     }),
@@ -373,14 +385,22 @@
                         desc: 'When the ball reverses sides, the offense mirrors the circle movement in the new attack direction. The floor stays spaced and the defense must recover.',
                         setup: { players: { p1: 'rightWing', p2: 'top', p3: 'leftWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
-                            { type: 'pass', from: 'p1', to: 'p2', label: '1 reverses to 2 at the top' },
-                            { type: 'drive', player: 'p2', to: 'leftElbow', label: '2 attacks the left lane' },
+                            { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives to the elbow' },
                             { actions: [
-                                { type: 'fill', player: 'p3', to: 'leftCorner', label: '3 circles to the corner' },
-                                { type: 'fill', player: 'p4', to: 'rim', label: '4 dives to the paint' },
-                                { type: 'fill', player: 'p1', to: 'top', label: '1 fills the top' },
-                                { type: 'fill', player: 'p5', to: 'rightWing', label: '5 lifts to the wing' }
-                            ], label: 'Circle reverses to the left side' }
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
+                                { type: 'fill', player: 'p5', to: 'rightWing', label: '5 lifts to the wing' },
+                                { type: 'fill', player: 'p2', to: 'rightSlotHigh', label: '2 slides toward the ball' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 lifts from the corner' }
+                            ], label: 'Circle fills behind the drive' },
+                            { type: 'vibrate', player: 'p1', amplitude: 2, label: '1 picks up the dribble' },
+                            { actions: [
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p3', to: 'leftWing', label: '3 circles back to the wing' },
+                                { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 drops to the corner' },
+                                { type: 'fill', player: 'p5', to: 'rightCorner', label: '5 drops to the corner' }
+                            ], label: 'Circle reverses — floor resets' },
+                            { type: 'pass', from: 'p1', to: 'p3', label: '1 swings to 3 on the left wing' },
+                            { type: 'fill', player: 'p1', to: 'rightWing', label: '1 fills the open right wing' }
                         ]
                     }),
                     defineAction({
@@ -636,7 +656,7 @@
         }
         function animateSystemFrames(frames, index = 0, showRoutes = false) {
             if (index >= frames.length - 1) { animationFrame = null; renderFrame(frames[frames.length - 1], undefined, showRoutes); return; }
-            const from = frames[index], to = frames[index + 1], duration = 950, start = performance.now();
+            const from = frames[index], to = frames[index + 1], duration = to.duration !== undefined ? to.duration : 950, start = performance.now();
             function step(now) {
                 const t = Math.min((now - start) / duration, 1);
                 const frame = interpolateFrame(from, to, ease(t));
