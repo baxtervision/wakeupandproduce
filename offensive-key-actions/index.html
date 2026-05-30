@@ -19,50 +19,44 @@
         </header>
 
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
-            <!-- Court panel -->
-            <div class="lg:col-span-7 bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
-                <div class="flex items-center justify-between gap-3 mb-4">
-                    <div>
-                        <h2 id="gbb-action-title" class="text-xl font-extrabold text-stone-900">Select an action</h2>
-                        <p id="gbb-action-tag" class="text-xs font-bold uppercase tracking-wide text-orange-600 mt-1"></p>
-                    </div>
-                </div>
-                <p id="gbb-action-desc" class="text-sm text-stone-500 mb-4 leading-relaxed min-h-[2.5rem]">Choose an action from the list to see its court diagram and animation.</p>
-                <div class="w-full max-w-xl mx-auto aspect-[4/3] court-bg relative" id="gbb-court">
-                    <div class="court-baseline"></div>
-                    <div class="court-key"></div>
-                    <div class="court-free-throw-circle"></div>
-                    <div class="court-3pt-line"></div>
-                    <div class="court-backboard"></div>
-                    <div class="court-rim"></div>
-                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 300" aria-label="Animated offensive court diagram">
-                        <g id="gbb-routes" stroke-width="3" stroke-linecap="round" fill="none"></g>
-                    </svg>
-                    <div id="gp1" class="system-player system-primary">1</div>
-                    <div id="gp2" class="system-player">2</div>
-                    <div id="gp3" class="system-player">3</div>
-                    <div id="gp4" class="system-player">4</div>
-                    <div id="gp5" class="system-player">5</div>
-                    <div id="gball" class="system-ball"></div>
-                <div class="route-key" aria-label="Animation key">
-                    <span><i class="route-swatch drive"></i>Dribble/Drive</span>
-                    <span><i class="route-swatch pass"></i>Pass</span>
-                    <span><i class="route-swatch move"></i>Cut/Fill</span>
-                    <span><i class="route-swatch screen"></i>Screen</span>
-                </div>
-                </div>
-                <div class="flex justify-center gap-3 mt-5">
-                    <button id="gbb-show" class="bg-stone-100 text-stone-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Show Sequence</button>
-                    <button id="gbb-play" class="bg-stone-900 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-700 transition-colors">Play Animation</button>
-                    <button id="gbb-reset" class="bg-stone-100 text-stone-600 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Reset</button>
-                </div>
-            </div>
-
-            <!-- Right sidebar: action list + info -->
-            <aside class="lg:col-span-5 space-y-4">
+            <!-- Court panel + info panel -->
+            <div class="lg:col-span-7 space-y-4">
                 <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
-                    <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-3">Top 10 Actions</h3>
-                    <div id="gbb-action-list" class="space-y-2"></div>
+                    <div class="flex items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h2 id="gbb-action-title" class="text-xl font-extrabold text-stone-900">Select an action</h2>
+                            <p id="gbb-action-tag" class="text-xs font-bold uppercase tracking-wide text-orange-600 mt-1"></p>
+                        </div>
+                    </div>
+                    <p id="gbb-action-desc" class="text-sm text-stone-500 mb-4 leading-relaxed min-h-[2.5rem]">Choose an action from the list to see its court diagram and animation.</p>
+                    <div class="w-full max-w-xl mx-auto aspect-[4/3] court-bg relative" id="gbb-court">
+                        <div class="court-baseline"></div>
+                        <div class="court-key"></div>
+                        <div class="court-free-throw-circle"></div>
+                        <div class="court-3pt-line"></div>
+                        <div class="court-backboard"></div>
+                        <div class="court-rim"></div>
+                        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 300" aria-label="Animated offensive court diagram">
+                            <g id="gbb-routes" stroke-width="3" stroke-linecap="round" fill="none"></g>
+                        </svg>
+                        <div id="gp1" class="system-player system-primary">1</div>
+                        <div id="gp2" class="system-player">2</div>
+                        <div id="gp3" class="system-player">3</div>
+                        <div id="gp4" class="system-player">4</div>
+                        <div id="gp5" class="system-player">5</div>
+                        <div id="gball" class="system-ball"></div>
+                    <div class="route-key" aria-label="Animation key">
+                        <span><i class="route-swatch drive"></i>Dribble/Drive</span>
+                        <span><i class="route-swatch pass"></i>Pass</span>
+                        <span><i class="route-swatch move"></i>Cut/Fill</span>
+                        <span><i class="route-swatch screen"></i>Screen</span>
+                    </div>
+                    </div>
+                    <div class="flex justify-center gap-3 mt-5">
+                        <button id="gbb-show" class="bg-stone-100 text-stone-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Show Sequence</button>
+                        <button id="gbb-play" class="bg-stone-900 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-700 transition-colors">Play Animation</button>
+                        <button id="gbb-reset" class="bg-stone-100 text-stone-600 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Reset</button>
+                    </div>
                 </div>
                 <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm space-y-4" id="gbb-info-panel">
                     <div>
@@ -77,6 +71,14 @@
                         <h4 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1">Defensive Counters</h4>
                         <p id="gbb-counters" class="text-sm text-stone-600 leading-relaxed"></p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Right sidebar: action list -->
+            <aside class="lg:col-span-5">
+                <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+                    <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-3">Top 10 Offense Actions</h3>
+                    <div id="gbb-action-list" class="space-y-2"></div>
                 </div>
             </aside>
         </section>
