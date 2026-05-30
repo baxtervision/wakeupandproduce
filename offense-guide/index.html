@@ -421,7 +421,7 @@
                     defineAction({
                         id: 'ballscreen',
                         title: 'Layer 10: Ball Screen',
-                        desc: 'A Power Dribble triggers a teammate to set a ball screen. The driver attacks, the screener rolls, and the other three players rotate using Circle Movement.',
+                        desc: 'A power dribble triggers a teammate to set a ball screen. The driver attacks, the screener rolls, and the other three players rotate using Circle Movement.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { actions: [
@@ -440,7 +440,7 @@
                     defineAction({
                         id: 'powerdribble',
                         title: 'Layer 11: Power Dribble / DHO',
-                        desc: 'A strong dribble toward a teammate triggers a dribble handoff. The receiver attacks immediately while the original ball handler spaces or rolls behind the action.',
+                        desc: 'A power dribble toward a teammate triggers a dribble handoff. The receiver attacks immediately while the original ball handler spaces or rolls behind the action.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightSlotHigh', label: '1 power dribbles at 3' },
@@ -450,7 +450,9 @@
                                 { type: 'fill', player: 'p1', to: 'rightWing', label: '1 spaces off the handoff' },
                                 { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
                                 { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
-                            ], label: '3 attacks while spacing fills behind' }
+                            ], label: '3 attacks while spacing fills behind' },
+                            { type: 'drive', player: 'p3', to: 'rightElbow', label: '3 dribbles toward the paint' },
+                            { type: 'pass', from: 'p3', to: 'p5', label: '3 kicks to 5 in the corner' }
                         ]
                     }),
                     defineAction({
