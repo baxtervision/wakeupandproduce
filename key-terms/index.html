@@ -59,8 +59,17 @@
     .kt-key-dot.offense { background: #ea580c; }
     .kt-key-line { width: 24px; border-top: 2px dashed #2563eb; }
     .kt-key-screen { width: 18px; height: 8px; border-radius: 3px; background: #92400e; }
+    .kt-court-wrap { padding: 14px 18px 6px; }
+    .kt-court-inner { width: 100%; aspect-ratio: 4/3; position: relative; }
+    .kt-anim-btns { display: flex; gap: 8px; justify-content: center; padding: 10px 18px 0; }
+    .kt-anim-btn { padding: 6px 20px; border-radius: 8px; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+    .kt-anim-btn.play { background: #1c1917; color: #fff; border: 1px solid #1c1917; }
+    .kt-anim-btn.play:hover { background: #44403c; }
+    .kt-anim-btn.reset { background: #f5f5f4; color: #1c1917; border: 1px solid #d6d3d1; }
+    .kt-anim-btn.reset:hover { background: #e7e5e4; }
+    .kt-anim-note { text-align: center; margin: 8px 18px 0; font-size: .8rem; color: var(--site-muted); line-height: 1.55; }
     @media (max-width: 820px) { .kt-layout { grid-template-columns: 1fr; } .kt-sidebar { position: static; } }
-    @media (max-width: 640px) { .kt-term-detail { grid-template-columns: 1fr; } .kt-modal { padding: 10px; } .kt-modal-head { padding: 14px; } .kt-diagram { padding: 12px; } }
+    @media (max-width: 640px) { .kt-term-detail { grid-template-columns: 1fr; } .kt-modal { padding: 10px; } .kt-modal-head { padding: 14px; } .kt-diagram { padding: 0; } }
   </style>
 </head>
 <body>
@@ -752,211 +761,469 @@
       <div class="kt-modal-head">
         <div>
           <h2 class="kt-modal-title" id="diagram-title">Term Diagram</h2>
-          <p class="kt-modal-note" id="diagram-note">Static teaching diagram.</p>
         </div>
         <button class="kt-modal-close" type="button" aria-label="Close diagram">&times;</button>
       </div>
-      <div class="kt-diagram" id="diagram-body"></div>
+      <div class="kt-court-wrap">
+        <div class="kt-court-inner court-bg" id="kt-court">
+          <div class="court-baseline"></div>
+          <div class="court-key"></div>
+          <div class="court-free-throw-circle"></div>
+          <div class="court-3pt-line"></div>
+          <div class="court-backboard"></div>
+          <div class="court-rim"></div>
+          <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 400 300" aria-hidden="true">
+            <g id="kt-routes-g" stroke-width="3" stroke-linecap="round" fill="none"></g>
+          </svg>
+          <div id="kp1" class="system-player system-primary">1</div>
+          <div id="kp2" class="system-player">2</div>
+          <div id="kp3" class="system-player">3</div>
+          <div id="kp4" class="system-player">4</div>
+          <div id="kp5" class="system-player">5</div>
+          <div id="kball" class="system-ball"></div>
+        </div>
+      </div>
+      <div class="kt-anim-btns">
+        <button class="kt-anim-btn play" id="kt-play-btn" type="button">Play</button>
+        <button class="kt-anim-btn reset" id="kt-reset-btn" type="button">Reset</button>
+      </div>
+      <p class="kt-anim-note" id="kt-anim-note"></p>
+      <div class="kt-diagram-key" style="padding: 10px 18px 14px;">
+        <span><i class="kt-key-dot offense"></i>Featured (orange)</span>
+        <span><i class="kt-key-dot"></i>Other players</span>
+        <span><i class="kt-key-line"></i>Cut / movement</span>
+        <span><i class="kt-key-screen"></i>Screen</span>
+      </div>
     </div>
   </div>
   <script>
+    // ── Sidebar nav highlight ──────────────────────────────────────────────
     const sections = document.querySelectorAll('.kt-card[id]');
     const navBtns = document.querySelectorAll('.kt-nav-btn');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('href') === '#' + entry.target.id));
-        }
+        if (entry.isIntersecting) navBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('href') === '#' + entry.target.id));
       });
     }, { rootMargin: '-10% 0px -75% 0px' });
     sections.forEach(s => observer.observe(s));
 
+    // ── Court animation helpers ────────────────────────────────────────────
+    // Default player positions: p1=top-of-key, p2=left-wing, p3=right-wing, p4=left-block, p5=right-block
+    // Court orientation: y=0 is above 3pt arc (midcourt side), y=100 is baseline (basket end)
+    const KT_DEF = { p1:[50,18], p2:[20,30], p3:[80,30], p4:[20,70], p5:[80,70] };
+    function ktBase(opts={}) { return ktMove({}, [], opts); }
+    function ktMove(overrides={}, routes=[], opts={}) {
+      const pos = Object.assign({}, KT_DEF, overrides);
+      const ball = Array.isArray(opts.ball) ? opts.ball : (opts.ball && pos[opts.ball] ? pos[opts.ball] : pos.p1);
+      return { positions: pos, ball, routes };
+    }
+
+    // ── Diagram data: id → { frames[], note } ─────────────────────────────
+    const KT_DIAGRAMS = {
+      contain: {
+        frames: [
+          ktMove({p1:[30,28],p2:[22,32]}, [], {ball:'p2'}),
+          ktMove({p1:[38,50],p2:[32,54]}, [[22,32,32,54,'drive'],[30,28,38,50,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) = defender. Stays between the ball and the basket, giving ground to stay in front rather than gambling for a steal.'
+      },
+      closeout: {
+        frames: [
+          ktMove({p1:[55,55],p2:[80,30]}, [], {ball:'p2'}),
+          ktMove({p1:[74,28]}, [[55,55,74,28,'sprint']], {ball:'p2'})
+        ],
+        note: '1 (orange) = closeout defender. Sprint hard, then chop feet short of the shooter — arrive balanced with high hands, not flying past.'
+      },
+      help: {
+        frames: [
+          ktMove({p1:[50,40],p2:[22,32],p3:[80,30]}, [], {ball:'p2'}),
+          ktMove({p1:[40,54],p2:[36,58],p3:[80,30]}, [[22,32,36,58,'drive'],[50,40,40,54,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) = help defender stepping in on the drive. 2 = driver. 3 = the assignment 1 is temporarily leaving. Step in early — the driver must see a body.'
+      },
+      gap: {
+        frames: [
+          ktMove({p1:[64,28],p2:[50,18],p3:[80,30]}, [], {ball:'p2'}),
+          ktMove({p1:[54,36],p2:[38,32],p3:[80,30]}, [[50,18,38,32,'drive'],[64,28,54,36,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) = off-ball defender in the gap. Ball is at the top (2). 3 is 1\'s assignment. One foot in the lane — visible to both but committed to neither.'
+      },
+      deny: {
+        frames: [
+          ktMove({p1:[72,26],p2:[50,18],p3:[80,30]}, [], {ball:'p2'}),
+          ktMove({p1:[72,26],p3:[68,62]}, [[80,30,68,62,'cut'],[50,18,68,62,'pass']], {ball:[68,62]})
+        ],
+        note: '1 (orange) = denial defender on 3. Keeps hand and body in the passing lane. 3 reads the denial and back-cuts — 2 delivers a bounce pass to space.'
+      },
+      hedge: {
+        frames: [
+          ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
+          ktMove({p1:[26,24],p2:[34,32],p3:[36,26],p5:[42,58]}, [[50,18,34,32,'drive'],[46,28,42,58,'cut'],[44,38,26,24,'cut'],[52,16,36,26,'cut']], {ball:[34,32]}),
+          ktMove({p1:[40,56],p2:[30,28],p3:[32,24],p5:[40,64]}, [[26,24,40,56,'cut']], {ball:[30,28]})
+        ],
+        note: '1 (orange) = hedging big (5\'s defender). 5 = screener/roller. 2 = ball handler. 1 shows hard to slow the drive, then sprints back to 5 before 2 can find the roller.'
+      },
+      blitz: {
+        frames: [
+          ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
+          ktMove({p1:[38,28],p2:[36,30],p3:[30,26],p5:[42,58]}, [[50,18,36,30,'drive'],[46,28,42,58,'cut'],[44,38,38,28,'cut'],[52,16,30,26,'cut']], {ball:[36,30]})
+        ],
+        note: '1 (orange) + 3 = both trap 2 off the screen. 5 rolls away. Two defenders lock down the ball, forcing a rushed pass or turnover. Works best near sidelines or late clock.'
+      },
+      switch: {
+        frames: [
+          ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
+          ktMove({p1:[36,26],p2:[36,30],p3:[42,52],p5:[42,58]}, [[50,18,36,30,'drive'],[46,28,42,58,'cut'],[52,16,36,26,'cut'],[44,38,42,52,'cut']], {ball:[36,30]})
+        ],
+        note: '1 (orange) + 3 switch. 1 takes the ball handler (2). 3 takes the roller (5). Talk must come before contact — "switch" calls the exchange, "got him" confirms it.'
+      },
+      drop: {
+        frames: [
+          ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
+          ktMove({p1:[44,70],p2:[34,32],p3:[36,26],p5:[42,58]}, [[50,18,34,32,'drive'],[46,28,42,58,'cut'],[44,38,44,70,'cut'],[52,16,36,26,'cut']], {ball:[34,32]})
+        ],
+        note: '1 (orange) = big drops to protect the rim. 3 fights over the screen to stay with 2. 1 stays between 5 (roller) and the basket. Invites pull-up jumpers but protects layups.'
+      },
+      ice: {
+        frames: [
+          ktMove({p1:[46,16],p2:[50,18],p5:[36,32]}, [], {ball:'p2'}),
+          ktMove({p1:[30,22],p2:[26,36],p5:[30,44]}, [[50,18,26,36,'drive'],[46,16,30,22,'cut'],[36,32,30,44,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) = on-ball defender applying ICE. Forces 2 (ball handler) to the baseline side BEFORE the screen (5) arrives. Positions on the inside hip to deny the middle.'
+      },
+      underover: {
+        frames: [
+          ktMove({p1:[60,34],p2:[80,30],p4:[64,36]}, [], {ball:'p2'}),
+          ktMove({p1:[70,28]}, [[60,34,70,28,'sprint']], {ball:'p2'})
+        ],
+        note: '1 (orange) goes OVER the screen — used against shooters to stay attached. Going under (staying low) is used against non-shooters to prevent pull-ups near the screen.'
+      },
+      shortroll: {
+        frames: [
+          ktMove({p1:[46,28],p2:[50,18]}, [], {ball:'p2'}),
+          ktMove({p1:[48,46],p2:[36,30]}, [[50,18,36,30,'drive'],[46,28,48,46,'cut']], {ball:[36,30]})
+        ],
+        note: '1 (orange) = the short-rolling big. Stops at the free throw line instead of going to the rim. Creates a mid-range catch option and stresses the low help defender.'
+      },
+      tagroller: {
+        frames: [
+          ktMove({p1:[62,42],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
+          ktMove({p1:[44,54],p2:[34,32],p3:[36,26],p5:[42,58]}, [[50,18,34,32,'drive'],[46,28,42,58,'cut'],[52,16,36,26,'cut'],[62,42,44,54,'cut']], {ball:[34,32]}),
+          ktMove({p1:[72,36],p5:[42,64]}, [[44,54,72,36,'cut']], {ball:[34,32]})
+        ],
+        note: '1 (orange) = help defender tagging the roller. Steps into 5\'s path to slow the roll, then sprints back out to recover. Tag with the body, not a lazy arm reach.'
+      },
+      xout: {
+        frames: [
+          ktMove({p1:[50,42],p2:[22,32],p3:[80,30],p4:[88,68],p5:[58,38]}, [], {ball:'p2'}),
+          ktMove({p1:[40,50],p2:[36,54],p3:[80,30],p4:[88,68],p5:[58,38]}, [[22,32,36,54,'drive'],[50,42,40,50,'cut']], {ball:'p2'}),
+          ktMove({p1:[80,60],p2:[36,54],p3:[80,30],p4:[88,68],p5:[76,28]}, [[36,54,80,30,'pass'],[40,50,80,60,'cut'],[58,38,76,28,'cut']], {ball:[80,30]})
+        ],
+        note: '1 (orange) + 5 cross and exchange assignments after 2\'s drive-and-kick. 1 takes the corner (4), 5 takes the wing (3). First takes the nearest threat, second takes next.'
+      },
+      scram: {
+        frames: [
+          ktMove({p1:[36,56],p2:[28,34],p3:[30,28],p5:[38,62]}, [], {ball:[50,18]}),
+          ktMove({p1:[28,30],p2:[36,58]}, [[36,56,28,30,'cut'],[28,34,36,58,'cut']], {ball:[50,18]})
+        ],
+        note: '1 (orange) = small defender stuck in a post mismatch on 5. 2 = big with the wrong perimeter assignment. They scram: 1 sprints back out, 2 takes the post. Call it before the entry, not after the catch.'
+      },
+      shrink: {
+        frames: [
+          ktMove({p1:[50,36],p2:[22,30],p3:[78,30],p4:[22,56],p5:[78,56]}, [], {ball:[50,18]}),
+          ktMove({p1:[50,44],p2:[34,42],p3:[66,42],p4:[34,60],p5:[66,60]}, [[22,30,34,42,'cut'],[78,30,66,42,'cut'],[22,56,34,60,'cut'],[78,56,66,60,'cut']], {ball:[50,18]})
+        ],
+        note: 'All 5 defenders shrink toward the paint when the ball is above the break. Show a crowd — every drive should see a body. Recover fast when the ball swings.'
+      },
+      nomiddle: {
+        frames: [
+          ktMove({p1:[30,28],p2:[22,32]}, [], {ball:'p2'}),
+          ktMove({p1:[24,36],p2:[16,50]}, [[22,32,16,50,'drive'],[30,28,24,36,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) forces 2 to the sideline. Top foot stays high — body angled to deny the middle lane. One bad hip opens the straight-line drive to the rim.'
+      },
+      icepost: {
+        frames: [
+          ktMove({p1:[30,60],p2:[50,18],p5:[34,64]}, [], {ball:'p2'}),
+          ktMove({p1:[32,56],p5:[34,64]}, [[50,18,34,64,'pass'],[30,60,32,56,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) fronts or 3-quarters 5 (post player). With backside help (4, not shown) covering the lob, the post catch is taken away entirely. Call it before the ball arrives at the post.'
+      },
+      toplock: {
+        frames: [
+          ktMove({p1:[24,62],p2:[50,18],p3:[24,68],p4:[24,52]}, [], {ball:'p2'}),
+          ktMove({p1:[20,46],p4:[24,58]}, [[24,52,24,58,'screen'],[24,62,20,46,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) top-locks: jumps to the HIGH side of 3 (cutter) before 4\'s screen. Takes away the curl. Forces a backdoor cut or a catch in traffic. Requires rim help behind it.'
+      },
+      locktrail: {
+        frames: [
+          ktMove({p1:[24,74],p2:[50,18],p3:[22,72],p4:[24,52]}, [], {ball:'p2'}),
+          ktMove({p1:[22,32],p3:[22,30],p4:[24,58]}, [[24,52,24,58,'screen'],[22,72,22,30,'cut'],[24,74,22,32,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) = lock and trail: chases hip-to-hip behind 3 (shooter) through both the screen and the catch. Stay attached — any gap is a clean catch-and-shoot.'
+      },
+      pindown: {
+        frames: [
+          ktMove({p1:[24,72],p2:[50,18],p4:[24,54]}, [], {ball:'p2'}),
+          ktMove({p1:[22,30],p4:[24,60]}, [[24,54,24,60,'screen'],[24,72,22,30,'cut'],[50,18,22,30,'pass']], {ball:[22,30]})
+        ],
+        note: '4 sets a pin-down (downscreen) for 1 (orange). 1 cuts up from the corner to the wing. Defenders must decide: trail, shoot the gap, top-lock, or switch.'
+      },
+      flare: {
+        frames: [
+          ktMove({p1:[36,44],p2:[50,18],p4:[30,38]}, [], {ball:'p2'}),
+          ktMove({p1:[12,72],p4:[24,44]}, [[30,38,24,44,'screen'],[36,44,12,72,'cut'],[50,18,12,72,'pass']], {ball:[12,72]})
+        ],
+        note: '4 sets a flare screen sending 1 (orange) away from the ball toward the corner. Defender on 4 must communicate — the screen comes from the back side.'
+      },
+      backscreen: {
+        frames: [
+          ktMove({p1:[80,30],p2:[50,18],p4:[62,44]}, [], {ball:'p2'}),
+          ktMove({p1:[52,72],p4:[66,34]}, [[62,44,66,34,'screen'],[80,30,52,72,'cut'],[50,18,52,72,'pass']], {ball:[52,72]})
+        ],
+        note: '4 sets a back screen behind 1\'s (orange) defender. 1 cuts hard to the rim. The defender must be warned early — "back, back, back" — before contact is made.'
+      },
+      crossscreen: {
+        frames: [
+          ktMove({p1:[76,64],p2:[50,18],p4:[32,68]}, [], {ball:'p2'}),
+          ktMove({p1:[24,68],p4:[46,68]}, [[32,68,46,68,'screen'],[76,64,24,68,'cut'],[50,18,24,68,'pass']], {ball:[24,68]})
+        ],
+        note: '4 sets a cross screen for 1 (orange), sending them across the lane to the opposite block. Used to free post players near the rim. Defenders can fight through, switch, or front.'
+      },
+      stagger: {
+        frames: [
+          ktMove({p1:[78,70],p2:[50,18],p4:[60,50],p5:[42,42]}, [], {ball:'p2'}),
+          ktMove({p1:[22,28],p4:[58,54],p5:[40,46]}, [[60,50,58,54,'screen'],[42,42,40,46,'screen'],[78,70,22,28,'cut'],[50,18,22,28,'pass']], {ball:[22,28]})
+        ],
+        note: '4 and 5 set back-to-back screens for 1 (orange). The second screen is where most defenders relax — that\'s where the catch happens. Force the defender to navigate twice.'
+      },
+      slip: {
+        frames: [
+          ktMove({p1:[46,30],p2:[50,18]}, [], {ball:'p2'}),
+          ktMove({p1:[48,68]}, [[46,30,48,68,'cut'],[50,18,48,68,'pass']], {ball:[48,68]})
+        ],
+        note: '1 (orange) fakes setting a screen, then slips to the rim before contact. Punishes any defender who over-commits or switches early. The ball handler must be ready to deliver immediately.'
+      },
+      boxout: {
+        frames: [
+          ktMove({p1:[42,52],p2:[38,55]}, [], {ball:[50,20]}),
+          ktMove({p1:[40,62],p2:[36,62]}, [[42,52,40,62,'cut']], {ball:[50,20]})
+        ],
+        note: '1 (orange) = defender boxing out. Makes contact with 2 first, then seals them away from the ball. Hit first, then go get. Rebounding starts at contact, not when the ball hits the rim.'
+      },
+      crash: {
+        frames: [
+          ktMove({p1:[45,55],p4:[42,54]}, [], {ball:[50,20]}),
+          ktMove({p1:[44,70]}, [[45,55,44,70,'sprint']], {ball:[50,20]})
+        ],
+        note: '1 (orange) = offensive rebounder crashing hard to the glass. Fight through the box-out attempt (4). Crash with purpose — straight-line path to where the ball is going, not where it came from.'
+      },
+      release: {
+        frames: [
+          ktMove({p1:[50,40]}, [], {ball:[50,25]}),
+          ktMove({p1:[50,10]}, [[50,40,50,10,'sprint']], {ball:[50,25]})
+        ],
+        note: '1 (orange) = release guard. Leaks toward half-court the moment the shot goes up. A perfect outlet pass becomes a fast break before the defense has time to organize.'
+      },
+      fiveout: {
+        frames: [ktMove({p2:[18,30],p3:[82,30],p4:[10,72],p5:[90,72]}, [], {ball:'p1'})],
+        note: '5-out: all five players on the perimeter. The paint is empty — every drive has a clear lane. Corner players must hold spacing and not collapse toward the ball without a read.'
+      },
+      drivekick: {
+        frames: [
+          ktMove({p2:[18,30],p3:[82,30],p4:[10,72],p5:[90,72]}, [], {ball:'p1'}),
+          ktMove({p1:[38,44],p2:[18,30],p3:[82,30],p4:[10,72],p5:[90,72]}, [[50,18,38,44,'drive']], {ball:[38,44]}),
+          ktMove({p1:[38,44],p2:[18,30],p3:[82,30],p4:[10,72],p5:[90,72]}, [[38,44,82,30,'pass']], {ball:[82,30]})
+        ],
+        note: '1 drives to collapse the defense, then kicks to 3 (open shooter). The drive forces a help decision — someone must leave their assignment. Find the open player before they leave.'
+      },
+      corner45: {
+        frames: [
+          ktMove({p1:[50,18],p2:[18,30],p4:[10,72]}, [], {ball:'p1'}),
+          ktMove({p1:[38,44],p4:[24,58]}, [[50,18,38,44,'drive'],[10,72,24,58,'cut']], {ball:[38,44]}),
+          ktMove({p1:[38,44],p4:[24,58]}, [[38,44,24,58,'pass']], {ball:[24,58]})
+        ],
+        note: '1 drives toward the baseline. 4 (corner player) cuts at 45° up into the gap when their defender helps on the drive. The cut exploits the help rotation before it can recover.'
+      },
+      primarybreak: {
+        frames: [
+          ktMove({p1:[50,72],p2:[16,68],p3:[84,68]}, [], {ball:'p1'}),
+          ktMove({p1:[50,36],p2:[16,32],p3:[84,30]}, [[50,72,50,36,'sprint'],[16,68,16,32,'sprint'],[84,68,84,30,'sprint']], {ball:'p1'})
+        ],
+        note: '1 outlets, 2 and 3 fill the lanes wide. Getting the ball ahead by passing is always faster than dribbling. Fill early, outnumber the defense before it can get back.'
+      },
+      advantage: {
+        frames: [
+          ktMove({p1:[32,32],p2:[68,32],p4:[50,52]}, [], {ball:'p1'}),
+          ktMove({p1:[42,48],p4:[42,50]}, [[32,32,42,48,'drive'],[50,52,42,50,'cut']], {ball:[42,48]}),
+          ktMove({p1:[42,48],p4:[42,50]}, [[42,48,68,32,'pass']], {ball:[68,32]})
+        ],
+        note: '2-on-1: 1 drives, 4 (lone defender) must commit. 1 keeps the scoring threat alive until 4 commits, then passes to 2. Never give up the advantage by deciding too early.'
+      },
+      man: {
+        frames: [ktMove({p1:[50,22],p2:[22,34],p3:[78,34],p4:[22,68],p5:[78,68]}, [], {ball:[50,18]})],
+        note: '1 (orange) = ball defender. Man-to-man: each player guards a specific matchup. Help rules — gap, help side, tag — still apply behind every matchup.'
+      },
+      zone: {
+        frames: [ktMove({p1:[32,24],p2:[68,24],p3:[18,54],p4:[50,54],p5:[82,54]}, [], {ball:[50,18]})],
+        note: '2-3 zone. 1 and 2 (top) pressure the perimeter. 3, 4, and 5 (bottom) cover the lane and elbows. 1 (orange) initiates pressure and calls shifts as the ball moves.'
+      },
+      press: {
+        frames: [
+          ktMove({p1:[42,64],p2:[40,70],p3:[50,58],p5:[50,30]}, [], {ball:'p2'}),
+          ktMove({p1:[38,68],p3:[44,68]}, [[50,58,44,68,'cut'],[42,64,38,68,'cut']], {ball:'p2'})
+        ],
+        note: '1 (orange) corrals 2 (ball handler). 3 jumps to trap. The sideline boundary acts as an extra defender. 5 stays deep as the safety net — no gambling that leaves the rim open.'
+      },
+      safety: {
+        frames: [ktMove({p1:[38,68],p2:[40,72],p3:[64,68],p4:[50,30]}, [], {ball:'p2'})],
+        note: '4 (orange) = safety / center fielder. Stays deeper than any offensive threat while the press plays out. Never gambles — one back-tap or lob pass ends in an uncontested layup.'
+      }
+    };
+
+    // ── Term → diagram ID mapping ──────────────────────────────────────────
+    const KT_MAP = {
+      'on-ball defense':'contain','contain':'contain','closeout':'closeout','stance':'contain',
+      'slide / drop step':'contain','help defense':'help','gap':'gap','deny':'deny',
+      'shell principles':'shrink','pack line / pressure':'nomiddle',
+      'ball screen':'hedge','hedge':'hedge','blitz / trap':'blitz','switch':'switch',
+      'drop coverage':'drop','ice / down':'ice','show and recover':'hedge',
+      'under / over':'underover','late switch / peel switch':'switch','short roll':'shortroll',
+      'down screen / pin down':'pindown','flare screen':'flare','back screen':'backscreen',
+      'cross screen':'crossscreen','stagger':'stagger','slip':'slip',
+      'top-lock':'toplock','lock and trail':'locktrail','shoot the gap':'underover','switch off-ball':'switch',
+      'help-side':'help','strong side / weak side':'help','tag the roller':'tagroller',
+      'x-out':'xout','scram switch':'scram','shrink / close the gap':'shrink',
+      'pack the paint':'shrink','no-middle':'nomiddle','ice the post':'icepost','wall up':'closeout',
+      'contain press':'press','run-and-jump':'press','side trap / corner trap':'press',
+      'denial press':'deny','match-up press':'press','safety / center fielder':'safety',
+      'man-to-man':'man','zone defense':'zone','match-up zone':'zone',
+      'ball-side / weak-side i':'help','shell drill':'shrink','kill / stop':'contain',
+      'no paint touch':'nomiddle','ball, help, gap':'help','shot, box out':'boxout',
+      'tag, go, switch':'tagroller','early, loud, continuous':'help','next':'xout',
+      'box out':'boxout','crash':'crash','release':'release','hit-and-go-get':'boxout',
+      '5-out / 4-out 1-in':'fiveout','drive-and-kick':'drivekick','kick-ahead':'primarybreak',
+      'paint touch':'drivekick','corner spacing / 45° cut':'corner45',
+      'transition':'primarybreak','primary break':'primarybreak','secondary break':'primarybreak',
+      'advantage / disadvantage':'advantage','zone':'zone','turnover':'contain',
+      'and-one':'contain','field goal % / free throw %':'contain'
+    };
+
+    // ── Animation engine ───────────────────────────────────────────────────
+    const KT_PLAYERS = ['p1','p2','p3','p4','p5'];
+    let ktCurrent = null, ktTimers = [], ktRaf = null;
+
+    function ktSetPlayer(id, xy) { const el = document.getElementById('k'+id); if (el) { el.style.left = xy[0]+'%'; el.style.top = xy[1]+'%'; } }
+    function ktSetBall(xy) { const el = document.getElementById('kball'); if (el) { el.style.left = xy[0]+'%'; el.style.top = xy[1]+'%'; } }
+
+    function ktDrawRoutes(routes, limit) {
+      const g = document.getElementById('kt-routes-g');
+      g.innerHTML = '';
+      routes.slice(0, limit).forEach(([x1,y1,x2,y2,type]) => {
+        const sx1=x1*4, sy1=y1*3, sx2=x2*4, sy2=y2*3;
+        const colors = {pass:'#f59e0b',drive:'#f97316',dribble:'#f97316',screen:'#1c1917',sprint:'#64748b',cut:'#64748b',fill:'#64748b'};
+        const color = colors[type] || '#64748b';
+        const dx=sx2-sx1, dy=sy2-sy1, len=Math.sqrt(dx*dx+dy*dy)||1;
+        const ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
+        let el;
+        if (type==='drive'||type==='dribble') {
+          let d='M'+sx1+' '+sy1;
+          for (let i=1;i<=18;i++) { const t=i/18, w=Math.sin(t*Math.PI*6)*5; d+=' L'+(sx1+dx*t+nx*w).toFixed(1)+' '+(sy1+dy*t+ny*w).toFixed(1); }
+          el=document.createElementNS('http://www.w3.org/2000/svg','path');
+          el.setAttribute('d',d); el.setAttribute('stroke',color); el.setAttribute('fill','none');
+        } else {
+          el=document.createElementNS('http://www.w3.org/2000/svg','line');
+          el.setAttribute('x1',sx1); el.setAttribute('y1',sy1); el.setAttribute('x2',sx2); el.setAttribute('y2',sy2);
+          el.setAttribute('stroke',color);
+          if (type!=='screen') el.setAttribute('stroke-dasharray','7 5');
+          if (type==='screen') {
+            const tb=document.createElementNS('http://www.w3.org/2000/svg','line');
+            tb.setAttribute('x1',sx2-nx*9); tb.setAttribute('y1',sy2-ny*9); tb.setAttribute('x2',sx2+nx*9); tb.setAttribute('y2',sy2+ny*9);
+            tb.setAttribute('stroke',color); tb.setAttribute('stroke-width','3'); g.appendChild(tb);
+          }
+        }
+        el.setAttribute('stroke-width','3'); el.setAttribute('stroke-linecap','round'); g.appendChild(el);
+        if (type!=='screen') {
+          const arr=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+          arr.setAttribute('points',[[sx2,sy2],[sx2-ux*12+nx*5,sy2-uy*12+ny*5],[sx2-ux*12-nx*5,sy2-uy*12-ny*5]].map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
+          arr.setAttribute('fill',color); g.appendChild(arr);
+        }
+      });
+    }
+
+    function ktRenderFrame(frame, routeLimit) {
+      KT_PLAYERS.forEach(id => ktSetPlayer(id, frame.positions[id]));
+      ktSetBall(frame.ball);
+      ktDrawRoutes(frame.routes||[], routeLimit===undefined ? (frame.routes?frame.routes.length:0) : routeLimit);
+    }
+
+    function ktLerp(a,b,t) { return a+(b-a)*t; }
+    function ktEase(t) { return t<0.5?2*t*t:-1+(4-2*t)*t; }
+    function ktInterp(from, to, amt) {
+      const pos={};
+      KT_PLAYERS.forEach(id=>{ pos[id]=[ktLerp(from.positions[id][0],to.positions[id][0],amt),ktLerp(from.positions[id][1],to.positions[id][1],amt)]; });
+      return { positions:pos, ball:[ktLerp(from.ball[0],to.ball[0],amt),ktLerp(from.ball[1],to.ball[1],amt)], routes:to.routes||[] };
+    }
+    function ktAnimate(frames, idx=0) {
+      if (idx>=frames.length-1) { ktRaf=null; ktRenderFrame(frames[frames.length-1]); return; }
+      const from=frames[idx], to=frames[idx+1], dur=950, t0=performance.now();
+      function step(now) {
+        const t=Math.min((now-t0)/dur,1);
+        ktRenderFrame(ktInterp(from,to,ktEase(t)));
+        if (t<1) ktRaf=requestAnimationFrame(step); else ktAnimate(frames,idx+1);
+      }
+      ktRaf=requestAnimationFrame(step);
+    }
+    function ktClear() { ktTimers.forEach(clearTimeout); ktTimers=[]; if(ktRaf){cancelAnimationFrame(ktRaf);ktRaf=null;} }
+    function ktPlay() { if(!ktCurrent)return; ktClear(); ktRenderFrame(ktCurrent.frames[0],0); ktTimers.push(setTimeout(()=>ktAnimate(ktCurrent.frames),500)); }
+    function ktReset() { if(!ktCurrent)return; ktClear(); ktRenderFrame(ktCurrent.frames[0],0); }
+
+    // ── Modal open/close ───────────────────────────────────────────────────
     const diagramModal = document.querySelector('#diagram-modal');
     const diagramTitle = document.querySelector('#diagram-title');
-    const diagramNote = document.querySelector('#diagram-note');
-    const diagramBody = document.querySelector('#diagram-body');
     const diagramClose = document.querySelector('.kt-modal-close');
     let lastDiagramButton = null;
+    const normalizeTerm = t => t.toLowerCase().replace(/\s+/g,' ').trim();
 
-    const normalizeTerm = (text) => text.toLowerCase().replace(/\s+/g, ' ').trim();
-
-    const getDiagramType = (term, sectionId) => {
-      const t = normalizeTerm(term);
-      if (/(screen|hedge|blitz|trap|switch|drop|ice|down|under|over|short roll|slip|top-lock|trail|stagger|flare|pin|cross)/.test(t)) return 'screen';
-      if (/(tag|x-out|scram|help|gap|shrink|pack|no-middle|wall|low man|load|strong side|weak side|paint touch)/.test(t)) return 'help';
-      if (/(press|run-and-jump|safety|center fielder|denial)/.test(t)) return 'pressure';
-      if (/(zone|man-to-man|match-up|shell|kill|stop|no paint)/.test(t) || sectionId === 'team-schemes') return 'scheme';
-      if (/(box|crash|release|hit-and-go-get|rebound)/.test(t) || sectionId === 'rebounding') return 'rebound';
-      if (/(transition|break|kick-ahead|advantage|disadvantage)/.test(t) || sectionId === 'transition') return 'transition';
-      if (/(5-out|4-out|drive-and-kick|corner spacing|45)/.test(t) || sectionId === 'offensive-spacing') return 'spacing';
-      return 'foundation';
-    };
-
-    const diagramNoteFor = (type, term) => {
-      const notes = {
-        foundation: 'Static stance and angle picture: defender keeps the ball out of the middle and protects the lane first.',
-        screen: 'Static screen-coverage picture: the thick block is the screen, dashed lines show player paths, and the blue defender line shows the coverage response.',
-        help: 'Static help-and-rotation picture: blue defenders shrink, tag, or exchange while orange offense threatens the paint and kick-out.',
-        pressure: 'Static pressure picture: two defenders use the sideline as an extra defender while the safety protects behind the play.',
-        scheme: 'Static team-shape picture: defenders are arranged by responsibility so players can see spacing, help, and coverage zones.',
-        rebound: 'Static rebounding picture: contact happens first, then players pursue the ball path.',
-        transition: 'Static transition picture: the ball moves ahead, lanes fill wide, and the defense organizes from disadvantage.',
-        spacing: 'Static spacing picture: the offense stretches the floor, then attacks the gap to create a help decision.'
-      };
-      return notes[type] || notes.foundation;
-    };
-
-    const player = (x, y, label, team = 'defense') => {
-      const fill = team === 'offense' ? '#fb923c' : '#60a5fa';
-      const stroke = team === 'offense' ? '#9a3412' : '#1d4ed8';
-      return `<g><circle cx="${x}" cy="${y}" r="18" fill="${fill}" stroke="${stroke}" stroke-width="3"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="13" font-weight="900" fill="#111827">${label}</text></g>`;
-    };
-
-    const label = (x, y, text) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="15" font-weight="900" fill="#1c1917">${text}</text>`;
-    const path = (d, color = '#2563eb', dashed = true) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ${dashed ? 'stroke-dasharray="10 8"' : ''} marker-end="url(#arrow)"/>`;
-    const screen = (x, y, rotate = 0) => `<rect x="${x}" y="${y}" width="12" height="58" rx="5" fill="#92400e" transform="rotate(${rotate} ${x + 6} ${y + 29})"/><path d="M${x - 12} ${y + 9} q10 8 0 16 q-10 8 0 16 q10 8 0 16" fill="none" stroke="#92400e" stroke-width="3" stroke-linecap="round"/>`;
-
-    const courtShell = (inner) => `
-      <svg viewBox="0 0 640 420" role="img" aria-label="Static basketball teaching diagram">
-        <defs>
-          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill="#2563eb"></path>
-          </marker>
-          <pattern id="dashShade" width="8" height="8" patternUnits="userSpaceOnUse">
-            <path d="M0 8 L8 0" stroke="#fed7aa" stroke-width="2"></path>
-          </pattern>
-        </defs>
-        <rect x="20" y="20" width="600" height="380" rx="10" fill="#fff" stroke="#d6d3d1" stroke-width="3"/>
-        <line x1="320" y1="20" x2="320" y2="400" stroke="#e7e5e4" stroke-width="2"/>
-        <rect x="245" y="20" width="150" height="130" fill="none" stroke="#d6d3d1" stroke-width="3"/>
-        <circle cx="320" cy="150" r="58" fill="none" stroke="#e7e5e4" stroke-width="3"/>
-        <path d="M190 20 C210 118 430 118 450 20" fill="none" stroke="#e7e5e4" stroke-width="3"/>
-        <circle cx="320" cy="42" r="21" fill="none" stroke="#d6d3d1" stroke-width="3"/>
-        ${inner}
-      </svg>
-      <div class="kt-diagram-key">
-        <span><i class="kt-key-dot offense"></i>Offense</span>
-        <span><i class="kt-key-dot"></i>Defense</span>
-        <span><i class="kt-key-line"></i>Movement / help path</span>
-        <span><i class="kt-key-screen"></i>Screen</span>
-      </div>`;
-
-    const diagramSvg = (type, term) => {
-      if (type === 'screen') {
-        return courtShell(`
-          ${player(250, 245, 'O1', 'offense')}${player(330, 230, 'O5', 'offense')}${player(238, 285, 'D1')}${player(360, 205, 'D5')}
-          ${screen(306, 210, -20)}
-          ${path('M250 245 C285 220 310 215 350 225', '#ea580c')}
-          ${path('M360 205 C330 210 306 230 292 260', '#2563eb')}
-          ${path('M238 285 C265 260 295 245 332 238', '#2563eb')}
-          ${label(320, 342, 'Screen action: talk early, show the coverage, recover')}
-        `);
-      }
-      if (type === 'help') {
-        return courtShell(`
-          <rect x="245" y="20" width="150" height="130" fill="url(#dashShade)" opacity=".65"/>
-          ${player(170, 235, 'O1', 'offense')}${player(430, 205, 'O2', 'offense')}${player(320, 115, 'O5', 'offense')}
-          ${player(180, 282, 'D1')}${player(350, 205, 'D2')}${player(300, 150, 'D5')}${player(435, 275, 'D3')}
-          ${path('M170 235 C220 195 270 160 320 125', '#ea580c')}
-          ${path('M350 205 C325 185 310 165 300 150', '#2563eb')}
-          ${path('M435 275 C410 235 380 215 350 205', '#2563eb')}
-          ${label(320, 342, 'Help picture: shrink, tag, then recover to the next threat')}
-        `);
-      }
-      if (type === 'pressure') {
-        return courtShell(`
-          ${player(92, 300, 'O1', 'offense')}${player(112, 250, 'D1')}${player(75, 350, 'D2')}${player(270, 95, 'D5')}${player(215, 265, 'O2', 'offense')}
-          <line x1="20" y1="210" x2="250" y2="400" stroke="#fed7aa" stroke-width="9" stroke-linecap="round" opacity=".75"/>
-          ${path('M112 250 C98 270 92 288 92 300', '#2563eb')}
-          ${path('M75 350 C85 330 90 314 92 300', '#2563eb')}
-          ${path('M92 300 C138 280 180 270 215 265', '#ea580c')}
-          ${label(330, 342, 'Trap picture: boundary helps, nearest defenders rotate, safety stays deep')}
-        `);
-      }
-      if (type === 'scheme') {
-        return courtShell(`
-          <path d="M210 65 L430 65 L500 250 L320 340 L140 250 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="3" opacity=".75"/>
-          ${player(320, 90, 'D5')}${player(220, 150, 'D3')}${player(420, 150, 'D4')}${player(225, 285, 'D1')}${player(415, 285, 'D2')}
-          ${player(320, 45, 'O5', 'offense')}${player(170, 220, 'O1', 'offense')}${player(470, 220, 'O2', 'offense')}
-          ${path('M170 220 C230 180 270 120 320 90', '#2563eb')}
-          ${label(320, 365, 'Team shape: guard your area or matchup, then help the next action')}
-        `);
-      }
-      if (type === 'rebound') {
-        return courtShell(`
-          ${player(260, 125, 'O5', 'offense')}${player(285, 165, 'D5')}${player(370, 150, 'O3', 'offense')}${player(392, 190, 'D3')}
-          ${path('M390 70 C370 85 350 98 330 118', '#ea580c')}
-          ${path('M285 165 C278 148 270 134 260 125', '#2563eb', false)}
-          ${path('M392 190 C384 170 376 158 370 150', '#2563eb', false)}
-          ${label(320, 342, 'Rebound picture: hit first, seal space, then pursue the ball')}
-        `);
-      }
-      if (type === 'transition') {
-        return courtShell(`
-          ${player(135, 310, 'O1', 'offense')}${player(250, 245, 'O2', 'offense')}${player(390, 145, 'O3', 'offense')}
-          ${player(210, 300, 'D1')}${player(320, 250, 'D2')}${player(395, 205, 'D3')}
-          ${path('M135 310 C210 265 295 205 390 145', '#ea580c')}
-          ${path('M210 300 C260 270 310 235 395 205', '#2563eb')}
-          ${label(320, 342, 'Transition picture: advance the ball, fill lanes, stop the rim first')}
-        `);
-      }
-      if (type === 'spacing') {
-        return courtShell(`
-          ${player(160, 300, 'O1', 'offense')}${player(205, 80, 'O2', 'offense')}${player(435, 80, 'O3', 'offense')}${player(480, 300, 'O4', 'offense')}${player(320, 185, 'O5', 'offense')}
-          ${player(210, 250, 'D1')}${player(320, 145, 'D5')}${player(430, 245, 'D4')}
-          ${path('M160 300 C215 250 260 210 320 185', '#ea580c')}
-          ${path('M320 145 C290 170 270 195 250 225', '#2563eb')}
-          ${path('M320 185 C365 145 400 105 435 80', '#ea580c')}
-          ${label(320, 352, 'Spacing picture: wide threats create a gap, the drive forces help')}
-        `);
-      }
-      return courtShell(`
-        ${player(235, 260, 'O1', 'offense')}${player(250, 310, 'D1')}${player(390, 185, 'O2', 'offense')}${player(330, 205, 'D2')}
-        <path d="M235 260 C275 225 305 185 320 140" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round" opacity=".28"/>
-        ${path('M250 310 C255 285 250 270 235 260', '#2563eb', false)}
-        ${path('M330 205 C300 195 285 178 275 150', '#2563eb')}
-        ${label(320, 342, 'Foundation picture: contain the ball, close the lane, show early help')}
-      `);
-    };
-
-    const openDiagram = (button, term, sectionId) => {
-      const type = getDiagramType(term, sectionId);
+    const openDiagram = (button, term) => {
+      const key = normalizeTerm(term);
+      const id = KT_MAP[key] || 'contain';
+      const diagram = KT_DIAGRAMS[id] || KT_DIAGRAMS.contain;
+      ktCurrent = diagram;
       lastDiagramButton = button;
       diagramTitle.textContent = term;
-      diagramNote.textContent = diagramNoteFor(type, term);
-      diagramBody.innerHTML = diagramSvg(type, term);
+      document.getElementById('kt-anim-note').textContent = diagram.note;
+      ktClear();
+      ktRenderFrame(diagram.frames[0], 0);
       diagramModal.classList.add('open');
-      diagramModal.setAttribute('aria-hidden', 'false');
+      diagramModal.setAttribute('aria-hidden','false');
       diagramClose.focus();
     };
 
     const closeDiagram = () => {
+      ktClear();
       diagramModal.classList.remove('open');
-      diagramModal.setAttribute('aria-hidden', 'true');
-      diagramBody.innerHTML = '';
+      diagramModal.setAttribute('aria-hidden','true');
       if (lastDiagramButton) lastDiagramButton.focus();
     };
 
-    document.querySelectorAll('.kt-term').forEach((termEl) => {
+    document.getElementById('kt-play-btn').addEventListener('click', ktPlay);
+    document.getElementById('kt-reset-btn').addEventListener('click', ktReset);
+    diagramClose.addEventListener('click', closeDiagram);
+    diagramModal.addEventListener('click', e => { if(e.target===diagramModal) closeDiagram(); });
+    document.addEventListener('keydown', e => { if(e.key==='Escape'&&diagramModal.classList.contains('open')) closeDiagram(); });
+
+    // ── Inject View buttons ────────────────────────────────────────────────
+    document.querySelectorAll('.kt-term').forEach(termEl => {
       const nameEl = termEl.querySelector('.kt-term-name');
       if (!nameEl || nameEl.querySelector('.kt-view-btn')) return;
       const term = nameEl.childNodes[0].textContent.trim();
-      const sectionId = termEl.closest('.kt-card[id]')?.id || '';
-      const button = document.createElement('button');
-      button.className = 'kt-view-btn';
-      button.type = 'button';
-      button.textContent = 'View';
-      button.setAttribute('aria-label', `View diagram for ${term}`);
-      button.addEventListener('click', () => openDiagram(button, term, sectionId));
-      nameEl.appendChild(button);
-    });
-
-    diagramClose.addEventListener('click', closeDiagram);
-    diagramModal.addEventListener('click', (event) => {
-      if (event.target === diagramModal) closeDiagram();
-    });
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && diagramModal.classList.contains('open')) closeDiagram();
+      const btn = document.createElement('button');
+      btn.className = 'kt-view-btn'; btn.type = 'button'; btn.textContent = 'View';
+      btn.setAttribute('aria-label', 'View diagram for ' + term);
+      btn.addEventListener('click', () => openDiagram(btn, term));
+      nameEl.appendChild(btn);
     });
   </script>
   <script src="../shared-nav.js"></script>
