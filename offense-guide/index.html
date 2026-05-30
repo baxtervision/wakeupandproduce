@@ -19,7 +19,7 @@
         </header>
 
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
-            <div class="lg:col-span-7 bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
+            <div id="court-panel" class="lg:col-span-7 bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
                 <div class="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Offensive systems">
                     <button class="system-tab px-4 py-2 rounded-lg text-sm font-bold bg-orange-600 text-white" data-system="readreact">Read & React</button>
                     <button class="system-tab px-4 py-2 rounded-lg text-sm font-bold bg-white border border-stone-200 text-stone-600" data-system="grinnell">Grinnell</button>
@@ -48,7 +48,7 @@
                     <div id="p3" class="system-player">3</div>
                     <div id="p4" class="system-player">4</div>
                     <div id="p5" class="system-player">5</div>
-                    <div id="court-overlay" class="absolute inset-0 z-50 hidden flex-col items-center justify-center bg-stone-50/97 rounded-lg px-6 py-5 text-center">
+                    <div id="court-overlay" class="absolute inset-0 z-50 hidden flex-col items-center justify-center bg-white rounded-lg px-6 py-5 text-center">
                         <p id="court-overlay-msg" class="text-sm font-semibold text-stone-600 mb-4 max-w-xs leading-relaxed"></p>
                         <ul id="court-overlay-points" class="text-left space-y-2 max-w-xs"></ul>
                     </div>
@@ -66,9 +66,40 @@
                     <button id="show-system" class="bg-stone-100 text-stone-700 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Show Sequence</button>
                     <button id="reset-system" class="bg-stone-100 text-stone-600 px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors">Reset</button>
                 </div>
+                <div id="motion-content" class="hidden mt-4 space-y-6 text-sm text-stone-700">
+                    <h2 class="text-lg font-bold text-stone-900">Traditional Motion vs. Read &amp; React</h2>
+                    <div>
+                        <h3 class="font-bold text-stone-800 mb-2">1. After you pass the ball</h3>
+                        <ul class="space-y-2 pl-4">
+                            <li><strong>Traditional Motion:</strong> You make a choice. After you pass, you can choose to go set a screen for a teammate on the other side of the floor.</li>
+                            <li><strong>Read &amp; React:</strong> You don't choose. After you pass, you must sprint directly to the basket. You have to clear out so someone else can fill your spot.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-stone-800 mb-2">2. When screens happen</h3>
+                        <ul class="space-y-2 pl-4">
+                            <li><strong>Traditional Motion:</strong> You have to read your defender. If they trail behind you, you curl toward the basket. If they cheat under the screen, you flare out for a shot.</li>
+                            <li><strong>Read &amp; React:</strong> The rules make the choice for you. You don't have to guess what the defender is doing. The system tells you exactly where to go based on the type of screen being set.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-stone-800 mb-2">3. When someone dribbles right at you</h3>
+                        <ul class="space-y-2 pl-4">
+                            <li><strong>Traditional Motion:</strong> You and your teammate have to be on the same page. It could mean you cut backdoor, it could mean you swap spots, or it could mean you take a handoff.</li>
+                            <li><strong>Read &amp; React:</strong> It always means one thing. If a teammate dribbles toward you, you cut to the basket immediately. No guessing, no waiting.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-stone-800 mb-2">4. When the ball goes into the post</h3>
+                        <ul class="space-y-2 pl-4">
+                            <li><strong>Traditional Motion:</strong> The players on the outside swap spots or screen for each other to keep their defenders busy while the post player works.</li>
+                            <li><strong>Read &amp; React:</strong> The person who passed the ball sprints right past the post player looking for a quick handoff or a layup. Everyone else waits for that first cut to happen.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <aside class="lg:col-span-5 space-y-4">
+            <aside id="action-aside" class="lg:col-span-5 space-y-4">
                 <div class="bg-white border border-stone-200 rounded-lg p-5 shadow-sm">
                     <h3 class="text-sm font-extrabold uppercase tracking-wider text-stone-400 mb-3">System Actions</h3>
                     <div id="action-list" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
@@ -142,7 +173,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="p-4 bg-orange-50 border border-orange-100 rounded-lg"><strong>Read & React</strong><p class="text-sm text-stone-600 mt-2">Best when you want every player learning spacing, cuts, and decision-making habits.</p></div>
                 <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg"><strong>Grinnell</strong><p class="text-sm text-stone-600 mt-2">Best when tempo, depth, and volume can overwhelm opponents over time.</p></div>
-                <div class="p-4 bg-stone-100 border border-stone-200 rounded-lg"><strong>Traditional Motion</strong><p class="text-sm text-stone-600 mt-2">Best when screening, timing, and disciplined reads fit your roster identity.</p></div>
+                <div class="p-4 bg-stone-100 border border-stone-200 rounded-lg"><strong>Traditional Motion</strong><p class="text-sm text-stone-600 mt-2">Best when screening, timing, and disciplined defensive reads fit your roster identity.</p></div>
             </div>
         </section>
     </main>
@@ -184,6 +215,8 @@
             deepRightCorner: [88,18],
             pressTrapLeft: [20,40],
             pressTrapRight: [28,46],
+            pressPaintLeft: [44,64],
+            pressPaintRight: [56,64],
             platoonLeftWing: [22,18],
             platoonRightWing: [78,18],
             platoonLeftCorner: [24,42],
@@ -458,7 +491,7 @@
                     defineAction({
                         id: 'transitionflow',
                         title: 'Layer 12: Transition Flow into 4-Out, 1-In',
-                        desc: 'Transition into spacing. The rim runner establishes the post, the guards fill perimeter spots, and the team arrives naturally in a 4-out, 1-in shape.',
+                        desc: 'Transition into spacing.  The rim runner establishes the post, the guards fill perimeter spots, and the team arrives naturally in a 4-out, 1-in shape.',
                         setup: { players: { p1: 'leftWide', p2: 'rightWide', p3: 'leftSlotHigh', p4: 'rightSlotHigh', p5: 'highSafety' }, ball: 'p1' },
                         steps: [
                             { type: 'sprint', player: 'p5', to: 'rightBlock', label: '5 rim runs into early post' },
@@ -511,11 +544,11 @@
                       ]})
                     },
                     { id: 'press', displayType: 'animated', typeLabel: 'Pressure Concept',
-                      title: 'Full-Court Pressure / 1-2-2 Trap',
+                      title: 'Full-Court Pressure / Traps',
                       desc: 'The press is part of the offensive math. It creates turnovers, rushed shots, and extra possessions, even when it gives up space behind the trap.',
                       frames: buildActionFrames({ setup: { players: { p1: 'leftSlot', p2: 'rightSlot', p3: 'leftWing', p4: 'top', p5: 'rightElbow' }, ball: 'p1' }, steps: [
                           { actions: [ { type: 'trap', player: 'p1', to: 'pressTrapLeft', label: '1 traps from the left' }, { type: 'trap', player: 'p2', to: 'pressTrapRight', label: '2 closes from the right' } ], label: 'Double-team the ball — force a rushed pass' },
-                          { actions: [ { type: 'fill', player: 'p3', to: 'leftElbow', label: '3 takes the left passing lane' }, { type: 'fill', player: 'p4', to: 'middleLane', label: '4 clogs the middle' } ], label: 'Others rotate to protect passing lanes' }
+                          { actions: [ { type: 'fill', player: 'p3', to: 'pressPaintLeft', label: '3 drops to the middle of the paint' }, { type: 'fill', player: 'p4', to: 'pressPaintRight', label: '4 drops to the middle of the paint' } ], label: '3 and 4 collapse to the middle of the paint' }
                       ]})
                     },
                     { id: 'tradeoffs', displayType: 'tradeoff', typeLabel: 'System Tradeoff',
@@ -711,7 +744,6 @@
         function renderSystem(systemKey, actionIndex = 0) {
             clearTimers(); currentSystem = systemKey; currentAction = actionIndex;
             const system = systems[systemKey];
-            const action = system.actions[actionIndex];
             document.getElementById('system-title').textContent = system.title;
             document.getElementById('system-subtitle').textContent = system.subtitle;
             document.getElementById('system-tag').textContent = system.tag;
@@ -720,14 +752,38 @@
                 const active = btn.dataset.system === systemKey;
                 btn.className = active ? 'system-tab px-4 py-2 rounded-lg text-sm font-bold bg-orange-600 text-white' : 'system-tab px-4 py-2 rounded-lg text-sm font-bold bg-white border border-stone-200 text-stone-600';
             });
+            const metrics = document.getElementById('grinnell-metrics');
+            if (metrics) metrics.classList.toggle('hidden', systemKey !== 'grinnell');
+            const motionContent = document.getElementById('motion-content');
+            const courtEl = document.getElementById('system-court');
+            const stepCue = document.getElementById('step-cue');
+            const courtPanel = document.getElementById('court-panel');
+            const aside = document.getElementById('action-aside');
+            const btnRow = courtPanel.querySelector('.flex.flex-wrap.justify-center');
+            if (systemKey === 'motion') {
+                if (motionContent) motionContent.classList.remove('hidden');
+                if (courtEl) courtEl.classList.add('hidden');
+                if (stepCue) stepCue.classList.add('hidden');
+                if (btnRow) btnRow.classList.add('hidden');
+                if (aside) aside.classList.add('hidden');
+                courtPanel.classList.remove('lg:col-span-7');
+                courtPanel.classList.add('lg:col-span-12');
+                return;
+            }
+            if (motionContent) motionContent.classList.add('hidden');
+            if (courtEl) courtEl.classList.remove('hidden');
+            if (stepCue) stepCue.classList.remove('hidden');
+            if (btnRow) btnRow.classList.remove('hidden');
+            if (aside) aside.classList.remove('hidden');
+            courtPanel.classList.remove('lg:col-span-12');
+            courtPanel.classList.add('lg:col-span-7');
+            const action = system.actions[actionIndex];
             document.getElementById('action-list').innerHTML = system.actions.map((a, index) => `<button class="action-choice ${index === actionIndex ? 'active' : ''}" data-index="${index}"><strong>${a.title}</strong><span>${a.desc}</span></button>`).join('');
             document.querySelectorAll('.action-choice').forEach(btn => btn.addEventListener('click', () => renderSystem(currentSystem, Number(btn.dataset.index))));
             document.getElementById('action-title').textContent = action.title;
             document.getElementById('action-desc').textContent = action.desc;
             const badge = document.getElementById('action-type-badge');
             if (badge) { if (action.typeLabel) { badge.textContent = action.typeLabel; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
-            const metrics = document.getElementById('grinnell-metrics');
-            if (metrics) metrics.classList.toggle('hidden', systemKey !== 'grinnell');
             const overlay = document.getElementById('court-overlay');
             if (overlay) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
             const primary = action.primary || 'p1';
