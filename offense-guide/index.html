@@ -387,18 +387,18 @@
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives to the elbow' },
                             { actions: [
-                                { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
-                                { type: 'fill', player: 'p5', to: 'rightWing', label: '5 lifts to the wing' },
-                                { type: 'fill', player: 'p2', to: 'rightSlotHigh', label: '2 slides toward the ball' },
-                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 lifts from the corner' }
-                            ], label: 'Circle fills behind the drive' },
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 circles to the top' },
+                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 circles to the wing' },
+                                { type: 'fill', player: 'p2', to: 'rightWing', label: '2 circles to the wing' },
+                                { type: 'fill', player: 'p5', to: 'rim', label: '5 dives to the rim' }
+                            ], label: 'Circle fills clockwise' },
                             { type: 'vibrate', player: 'p1', amplitude: 2, label: '1 picks up the dribble' },
                             { actions: [
-                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
+                                { type: 'fill', player: 'p2', to: 'top', label: '2 circles back to the top' },
                                 { type: 'fill', player: 'p3', to: 'leftWing', label: '3 circles back to the wing' },
-                                { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 drops to the corner' },
-                                { type: 'fill', player: 'p5', to: 'rightCorner', label: '5 drops to the corner' }
-                            ], label: 'Circle reverses — floor resets' },
+                                { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 circles back to the corner' },
+                                { type: 'fill', player: 'p5', to: 'rightCorner', label: '5 circles back to the corner' }
+                            ], label: 'Circle reverses counter-clockwise' },
                             { type: 'pass', from: 'p1', to: 'p3', label: '1 swings to 3 on the left wing' },
                             { type: 'fill', player: 'p1', to: 'rightWing', label: '1 fills the open right wing' }
                         ]
