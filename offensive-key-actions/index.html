@@ -183,7 +183,7 @@
                     { team: 'Teaching Point', text: 'The first pass should trigger immediate movement with no pause.' },
                     { team: 'Player Read', text: 'If both defenders jump the return, the post player attacks the open lane.' }
                 ],
-                frames: [move({p4:[32,38]},[],{ball:'p1'}), move({p1:[32,38],p4:[40,52]},[[50,18,32,38,'pass'],[50,18,32,38,'cut'],[32,38,40,52,'cut']],{ball:[32,38]})]
+                frames: [base({ball:'p1'}), move({p1:[28,28]},[[50,18,20,30,'pass'],[50,18,28,28,'cut']],{ball:[20,30]}), move({p1:[28,28],p2:[50,18]},[[20,30,28,28,'pass'],[20,30,50,18,'fill']],{ball:[28,28]})]
             },
             {
                 id: 'give-go',
