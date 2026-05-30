@@ -294,16 +294,16 @@
                     defineAction({
                         id: 'dribbleat',
                         title: 'Layer 3: Dribble At Backdoor',
-                        desc: 'When the ball handler dribbles directly at a perimeter teammate, that teammate back cuts immediately. The cut protects spacing and punishes pressure.',
+                        desc: 'When the ball handler dribbles directly at a perimeter teammate, that teammate back cuts immediately. The cut protects spacing and punishes defensive pressure.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' },
                         steps: [
                             { type: 'drive', player: 'p1', to: 'leftSlot', label: '1 dribbles at 2' },
                             { type: 'cut', player: 'p2', to: 'rim', label: '2 back cuts immediately' },
-                            { type: 'fill', player: 'p2', to: 'rightCorner', label: '2 exits opposite' },
                             { actions: [
                                 { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' },
                                 { type: 'fill', player: 'p5', to: 'rightWing', label: '5 lifts to the wing' }
-                            ], label: 'The weak side fills into five-out spacing' }
+                            ], label: 'The weak side fills into five-out spacing' },
+                            { type: 'fill', player: 'p2', to: 'rightCorner', label: '2 exits opposite' }
                         ]
                     }),
                     defineAction({
@@ -314,7 +314,7 @@
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives the right lane' },
                             { actions: [
-                                { type: 'fill', player: 'p3', to: 'rightCorner', label: '3 circles to the corner' },
+                                { type: 'fill', player: 'p3', to: 'rightDeepCorner', label: '3 circles to the corner' },
                                 { type: 'fill', player: 'p5', to: 'rim', label: '5 dives to the rim' },
                                 { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
                                 { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
@@ -324,13 +324,13 @@
                     defineAction({
                         id: 'postreaction',
                         title: 'Layer 5: Post Reaction on Penetration',
-                        desc: 'When a perimeter player drives, the post slides to the short corner to open a passing window and clear help-side traffic from the paint.',
+                        desc: 'When a perimeter player drives above the post, the post slides to the short corner to open a passing window and clear help-side traffic from the paint.',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p1' },
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives the right lane' },
                             { actions: [
                                 { type: 'fill', player: 'p5', to: 'rightShortCorner', label: '5 slides to the short corner' },
-                                { type: 'fill', player: 'p3', to: 'rightCorner', label: '3 circles behind the drive' },
+                                { type: 'fill', player: 'p3', to: 'rightDeepCorner', label: '3 circles behind the drive' },
                                 { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' }
                             ], label: 'Post opens a window on the drive side' },
                             { type: 'pass', from: 'p1', to: 'p5', label: '1 kicks to 5 in the short corner' }
@@ -344,7 +344,8 @@
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightBaseline', label: '1 drives the baseline' },
                             { actions: [
-                                { type: 'fill', player: 'p5', to: 'rim', label: '5 drifts to the paint' },
+                                { type: 'fill', player: 'p5', to: 'rightElbow', label: '5 lifts to the elbow' },
+                                { type: 'fill', player: 'p4', to: 'leftDeepCorner', label: '4 spaces to the far corner' },
                                 { type: 'fill', player: 'p2', to: 'rightSlotHigh', label: '2 slides to safety' },
                                 { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' }
                             ], label: 'The corner drifts and the top rotates' }
@@ -353,13 +354,17 @@
                     defineAction({
                         id: 'pinskip',
                         title: 'Layer 7: Pin & Skip',
-                        desc: 'Against zone or heavy help, a weak-side player pins the backside defender so the ball can be skipped to an open shooter.',
+                        desc: 'Against zone or heavy help, a weak-side player pin (screens) the backside defender so the ball can be skipped to an open shooter.',
+                        primary: 'p3',
                         setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p3' },
                         steps: [
-                            { type: 'screen', player: 'p4', to: 'pinLeftWing', label: '4 pins the weak-side defender' },
-                            { type: 'fill', player: 'p2', to: 'skipLeftSlot', label: '2 lifts into the skip window' },
+                            { type: 'screen', player: 'p4', to: 'leftSlot', label: '4 pins near the top' },
+                            { actions: [
+                                { type: 'fill', player: 'p2', to: 'leftCorner', label: '2 fills the left corner' },
+                                { type: 'fill', player: 'p1', to: 'leftWing', label: '1 rotates to the left wing' }
+                            ], label: '2 and 1 rotate away from the screen' },
                             { type: 'pass', from: 'p3', to: 'p2', label: '3 skips the ball to 2' },
-                            { type: 'fill', player: 'p4', to: 'leftCorner', label: '4 releases after the pin' }
+                            { type: 'fill', player: 'p4', to: 'top', label: '4 releases to the top' }
                         ]
                     }),
                     defineAction({
@@ -696,6 +701,9 @@
             if (metrics) metrics.classList.toggle('hidden', systemKey !== 'grinnell');
             const overlay = document.getElementById('court-overlay');
             if (overlay) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
+            const primary = action.primary || 'p1';
+            document.querySelectorAll('.system-player').forEach(el => el.classList.remove('system-primary'));
+            document.getElementById(primary).classList.add('system-primary');
             const animated = supportsAnimation(action);
             setAnimationButtons(animated);
             if (animated && action.frames) { renderFrame(action.frames[0], 0, false); }
