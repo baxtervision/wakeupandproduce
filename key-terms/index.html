@@ -61,13 +61,7 @@
     .kt-key-screen { width: 18px; height: 8px; border-radius: 3px; background: #92400e; }
     .kt-court-wrap { padding: 14px 18px 6px; }
     .kt-court-inner { width: 100%; aspect-ratio: 4/3; position: relative; }
-    .kt-anim-btns { display: flex; gap: 8px; justify-content: center; padding: 10px 18px 0; }
-    .kt-anim-btn { padding: 6px 20px; border-radius: 8px; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
-    .kt-anim-btn.play { background: #1c1917; color: #fff; border: 1px solid #1c1917; }
-    .kt-anim-btn.play:hover { background: #44403c; }
-    .kt-anim-btn.reset { background: #f5f5f4; color: #1c1917; border: 1px solid #d6d3d1; }
-    .kt-anim-btn.reset:hover { background: #e7e5e4; }
-    .kt-anim-note { text-align: center; margin: 8px 18px 0; font-size: .8rem; color: var(--site-muted); line-height: 1.55; }
+    .kt-diagram-note { margin: 8px 18px 0; font-size: .8rem; color: var(--site-muted); line-height: 1.55; }
     @media (max-width: 820px) { .kt-layout { grid-template-columns: 1fr; } .kt-sidebar { position: static; } }
     @media (max-width: 640px) { .kt-term-detail { grid-template-columns: 1fr; } .kt-modal { padding: 10px; } .kt-modal-head { padding: 14px; } .kt-diagram { padding: 0; } }
   </style>
@@ -783,11 +777,7 @@
           <div id="kball" class="system-ball"></div>
         </div>
       </div>
-      <div class="kt-anim-btns">
-        <button class="kt-anim-btn play" id="kt-play-btn" type="button">Play</button>
-        <button class="kt-anim-btn reset" id="kt-reset-btn" type="button">Reset</button>
-      </div>
-      <p class="kt-anim-note" id="kt-anim-note"></p>
+      <p class="kt-diagram-note" id="kt-diagram-note"></p>
       <div class="kt-diagram-key" style="padding: 10px 18px 14px;">
         <span><i class="kt-key-dot offense"></i>Featured (orange)</span>
         <span><i class="kt-key-dot"></i>Other players</span>
@@ -1110,17 +1100,16 @@
       'and-one':'contain','field goal % / free throw %':'contain'
     };
 
-    // ── Animation engine ───────────────────────────────────────────────────
+    // ── Static diagram renderer ────────────────────────────────────────────
     const KT_PLAYERS = ['p1','p2','p3','p4','p5'];
-    let ktCurrent = null, ktTimers = [], ktRaf = null;
 
     function ktSetPlayer(id, xy) { const el = document.getElementById('k'+id); if (el) { el.style.left = xy[0]+'%'; el.style.top = xy[1]+'%'; } }
     function ktSetBall(xy) { const el = document.getElementById('kball'); if (el) { el.style.left = xy[0]+'%'; el.style.top = xy[1]+'%'; } }
 
-    function ktDrawRoutes(routes, limit) {
+    function ktDrawRoutes(routes) {
       const g = document.getElementById('kt-routes-g');
       g.innerHTML = '';
-      routes.slice(0, limit).forEach(([x1,y1,x2,y2,type]) => {
+      routes.forEach(([x1,y1,x2,y2,type]) => {
         const sx1=x1*4, sy1=y1*3, sx2=x2*4, sy2=y2*3;
         const colors = {pass:'#f59e0b',drive:'#f97316',dribble:'#f97316',screen:'#1c1917',sprint:'#64748b',cut:'#64748b',fill:'#64748b'};
         const color = colors[type] || '#64748b';
@@ -1152,32 +1141,14 @@
       });
     }
 
-    function ktRenderFrame(frame, routeLimit) {
-      KT_PLAYERS.forEach(id => ktSetPlayer(id, frame.positions[id]));
-      ktSetBall(frame.ball);
-      ktDrawRoutes(frame.routes||[], routeLimit===undefined ? (frame.routes?frame.routes.length:0) : routeLimit);
+    function ktRenderStatic(diagram) {
+      const first = diagram.frames[0];
+      // All routes from frames after the first — they originate from frame[0] positions
+      const routes = diagram.frames.slice(1).flatMap(f => f.routes || []);
+      KT_PLAYERS.forEach(id => ktSetPlayer(id, first.positions[id]));
+      ktSetBall(first.ball);
+      ktDrawRoutes(routes);
     }
-
-    function ktLerp(a,b,t) { return a+(b-a)*t; }
-    function ktEase(t) { return t<0.5?2*t*t:-1+(4-2*t)*t; }
-    function ktInterp(from, to, amt) {
-      const pos={};
-      KT_PLAYERS.forEach(id=>{ pos[id]=[ktLerp(from.positions[id][0],to.positions[id][0],amt),ktLerp(from.positions[id][1],to.positions[id][1],amt)]; });
-      return { positions:pos, ball:[ktLerp(from.ball[0],to.ball[0],amt),ktLerp(from.ball[1],to.ball[1],amt)], routes:to.routes||[] };
-    }
-    function ktAnimate(frames, idx=0) {
-      if (idx>=frames.length-1) { ktRaf=null; ktRenderFrame(frames[frames.length-1]); return; }
-      const from=frames[idx], to=frames[idx+1], dur=950, t0=performance.now();
-      function step(now) {
-        const t=Math.min((now-t0)/dur,1);
-        ktRenderFrame(ktInterp(from,to,ktEase(t)));
-        if (t<1) ktRaf=requestAnimationFrame(step); else ktAnimate(frames,idx+1);
-      }
-      ktRaf=requestAnimationFrame(step);
-    }
-    function ktClear() { ktTimers.forEach(clearTimeout); ktTimers=[]; if(ktRaf){cancelAnimationFrame(ktRaf);ktRaf=null;} }
-    function ktPlay() { if(!ktCurrent)return; ktClear(); ktRenderFrame(ktCurrent.frames[0],0); ktTimers.push(setTimeout(()=>ktAnimate(ktCurrent.frames),500)); }
-    function ktReset() { if(!ktCurrent)return; ktClear(); ktRenderFrame(ktCurrent.frames[0],0); }
 
     // ── Modal open/close ───────────────────────────────────────────────────
     const diagramModal = document.querySelector('#diagram-modal');
@@ -1190,26 +1161,21 @@
       const key = normalizeTerm(term);
       const id = KT_MAP[key] || 'contain';
       const diagram = KT_DIAGRAMS[id] || KT_DIAGRAMS.contain;
-      ktCurrent = diagram;
       lastDiagramButton = button;
       diagramTitle.textContent = term;
-      document.getElementById('kt-anim-note').textContent = diagram.note;
-      ktClear();
-      ktRenderFrame(diagram.frames[0], 0);
+      document.getElementById('kt-diagram-note').textContent = diagram.note;
+      ktRenderStatic(diagram);
       diagramModal.classList.add('open');
       diagramModal.setAttribute('aria-hidden','false');
       diagramClose.focus();
     };
 
     const closeDiagram = () => {
-      ktClear();
       diagramModal.classList.remove('open');
       diagramModal.setAttribute('aria-hidden','true');
       if (lastDiagramButton) lastDiagramButton.focus();
     };
 
-    document.getElementById('kt-play-btn').addEventListener('click', ktPlay);
-    document.getElementById('kt-reset-btn').addEventListener('click', ktReset);
     diagramClose.addEventListener('click', closeDiagram);
     diagramModal.addEventListener('click', e => { if(e.target===diagramModal) closeDiagram(); });
     document.addEventListener('keydown', e => { if(e.key==='Escape'&&diagramModal.classList.contains('open')) closeDiagram(); });
