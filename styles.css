@@ -805,6 +805,12 @@ body:not(.site-home) {
   background: var(--site-accent);
 }
 
+.system-defender {
+  background: transparent;
+  border: 2px solid #2563eb;
+  color: #2563eb;
+}
+
 .system-ball {
   width: 13px;
   height: 13px;

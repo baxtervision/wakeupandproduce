@@ -48,6 +48,7 @@
                     <div id="p3" class="system-player">3</div>
                     <div id="p4" class="system-player">4</div>
                     <div id="p5" class="system-player">5</div>
+                    <div id="d1" class="system-player system-defender" style="display:none">D</div>
                     <div id="court-overlay" class="absolute inset-0 z-50 hidden flex-col items-center justify-center bg-white rounded-lg px-6 py-5 text-center">
                         <p id="court-overlay-msg" class="text-sm font-semibold text-stone-600 mb-4 max-w-xs leading-relaxed"></p>
                         <ul id="court-overlay-points" class="text-left space-y-2 max-w-xs"></ul>
@@ -217,6 +218,14 @@
             pressTrapRight: [28,46],
             pressPaintLeft: [44,64],
             pressPaintRight: [56,64],
+            halfCourtBallLeft: [33,7],
+            pressCloseLeft: [20,9],
+            pressCloseRight: [48,9],
+            pressTrapZoneLeft: [26,7],
+            pressTrapZoneRight: [41,7],
+            pressDenyMiddle: [36,26],
+            pressDenySideline: [66,20],
+            pressSafetyKey: [50,42],
             platoonLeftWing: [22,18],
             platoonRightWing: [78,18],
             platoonLeftCorner: [24,42],
@@ -538,17 +547,17 @@
                       title: 'Offensive Rebound and Kick-Out',
                       desc: 'Misses are part of the system. Three players crash the offensive glass to create second shots, preferably kick-out threes instead of forced putbacks.',
                       frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightCorner' }, ball: 'p1' }, steps: [
-                          { type: 'pass', from: 'p1', to: 'p3', label: '1 kicks ahead to 3 for a three' },
-                          { actions: [ { type: 'crash', player: 'p2', to: 'leftBlock', label: '2 crashes the glass' }, { type: 'crash', player: 'p4', to: 'rim', label: '4 crashes hard' }, { type: 'crash', player: 'p5', to: 'rightBlock', label: '5 crashes the glass' } ], label: 'Three players crash every shot' },
-                          { type: 'pass', from: 'p3', to: 'p1', label: '3 secures and kicks out for another three' }
+                          { type: 'pass', from: 'p1', to: 'p3', label: '1 passes to 3' },
+                          { actions: [ { type: 'shot', player: 'p3', label: '3 shoots' }, { type: 'crash', player: 'p2', to: 'leftBlock', label: '2 crashes the glass' }, { type: 'crash', player: 'p4', to: 'rim', label: '4 crashes hard' }, { type: 'crash', player: 'p5', to: 'rightBlock', label: '5 crashes the glass' } ], label: '3 shoots — three players crash the glass' },
+                          { type: 'pass', from: 'p4', to: 'p1', label: '4 grabs the rebound and kicks out to 1' }
                       ]})
                     },
                     { id: 'press', displayType: 'animated', typeLabel: 'Pressure Concept',
                       title: 'Full-Court Pressure / Traps',
                       desc: 'The press is part of the offensive math. It creates turnovers, rushed shots, and extra possessions, even when it gives up space behind the trap.',
-                      frames: buildActionFrames({ setup: { players: { p1: 'leftSlot', p2: 'rightSlot', p3: 'leftWing', p4: 'top', p5: 'rightElbow' }, ball: 'p1' }, steps: [
-                          { actions: [ { type: 'trap', player: 'p1', to: 'pressTrapLeft', label: '1 traps from the left' }, { type: 'trap', player: 'p2', to: 'pressTrapRight', label: '2 closes from the right' } ], label: 'Double-team the ball — force a rushed pass' },
-                          { actions: [ { type: 'fill', player: 'p3', to: 'pressPaintLeft', label: '3 drops to the middle of the paint' }, { type: 'fill', player: 'p4', to: 'pressPaintRight', label: '4 drops to the middle of the paint' } ], label: '3 and 4 collapse to the middle of the paint' }
+                      frames: buildActionFrames({ setup: { players: { d1: 'halfCourtBallLeft', p1: 'pressCloseLeft', p2: 'pressCloseRight', p3: 'pressDenyMiddle', p4: 'pressDenySideline', p5: 'pressSafetyKey' }, ball: 'd1' }, steps: [
+                          { actions: [ { type: 'trap', player: 'p1', to: 'pressTrapZoneLeft', label: '1 traps from the left' }, { type: 'trap', player: 'p2', to: 'pressTrapZoneRight', label: '2 closes from the right' } ], label: 'Double-team near half court — force a rushed pass' },
+                          { actions: [ { type: 'fill', player: 'p3', to: 'top', label: '3 denies the middle passing lane' }, { type: 'fill', player: 'p4', to: 'rightWing', label: '4 denies the sideline outlet' } ], label: '3 and 4 cut off passing lanes' }
                       ]})
                     },
                     { id: 'tradeoffs', displayType: 'tradeoff', typeLabel: 'System Tradeoff',
@@ -676,6 +685,8 @@
         function setCue(text) { const el = document.getElementById('step-cue'); if (el) el.textContent = text || ''; }
         function renderFrame(frame, routeLimit = frame.routes ? frame.routes.length : 0, showRoutes = true) {
             players.forEach(id => setPlayer(id, frame.positions[id]));
+            const d1el = document.getElementById('d1');
+            if (d1el) { if (frame.positions.d1) { d1el.style.display = ''; setPlayer('d1', frame.positions.d1); } else { d1el.style.display = 'none'; } }
             setBall(frame.ball);
             drawRoutes(showRoutes ? (frame.routes || []) : [], routeLimit);
             setCue(frame.cue || '');
@@ -690,6 +701,9 @@
                     lerp(from.positions[id][1], to.positions[id][1], amount)
                 ];
             });
+            if (from.positions.d1 && to.positions.d1) {
+                positions.d1 = [lerp(from.positions.d1[0], to.positions.d1[0], amount), lerp(from.positions.d1[1], to.positions.d1[1], amount)];
+            }
             return {
                 positions,
                 ball: [lerp(from.ball[0], to.ball[0], amount), lerp(from.ball[1], to.ball[1], amount)],
