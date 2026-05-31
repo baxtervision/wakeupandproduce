@@ -758,7 +758,7 @@
         </div>
         <button class="kt-modal-close" type="button" aria-label="Close diagram">&times;</button>
       </div>
-      <div class="kt-court-wrap">
+      <div class="kt-court-wrap" id="kt-court-section">
         <div class="kt-court-inner court-bg" id="kt-court">
           <div class="court-baseline"></div>
           <div class="court-key"></div>
@@ -777,8 +777,9 @@
           <div id="kball" class="system-ball"></div>
         </div>
       </div>
+      <div id="kt-illus-section" style="display:none;padding:14px 18px 6px;"><div id="kt-illus-wrap"></div></div>
       <p class="kt-diagram-note" id="kt-diagram-note"></p>
-      <div class="kt-diagram-key" style="padding: 10px 18px 14px;">
+      <div class="kt-diagram-key" id="kt-diagram-key-row" style="padding: 10px 18px 14px;">
         <span><i class="kt-key-dot offense"></i>Featured (orange)</span>
         <span><i class="kt-key-dot"></i>Other players</span>
         <span><i class="kt-key-line"></i>Cut / movement</span>
@@ -1069,12 +1070,43 @@
       safety: {
         frames: [ktMove({p1:[38,68],p2:[40,72],p3:[64,68],p4:[50,30]}, [], {ball:'p2'})],
         note: '4 (orange) = safety / center fielder. Stays deeper than any offensive threat while the press plays out. Never gambles — one back-tap or lob pass ends in an uncontested layup.'
+      },
+      stance: {
+        illus: `<svg viewBox="0 0 360 275" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:400px;border-radius:8px;background:#f8f7f6;">
+  <line x1="52" y1="232" x2="300" y2="232" stroke="#e2ddd8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="180" cy="36" r="18" fill="#e7e5e4" stroke="#1c1917" stroke-width="2.2"/>
+  <line x1="180" y1="54" x2="180" y2="67" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <polyline points="136,74 180,67 224,74" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="180" y1="67" x2="177" y2="116" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="152" y1="116" x2="202" y2="116" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <polyline points="136,74 108,112 90,150" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="224,74 252,112 270,150" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="154,118 120,178 94,230" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="94" y1="230" x2="76" y2="232" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <polyline points="200,118 234,178 258,230" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="258" y1="230" x2="276" y2="232" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="196" y1="28" x2="283" y2="22" stroke="#c4bfba" stroke-width="1"/>
+  <text x="286" y="25" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em">HEAD UP</text>
+  <line x1="210" y1="92" x2="283" y2="88" stroke="#c4bfba" stroke-width="1"/>
+  <text x="286" y="91" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em">CHEST UP</text>
+  <line x1="270" y1="150" x2="283" y2="148" stroke="#c4bfba" stroke-width="1"/>
+  <text x="286" y="151" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em">HANDS OUT</text>
+  <line x1="152" y1="116" x2="97" y2="114" stroke="#c4bfba" stroke-width="1"/>
+  <text x="94" y="117" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em" text-anchor="end">HIPS LOW</text>
+  <line x1="120" y1="178" x2="97" y2="176" stroke="#c4bfba" stroke-width="1"/>
+  <text x="94" y="179" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em" text-anchor="end">KNEES BENT</text>
+  <line x1="82" y1="249" x2="270" y2="249" stroke="#c4bfba" stroke-width="1.5"/>
+  <polygon points="78,249 86,246 86,252" fill="#c4bfba"/>
+  <polygon points="274,249 266,246 266,252" fill="#c4bfba"/>
+  <text x="176" y="264" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em" text-anchor="middle">WIDE BASE</text>
+</svg>`,
+        note: 'Low, balanced posture: feet wide, knees bent, hips loaded, chest up, and hands out — the foundation for every coverage.'
       }
     };
 
     // ── Term → diagram ID mapping ──────────────────────────────────────────
     const KT_MAP = {
-      'on-ball defense':'contain','contain':'contain','closeout':'closeout','stance':'contain',
+      'on-ball defense':'contain','contain':'contain','closeout':'closeout','stance':'stance',
       'slide / drop step':'contain','help defense':'help','gap':'gap','deny':'deny',
       'shell principles':'shrink','pack line / pressure':'nomiddle',
       'ball screen':'hedge','hedge':'hedge','blitz / trap':'blitz','switch':'switch',
@@ -1164,7 +1196,15 @@
       lastDiagramButton = button;
       diagramTitle.textContent = term;
       document.getElementById('kt-diagram-note').textContent = diagram.note;
-      ktRenderStatic(diagram);
+      const isIllus = !!diagram.illus;
+      document.getElementById('kt-court-section').style.display = isIllus ? 'none' : '';
+      document.getElementById('kt-illus-section').style.display = isIllus ? '' : 'none';
+      document.getElementById('kt-diagram-key-row').style.display = isIllus ? 'none' : '';
+      if (isIllus) {
+        document.getElementById('kt-illus-wrap').innerHTML = diagram.illus;
+      } else {
+        ktRenderStatic(diagram);
+      }
       diagramModal.classList.add('open');
       diagramModal.setAttribute('aria-hidden','false');
       diagramClose.focus();
