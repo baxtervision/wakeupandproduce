@@ -62,6 +62,7 @@
     .kt-court-wrap { padding: 14px 18px 6px; }
     .kt-court-inner { width: 100%; aspect-ratio: 4/3; position: relative; }
     .kt-diagram-note { margin: 8px 18px 0; font-size: .8rem; color: var(--site-muted); line-height: 1.55; }
+    .system-player.kt-def { background: #1e40af; }
     @media (max-width: 820px) { .kt-layout { grid-template-columns: 1fr; } .kt-sidebar { position: static; } }
     @media (max-width: 640px) { .kt-term-detail { grid-template-columns: 1fr; } .kt-modal { padding: 10px; } .kt-modal-head { padding: 14px; } .kt-diagram { padding: 0; } }
   </style>
@@ -769,7 +770,7 @@
           <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 400 300" aria-hidden="true">
             <g id="kt-routes-g" stroke-width="3" stroke-linecap="round" fill="none"></g>
           </svg>
-          <div id="kp1" class="system-player system-primary">1</div>
+          <div id="kp1" class="system-player">1</div>
           <div id="kp2" class="system-player">2</div>
           <div id="kp3" class="system-player">3</div>
           <div id="kp4" class="system-player">4</div>
@@ -780,8 +781,8 @@
       <div id="kt-illus-section" style="display:none;padding:14px 18px 6px;"><div id="kt-illus-wrap"></div></div>
       <p class="kt-diagram-note" id="kt-diagram-note"></p>
       <div class="kt-diagram-key" id="kt-diagram-key-row" style="padding: 10px 18px 14px;">
-        <span><i class="kt-key-dot offense"></i>Featured (orange)</span>
-        <span><i class="kt-key-dot"></i>Other players</span>
+        <span><i class="kt-key-dot" style="background:#1e40af"></i>Defense</span>
+        <span><i class="kt-key-dot"></i>Offense</span>
         <span><i class="kt-key-line"></i>Cut / movement</span>
         <span><i class="kt-key-screen"></i>Screen</span>
       </div>
@@ -816,35 +817,35 @@
           ktMove({p1:[40,34],p2:[34,22]}, [], {ball:'p2'}),
           ktMove({p1:[52,54],p2:[48,46]}, [[34,22,48,46,'drive'],[40,34,52,54,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) = containing defender — starts in the drive lane between the ball and the basket, not beside the handler. Backs up (gives ground) to stay in front. No reaching, no gambling. Chest between ball and rim the whole way.'
+        note: '1 = containing defender — starts in the drive lane between the ball and the basket, not beside the handler. Backs up (gives ground) to stay in front. No reaching, no gambling. Chest between ball and rim the whole way.'
       },
       closeout: {
         frames: [
           ktMove({p1:[55,55],p2:[80,30]}, [], {ball:'p2'}),
           ktMove({p1:[74,28]}, [[55,55,74,28,'sprint']], {ball:'p2'})
         ],
-        note: '1 (orange) = closeout defender. Sprint hard, then chop feet short of the shooter — arrive balanced with high hands, not flying past.'
+        note: '1 = closeout defender. Sprint hard, then chop feet short of the shooter — arrive balanced with high hands, not flying past.'
       },
       help: {
         frames: [
           ktMove({p1:[50,40],p2:[22,32],p3:[80,30]}, [], {ball:'p2'}),
           ktMove({p1:[40,54],p2:[36,58],p3:[80,30]}, [[22,32,36,58,'drive'],[50,40,40,54,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) = help defender stepping in on the drive. 2 = driver. 3 = the assignment 1 is temporarily leaving. Step in early — the driver must see a body.'
+        note: '1 = help defender stepping in on the drive. 2 = driver. 3 = the assignment 1 is temporarily leaving. Step in early — the driver must see a body.'
       },
       gap: {
         frames: [
           ktMove({p1:[64,28],p2:[50,18],p3:[80,30]}, [], {ball:'p2'}),
           ktMove({p1:[54,36],p2:[38,32],p3:[80,30]}, [[50,18,38,32,'drive'],[64,28,54,36,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) = off-ball defender in the gap. Ball is at the top (2). 3 is 1\'s assignment. One foot in the lane — visible to both but committed to neither.'
+        note: '1 = off-ball defender in the gap. Ball is at the top (2). 3 is 1\'s assignment. One foot in the lane — visible to both but committed to neither.'
       },
       deny: {
         frames: [
           ktMove({p1:[72,26],p2:[50,18],p3:[80,30]}, [], {ball:'p2'}),
           ktMove({p1:[72,26],p3:[68,62]}, [[80,30,68,62,'cut'],[50,18,68,62,'pass']], {ball:[68,62]})
         ],
-        note: '1 (orange) = denial defender on 3. Keeps hand and body in the passing lane. 3 reads the denial and back-cuts — 2 delivers a bounce pass to space.'
+        note: '1 = denial defender on 3. Keeps hand and body in the passing lane. 3 reads the denial and back-cuts — 2 delivers a bounce pass to space.'
       },
       hedge: {
         frames: [
@@ -852,49 +853,49 @@
           ktMove({p1:[26,24],p2:[34,32],p3:[36,26],p5:[42,58]}, [[50,18,34,32,'drive'],[46,28,42,58,'cut'],[44,38,26,24,'cut'],[52,16,36,26,'cut']], {ball:[34,32]}),
           ktMove({p1:[40,56],p2:[30,28],p3:[32,24],p5:[40,64]}, [[26,24,40,56,'cut']], {ball:[30,28]})
         ],
-        note: '1 (orange) = hedging big (5\'s defender). 5 = screener/roller. 2 = ball handler. 1 shows hard to slow the drive, then sprints back to 5 before 2 can find the roller.'
+        note: '1 = hedging big (5\'s defender). 5 = screener/roller. 2 = ball handler. 1 shows hard to slow the drive, then sprints back to 5 before 2 can find the roller.'
       },
       blitz: {
         frames: [
           ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
           ktMove({p1:[38,28],p2:[36,30],p3:[30,26],p5:[42,58]}, [[50,18,36,30,'drive'],[46,28,42,58,'cut'],[44,38,38,28,'cut'],[52,16,30,26,'cut']], {ball:[36,30]})
         ],
-        note: '1 (orange) + 3 = both trap 2 off the screen. 5 rolls away. Two defenders lock down the ball, forcing a rushed pass or turnover. Works best near sidelines or late clock.'
+        note: '1 + 3 = both trap 2 off the screen. 5 rolls away. Two defenders lock down the ball, forcing a rushed pass or turnover. Works best near sidelines or late clock.'
       },
       switch: {
         frames: [
           ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
           ktMove({p1:[36,26],p2:[36,30],p3:[42,52],p5:[42,58]}, [[50,18,36,30,'drive'],[46,28,42,58,'cut'],[52,16,36,26,'cut'],[44,38,42,52,'cut']], {ball:[36,30]})
         ],
-        note: '1 (orange) + 3 switch. 1 takes the ball handler (2). 3 takes the roller (5). Talk must come before contact — "switch" calls the exchange, "got him" confirms it.'
+        note: '1 + 3 switch. 1 takes the ball handler (2). 3 takes the roller (5). Talk must come before contact — "switch" calls the exchange, "got him" confirms it.'
       },
       drop: {
         frames: [
           ktMove({p1:[44,38],p2:[50,18],p3:[52,16],p5:[46,28]}, [], {ball:'p2'}),
           ktMove({p1:[44,70],p2:[34,32],p3:[36,26],p5:[42,58]}, [[50,18,34,32,'drive'],[46,28,42,58,'cut'],[44,38,44,70,'cut'],[52,16,36,26,'cut']], {ball:[34,32]})
         ],
-        note: '1 (orange) = big drops to protect the rim. 3 fights over the screen to stay with 2. 1 stays between 5 (roller) and the basket. Invites pull-up jumpers but protects layups.'
+        note: '1 = big drops to protect the rim. 3 fights over the screen to stay with 2. 1 stays between 5 (roller) and the basket. Invites pull-up jumpers but protects layups.'
       },
       ice: {
         frames: [
           ktMove({p1:[46,16],p2:[50,18],p5:[36,32]}, [], {ball:'p2'}),
           ktMove({p1:[30,22],p2:[26,36],p5:[30,44]}, [[50,18,26,36,'drive'],[46,16,30,22,'cut'],[36,32,30,44,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) = on-ball defender applying ICE. Forces 2 (ball handler) to the baseline side BEFORE the screen (5) arrives. Positions on the inside hip to deny the middle.'
+        note: '1 = on-ball defender applying ICE. Forces 2 (ball handler) to the baseline side BEFORE the screen (5) arrives. Positions on the inside hip to deny the middle.'
       },
       underover: {
         frames: [
           ktMove({p1:[60,34],p2:[80,30],p4:[64,36]}, [], {ball:'p2'}),
           ktMove({p1:[70,28]}, [[60,34,70,28,'sprint']], {ball:'p2'})
         ],
-        note: '1 (orange) goes OVER the screen — used against shooters to stay attached. Going under (staying low) is used against non-shooters to prevent pull-ups near the screen.'
+        note: '1 goes OVER the screen — used against shooters to stay attached. Going under (staying low) is used against non-shooters to prevent pull-ups near the screen.'
       },
       shortroll: {
         frames: [
           ktMove({p1:[46,28],p2:[50,18]}, [], {ball:'p2'}),
           ktMove({p1:[48,46],p2:[36,30]}, [[50,18,36,30,'drive'],[46,28,48,46,'cut']], {ball:[36,30]})
         ],
-        note: '1 (orange) = the short-rolling big. Stops at the free throw line instead of going to the rim. Creates a mid-range catch option and stresses the low help defender.'
+        note: '1 = the short-rolling big. Stops at the free throw line instead of going to the rim. Creates a mid-range catch option and stresses the low help defender.'
       },
       tagroller: {
         frames: [
@@ -902,7 +903,7 @@
           ktMove({p1:[44,54],p2:[34,32],p3:[36,26],p5:[42,58]}, [[50,18,34,32,'drive'],[46,28,42,58,'cut'],[52,16,36,26,'cut'],[62,42,44,54,'cut']], {ball:[34,32]}),
           ktMove({p1:[72,36],p5:[42,64]}, [[44,54,72,36,'cut']], {ball:[34,32]})
         ],
-        note: '1 (orange) = help defender tagging the roller. Steps into 5\'s path to slow the roll, then sprints back out to recover. Tag with the body, not a lazy arm reach.'
+        note: '1 = help defender tagging the roller. Steps into 5\'s path to slow the roll, then sprints back out to recover. Tag with the body, not a lazy arm reach.'
       },
       xout: {
         frames: [
@@ -910,14 +911,14 @@
           ktMove({p1:[40,50],p2:[36,54],p3:[80,30],p4:[88,68],p5:[58,38]}, [[22,32,36,54,'drive'],[50,42,40,50,'cut']], {ball:'p2'}),
           ktMove({p1:[80,60],p2:[36,54],p3:[80,30],p4:[88,68],p5:[76,28]}, [[36,54,80,30,'pass'],[40,50,80,60,'cut'],[58,38,76,28,'cut']], {ball:[80,30]})
         ],
-        note: '1 (orange) + 5 cross and exchange assignments after 2\'s drive-and-kick. 1 takes the corner (4), 5 takes the wing (3). First takes the nearest threat, second takes next.'
+        note: '1 + 5 cross and exchange assignments after 2\'s drive-and-kick. 1 takes the corner (4), 5 takes the wing (3). First takes the nearest threat, second takes next.'
       },
       scram: {
         frames: [
           ktMove({p1:[36,56],p2:[28,34],p3:[30,28],p5:[38,62]}, [], {ball:[50,18]}),
           ktMove({p1:[28,30],p2:[36,58]}, [[36,56,28,30,'cut'],[28,34,36,58,'cut']], {ball:[50,18]})
         ],
-        note: '1 (orange) = small defender stuck in a post mismatch on 5. 2 = big with the wrong perimeter assignment. They scram: 1 sprints back out, 2 takes the post. Call it before the entry, not after the catch.'
+        note: '1 = small defender stuck in a post mismatch on 5. 2 = big with the wrong perimeter assignment. They scram: 1 sprints back out, 2 takes the post. Call it before the entry, not after the catch.'
       },
       shrink: {
         frames: [
@@ -931,91 +932,91 @@
           ktMove({p1:[30,28],p2:[22,32]}, [], {ball:'p2'}),
           ktMove({p1:[24,36],p2:[16,50]}, [[22,32,16,50,'drive'],[30,28,24,36,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) forces 2 to the sideline. Top foot stays high — body angled to deny the middle lane. One bad hip opens the straight-line drive to the rim.'
+        note: '1 forces 2 to the sideline. Top foot stays high — body angled to deny the middle lane. One bad hip opens the straight-line drive to the rim.'
       },
       icepost: {
         frames: [
           ktMove({p1:[30,60],p2:[50,18],p5:[34,64]}, [], {ball:'p2'}),
           ktMove({p1:[32,56],p5:[34,64]}, [[50,18,34,64,'pass'],[30,60,32,56,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) fronts or 3-quarters 5 (post player). With backside help (4, not shown) covering the lob, the post catch is taken away entirely. Call it before the ball arrives at the post.'
+        note: '1 fronts or 3-quarters 5 (post player). With backside help (4, not shown) covering the lob, the post catch is taken away entirely. Call it before the ball arrives at the post.'
       },
       toplock: {
         frames: [
           ktMove({p1:[24,62],p2:[50,18],p3:[24,68],p4:[24,52]}, [], {ball:'p2'}),
           ktMove({p1:[20,46],p4:[24,58]}, [[24,52,24,58,'screen'],[24,62,20,46,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) top-locks: jumps to the HIGH side of 3 (cutter) before 4\'s screen. Takes away the curl. Forces a backdoor cut or a catch in traffic. Requires rim help behind it.'
+        note: '1 top-locks: jumps to the HIGH side of 3 (cutter) before 4\'s screen. Takes away the curl. Forces a backdoor cut or a catch in traffic. Requires rim help behind it.'
       },
       locktrail: {
         frames: [
           ktMove({p1:[24,74],p2:[50,18],p3:[22,72],p4:[24,52]}, [], {ball:'p2'}),
           ktMove({p1:[22,32],p3:[22,30],p4:[24,58]}, [[24,52,24,58,'screen'],[22,72,22,30,'cut'],[24,74,22,32,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) = lock and trail: chases hip-to-hip behind 3 (shooter) through both the screen and the catch. Stay attached — any gap is a clean catch-and-shoot.'
+        note: '1 = lock and trail: chases hip-to-hip behind 3 (shooter) through both the screen and the catch. Stay attached — any gap is a clean catch-and-shoot.'
       },
       pindown: {
         frames: [
           ktMove({p1:[24,72],p2:[50,18],p4:[24,54]}, [], {ball:'p2'}),
           ktMove({p1:[22,30],p4:[24,60]}, [[24,54,24,60,'screen'],[24,72,22,30,'cut'],[50,18,22,30,'pass']], {ball:[22,30]})
         ],
-        note: '4 sets a pin-down (downscreen) for 1 (orange). 1 cuts up from the corner to the wing. Defenders must decide: trail, shoot the gap, top-lock, or switch.'
+        note: '4 sets a pin-down (downscreen) for 1. 1 cuts up from the corner to the wing. Defenders must decide: trail, shoot the gap, top-lock, or switch.'
       },
       flare: {
         frames: [
           ktMove({p1:[36,44],p2:[50,18],p4:[30,38]}, [], {ball:'p2'}),
           ktMove({p1:[12,72],p4:[24,44]}, [[30,38,24,44,'screen'],[36,44,12,72,'cut'],[50,18,12,72,'pass']], {ball:[12,72]})
         ],
-        note: '4 sets a flare screen sending 1 (orange) away from the ball toward the corner. Defender on 4 must communicate — the screen comes from the back side.'
+        note: '4 sets a flare screen sending 1 away from the ball toward the corner. Defender on 4 must communicate — the screen comes from the back side.'
       },
       backscreen: {
         frames: [
           ktMove({p1:[80,30],p2:[50,18],p4:[62,44]}, [], {ball:'p2'}),
           ktMove({p1:[52,72],p4:[66,34]}, [[62,44,66,34,'screen'],[80,30,52,72,'cut'],[50,18,52,72,'pass']], {ball:[52,72]})
         ],
-        note: '4 sets a back screen behind 1\'s (orange) defender. 1 cuts hard to the rim. The defender must be warned early — "back, back, back" — before contact is made.'
+        note: '4 sets a back screen behind 1\'s defender. 1 cuts hard to the rim. The defender must be warned early — "back, back, back" — before contact is made.'
       },
       crossscreen: {
         frames: [
           ktMove({p1:[76,64],p2:[50,18],p4:[32,68]}, [], {ball:'p2'}),
           ktMove({p1:[24,68],p4:[46,68]}, [[32,68,46,68,'screen'],[76,64,24,68,'cut'],[50,18,24,68,'pass']], {ball:[24,68]})
         ],
-        note: '4 sets a cross screen for 1 (orange), sending them across the lane to the opposite block. Used to free post players near the rim. Defenders can fight through, switch, or front.'
+        note: '4 sets a cross screen for 1, sending them across the lane to the opposite block. Used to free post players near the rim. Defenders can fight through, switch, or front.'
       },
       stagger: {
         frames: [
           ktMove({p1:[78,70],p2:[50,18],p4:[60,50],p5:[42,42]}, [], {ball:'p2'}),
           ktMove({p1:[22,28],p4:[58,54],p5:[40,46]}, [[60,50,58,54,'screen'],[42,42,40,46,'screen'],[78,70,22,28,'cut'],[50,18,22,28,'pass']], {ball:[22,28]})
         ],
-        note: '4 and 5 set back-to-back screens for 1 (orange). The second screen is where most defenders relax — that\'s where the catch happens. Force the defender to navigate twice.'
+        note: '4 and 5 set back-to-back screens for 1. The second screen is where most defenders relax — that\'s where the catch happens. Force the defender to navigate twice.'
       },
       slip: {
         frames: [
           ktMove({p1:[46,30],p2:[50,18]}, [], {ball:'p2'}),
           ktMove({p1:[48,68]}, [[46,30,48,68,'cut'],[50,18,48,68,'pass']], {ball:[48,68]})
         ],
-        note: '1 (orange) fakes setting a screen, then slips to the rim before contact. Punishes any defender who over-commits or switches early. The ball handler must be ready to deliver immediately.'
+        note: '1 fakes setting a screen, then slips to the rim before contact. Punishes any defender who over-commits or switches early. The ball handler must be ready to deliver immediately.'
       },
       boxout: {
         frames: [
           ktMove({p1:[42,52],p2:[38,55]}, [], {ball:[50,20]}),
           ktMove({p1:[40,62],p2:[36,62]}, [[42,52,40,62,'cut']], {ball:[50,20]})
         ],
-        note: '1 (orange) = defender boxing out. Makes contact with 2 first, then seals them away from the ball. Hit first, then go get. Rebounding starts at contact, not when the ball hits the rim.'
+        note: '1 = defender boxing out. Makes contact with 2 first, then seals them away from the ball. Hit first, then go get. Rebounding starts at contact, not when the ball hits the rim.'
       },
       crash: {
         frames: [
           ktMove({p1:[45,55],p4:[42,54]}, [], {ball:[50,20]}),
           ktMove({p1:[44,70]}, [[45,55,44,70,'sprint']], {ball:[50,20]})
         ],
-        note: '1 (orange) = offensive rebounder crashing hard to the glass. Fight through the box-out attempt (4). Crash with purpose — straight-line path to where the ball is going, not where it came from.'
+        note: '1 = offensive rebounder crashing hard to the glass. Fight through the box-out attempt (4). Crash with purpose — straight-line path to where the ball is going, not where it came from.'
       },
       release: {
         frames: [
           ktMove({p1:[50,40]}, [], {ball:[50,25]}),
           ktMove({p1:[50,10]}, [[50,40,50,10,'sprint']], {ball:[50,25]})
         ],
-        note: '1 (orange) = release guard. Leaks toward half-court the moment the shot goes up. A perfect outlet pass becomes a fast break before the defense has time to organize.'
+        note: '1 = release guard. Leaks toward half-court the moment the shot goes up. A perfect outlet pass becomes a fast break before the defense has time to organize.'
       },
       fiveout: {
         frames: [ktMove({p2:[18,30],p3:[82,30],p4:[10,72],p5:[90,72]}, [], {ball:'p1'})],
@@ -1053,23 +1054,23 @@
         note: '2-on-1: 1 drives, 4 (lone defender) must commit. 1 keeps the scoring threat alive until 4 commits, then passes to 2. Never give up the advantage by deciding too early.'
       },
       man: {
-        frames: [ktMove({p1:[50,22],p2:[22,34],p3:[78,34],p4:[22,68],p5:[78,68]}, [], {ball:[50,18]})],
-        note: '1 (orange) = ball defender. Man-to-man: each player guards a specific matchup. Help rules — gap, help side, tag — still apply behind every matchup.'
+        frames: [ktMove({p1:[50,30],p2:[50,20],p3:[78,34],p4:[74,28],p5:[22,34]}, [], {ball:'p2'})],
+        note: '1 and 4 = defenders (blue). Each guards a specific matchup — 1 pressures 2 (ball), 4 stays between 3 and the basket. Help rules — gap, help side, tag — still apply behind every assignment.'
       },
       zone: {
         frames: [ktMove({p1:[32,24],p2:[68,24],p3:[18,54],p4:[50,54],p5:[82,54]}, [], {ball:[50,18]})],
-        note: '2-3 zone. 1 and 2 (top) pressure the perimeter. 3, 4, and 5 (bottom) cover the lane and elbows. 1 (orange) initiates pressure and calls shifts as the ball moves.'
+        note: '2-3 zone. 1 and 2 (top) pressure the perimeter. 3, 4, and 5 (bottom) cover the lane and elbows. 1 initiates pressure and calls shifts as the ball moves.'
       },
       press: {
         frames: [
           ktMove({p1:[42,64],p2:[40,70],p3:[50,58],p5:[50,30]}, [], {ball:'p2'}),
           ktMove({p1:[38,68],p3:[44,68]}, [[50,58,44,68,'cut'],[42,64,38,68,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) corrals 2 (ball handler). 3 jumps to trap. The sideline boundary acts as an extra defender. 5 stays deep as the safety net — no gambling that leaves the rim open.'
+        note: '1 corrals 2 (ball handler). 3 jumps to trap. The sideline boundary acts as an extra defender. 5 stays deep as the safety net — no gambling that leaves the rim open.'
       },
       safety: {
         frames: [ktMove({p1:[38,68],p2:[40,72],p3:[64,68],p4:[50,30]}, [], {ball:'p2'})],
-        note: '4 (orange) = safety / center fielder. Stays deeper than any offensive threat while the press plays out. Never gambles — one back-tap or lob pass ends in an uncontested layup.'
+        note: '4 = safety / center fielder. Stays deeper than any offensive threat while the press plays out. Never gambles — one back-tap or lob pass ends in an uncontested layup.'
       },
       stance: {
         illus: `<svg viewBox="0 0 360 275" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:400px;border-radius:8px;background:#f8f7f6;">
@@ -1132,6 +1133,48 @@
       'and-one':'contain','field goal % / free throw %':'contain'
     };
 
+    // ── Offense / defense roles per diagram ───────────────────────────────
+    const KT_ROLES = {
+      contain:     { def:['p1'], show:['p1','p2'] },
+      closeout:    { def:['p1'], show:['p1','p2'] },
+      help:        { def:['p1'], show:['p1','p2','p3'] },
+      gap:         { def:['p1'], show:['p1','p2','p3'] },
+      deny:        { def:['p1'], show:['p1','p2','p3'] },
+      hedge:       { def:['p1','p3'], show:['p1','p2','p3','p5'] },
+      blitz:       { def:['p1','p3'], show:['p1','p2','p3','p5'] },
+      switch:      { def:['p1','p3'], show:['p1','p2','p3','p5'] },
+      drop:        { def:['p1','p3'], show:['p1','p2','p3','p5'] },
+      ice:         { def:['p1'], show:['p1','p2','p5'] },
+      underover:   { def:['p1'], show:['p1','p2','p4'] },
+      shortroll:   { def:[], show:['p1','p2'] },
+      tagroller:   { def:['p1','p3'], show:['p1','p2','p3','p5'] },
+      xout:        { def:['p1','p5'], show:['p1','p2','p3','p4','p5'] },
+      scram:       { def:['p1','p2'], show:['p1','p2','p3','p5'] },
+      shrink:      { def:['p1','p2','p3','p4','p5'], show:['p1','p2','p3','p4','p5'] },
+      nomiddle:    { def:['p1'], show:['p1','p2'] },
+      icepost:     { def:['p1'], show:['p1','p2','p5'] },
+      toplock:     { def:['p1'], show:['p1','p2','p3','p4'] },
+      locktrail:   { def:['p1'], show:['p1','p2','p3','p4'] },
+      pindown:     { def:[], show:['p1','p2','p4'] },
+      flare:       { def:[], show:['p1','p2','p4'] },
+      backscreen:  { def:[], show:['p1','p2','p4'] },
+      crossscreen: { def:[], show:['p1','p2','p4'] },
+      stagger:     { def:[], show:['p1','p2','p4','p5'] },
+      slip:        { def:[], show:['p1','p2'] },
+      boxout:      { def:['p1'], show:['p1','p2'] },
+      crash:       { def:['p4'], show:['p1','p4'] },
+      release:     { def:[], show:['p1'] },
+      fiveout:     { def:[], show:['p1','p2','p3','p4','p5'] },
+      drivekick:   { def:[], show:['p1','p2','p3','p4','p5'] },
+      corner45:    { def:[], show:['p1','p2','p4'] },
+      primarybreak:{ def:[], show:['p1','p2','p3'] },
+      advantage:   { def:['p4'], show:['p1','p2','p4'] },
+      man:         { def:['p1','p4'], show:['p1','p2','p3','p4','p5'] },
+      zone:        { def:['p1','p2','p3','p4','p5'], show:['p1','p2','p3','p4','p5'] },
+      press:       { def:['p1','p3','p5'], show:['p1','p2','p3','p5'] },
+      safety:      { def:['p4'], show:['p1','p2','p3','p4'] },
+    };
+
     // ── Static diagram renderer ────────────────────────────────────────────
     const KT_PLAYERS = ['p1','p2','p3','p4','p5'];
 
@@ -1173,11 +1216,20 @@
       });
     }
 
-    function ktRenderStatic(diagram) {
+    function ktRenderStatic(id, diagram) {
       const first = diagram.frames[0];
-      // All routes from frames after the first — they originate from frame[0] positions
       const routes = diagram.frames.slice(1).flatMap(f => f.routes || []);
-      KT_PLAYERS.forEach(id => ktSetPlayer(id, first.positions[id]));
+      const roles = KT_ROLES[id] || {};
+      const defSet = new Set(roles.def || []);
+      const showSet = roles.show ? new Set(roles.show) : null;
+      KT_PLAYERS.forEach(pid => {
+        const el = document.getElementById('k' + pid);
+        if (!el) return;
+        const visible = !showSet || showSet.has(pid);
+        el.style.opacity = visible ? '1' : '0';
+        el.className = 'system-player' + (defSet.has(pid) ? ' kt-def' : '');
+        if (visible) ktSetPlayer(pid, first.positions[pid]);
+      });
       ktSetBall(first.ball);
       ktDrawRoutes(routes);
     }
@@ -1203,7 +1255,7 @@
       if (isIllus) {
         document.getElementById('kt-illus-wrap').innerHTML = diagram.illus;
       } else {
-        ktRenderStatic(diagram);
+        ktRenderStatic(id, diagram);
       }
       diagramModal.classList.add('open');
       diagramModal.setAttribute('aria-hidden','false');
