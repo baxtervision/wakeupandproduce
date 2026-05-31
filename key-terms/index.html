@@ -813,10 +813,10 @@
     const KT_DIAGRAMS = {
       contain: {
         frames: [
-          ktMove({p1:[30,28],p2:[22,32]}, [], {ball:'p2'}),
-          ktMove({p1:[38,50],p2:[32,54]}, [[22,32,32,54,'drive'],[30,28,38,50,'cut']], {ball:'p2'})
+          ktMove({p1:[40,34],p2:[34,22]}, [], {ball:'p2'}),
+          ktMove({p1:[52,54],p2:[48,46]}, [[34,22,48,46,'drive'],[40,34,52,54,'cut']], {ball:'p2'})
         ],
-        note: '1 (orange) = defender. Stays between the ball and the basket, giving ground to stay in front rather than gambling for a steal.'
+        note: '1 (orange) = containing defender — starts in the drive lane between the ball and the basket, not beside the handler. Backs up (gives ground) to stay in front. No reaching, no gambling. Chest between ball and rim the whole way.'
       },
       closeout: {
         frames: [
