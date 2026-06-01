@@ -379,6 +379,15 @@
             players.forEach(id => setGbbPlayer(id, frame.positions[id]));
             setGbbBall(frame.ball);
             drawGbbRoutes(frame.routes || [], routeLimit);
+            const [bx, by] = frame.ball;
+            let primaryId = 'p1';
+            let minDist = Infinity;
+            for (const id of players) {
+                const [px, py] = frame.positions[id];
+                const dist = Math.hypot(px - bx, py - by);
+                if (dist < minDist) { minDist = dist; primaryId = id; }
+            }
+            players.forEach(id => document.getElementById('g' + id).classList.toggle('system-primary', id === primaryId));
         }
         function gbbLerp(a, b, t) { return a + (b - a) * t; }
         function gbbEase(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
