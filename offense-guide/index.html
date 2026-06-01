@@ -398,7 +398,7 @@
                             { type: 'drive', player: 'p1', to: 'rightElbow', label: '1 drives the right lane' },
                             { actions: [
                                 { type: 'fill', player: 'p5', to: 'rightShortCorner', label: '5 slides to the short corner' },
-                                { type: 'fill', player: 'p3', to: 'rightDeepCorner', label: '3 circles behind the drive' },
+                                { type: 'fill', player: 'p3', to: 'leftDeepCorner', label: '3 drops to the deep left corner' },
                                 { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' }
                             ], label: 'Post opens a window on the drive side' },
                             { type: 'pass', from: 'p1', to: 'p5', label: '1 kicks to 5 in the short corner' }
@@ -412,9 +412,9 @@
                         steps: [
                             { type: 'drive', player: 'p1', to: 'rightBaseline', label: '1 drives the baseline' },
                             { actions: [
-                                { type: 'fill', player: 'p5', to: 'rightElbow', label: '5 lifts to the elbow' },
+                                { type: 'fill', player: 'p5', to: 'rightElbow', label: '5 drifts to the elbow' },
                                 { type: 'fill', player: 'p4', to: 'leftDeepCorner', label: '4 spaces to the far corner' },
-                                { type: 'fill', player: 'p2', to: 'rightSlotHigh', label: '2 slides to safety' },
+                                { type: 'fill', player: 'p2', to: 'leftWing', label: '2 goes to the left wing' },
                                 { type: 'fill', player: 'p3', to: 'top', label: '3 fills the top' }
                             ], label: 'The corner drifts and the top rotates' }
                         ]
@@ -609,7 +609,7 @@
             }
         };
         // Attach continuous timelines to Read & React layers using the new animation system
-        ['passcut', 'lakercut', 'dribbleat'].forEach(function(id) {
+        ['passcut', 'lakercut', 'dribbleat', 'postreaction', 'drivebaseline', 'pinskip', 'circlereverse', 'backscreen', 'ballscreen', 'powerdribble', 'transitionflow'].forEach(function(id) {
             const action = systems.readreact.actions.find(function(a) { return a.id === id; });
             if (action) action.timeline = buildTimeline(action.frames);
         });
