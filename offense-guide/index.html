@@ -61,6 +61,14 @@
                 </div>
                 </div>
                 <p id="step-cue" class="mt-4 min-h-[1.5rem] text-center text-sm font-semibold text-stone-600" aria-live="polite"></p>
+                <div id="timeline-player" class="hidden mt-4 px-1">
+                    <div class="flex items-center gap-3">
+                        <button id="tl-play-btn" class="bg-stone-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-stone-700 transition-colors shrink-0 w-20 text-center">Play</button>
+                        <input type="range" id="tl-scrubber" min="0" max="1000" value="0" class="flex-1 accent-orange-600 cursor-pointer">
+                        <span id="tl-pct" class="text-xs font-mono text-stone-400 w-8 text-right shrink-0">0%</span>
+                        <button id="tl-reset-btn" class="bg-stone-100 text-stone-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-stone-200 transition-colors shrink-0">Reset</button>
+                    </div>
+                </div>
                 <div class="flex flex-wrap justify-center gap-3 mt-5">
                     <button id="play-system" class="bg-stone-900 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-stone-700 transition-colors">Play</button>
                     <button id="detail-system" class="bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition-colors">Play Details</button>
@@ -596,6 +604,10 @@
                     { id: 'postexchange', title: 'Post Entry & Exchange', desc: 'Guard enters to the post and immediately screens away for a weak-side teammate. The post reads the double and passes to the open cutter.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'leftBlock' }, ball: 'p1' }, steps: [ { type: 'pass', from: 'p1', to: 'p5' }, { type: 'screen', player: 'p1', to: 'postExchangeScreen' }, { type: 'cut', player: 'p3', to: 'postExchangeCatch' }, { type: 'pass', from: 'p5', to: 'p3' } ] })}]
             }
         };
+        // Attach a continuous timeline to Layer 1: Pass & Cut (test case for new system)
+        const passcutAction = systems.readreact.actions.find(function(a) { return a.id === 'passcut'; });
+        if (passcutAction) passcutAction.timeline = buildTimeline(passcutAction.frames);
+
         function base(opts = {}) { return move({}, [], opts); }
         function move(overrides = {}, routes = [], opts = {}) {
             const positions = { p1:[50,18], p2:[20,30], p3:[80,30], p4:[20,70], p5:[80,70] };
@@ -608,6 +620,139 @@
         let timers = [];
         let animationFrame = null;
         const players = ['p1','p2','p3','p4','p5'];
+
+        // ─── Timeline Player ───────────────────────────────────────────────────────
+        // Converts the existing frames array (from buildActionFrames) into a
+        // t-based timeline (0.0–1.0).  Segment durations are weighted by route count
+        // so multi-player moves get proportionally more time than a single pass.
+        function buildTimeline(frames, totalDuration) {
+            totalDuration = totalDuration || 6000;
+            const n = frames.length - 1;
+            if (n === 0) return { totalDuration, keyframes: [{ t: 0, positions: frames[0].positions, ball: frames[0].ball, routes: [], caption: frames[0].cue || '' }] };
+            // Weight each segment by route count so simultaneous fills feel natural
+            const weights = frames.slice(1).map(function(f) { return Math.max(0.7, (f.routes || []).length * 0.55 + 0.65); });
+            const wTotal = weights.reduce(function(a, b) { return a + b; }, 0);
+            let cumT = 0;
+            const tVals = [0];
+            weights.forEach(function(w) { cumT += w / wTotal; tVals.push(Math.min(1, cumT)); });
+            return {
+                totalDuration,
+                keyframes: frames.map(function(f, i) {
+                    return { t: tVals[i] || 0, positions: f.positions, ball: f.ball, routes: f.routes || [], caption: f.cue || '' };
+                })
+            };
+        }
+
+        // Evaluate player/ball/caption/routes at any t in [0, 1].
+        function evaluateTimeline(tl, t) {
+            const kf = tl.keyframes;
+            if (t <= 0) return { positions: kf[0].positions, ball: kf[0].ball, routes: [], caption: kf[0].caption };
+            if (t >= 1) { const last = kf[kf.length - 1]; return { positions: last.positions, ball: last.ball, routes: last.routes, caption: last.caption }; }
+            let i = 0;
+            for (let j = 0; j < kf.length - 1; j++) { if (t < kf[j + 1].t) { i = j; break; } }
+            const a = kf[i], b = kf[Math.min(i + 1, kf.length - 1)];
+            const raw = (b.t > a.t) ? (t - a.t) / (b.t - a.t) : 1;
+            const et = ease(Math.min(raw, 1));
+            const positions = {};
+            players.forEach(function(id) {
+                positions[id] = [lerp(a.positions[id][0], b.positions[id][0], et), lerp(a.positions[id][1], b.positions[id][1], et)];
+            });
+            if (a.positions.d1 && b.positions.d1) {
+                positions.d1 = [lerp(a.positions.d1[0], b.positions.d1[0], et), lerp(a.positions.d1[1], b.positions.d1[1], et)];
+            }
+            return {
+                positions,
+                ball: [lerp(a.ball[0], b.ball[0], et), lerp(a.ball[1], b.ball[1], et)],
+                routes: b.routes,
+                caption: b.caption
+            };
+        }
+
+        let currentTimeline = null;
+        let tlT = 0;
+        let tlPlaying = false;
+        let tlRafId = null;
+        let tlLastTs = null;
+
+        function tlRenderAt(t) {
+            if (!currentTimeline) return;
+            tlT = Math.max(0, Math.min(1, t));
+            const state = evaluateTimeline(currentTimeline, tlT);
+            renderFrame({ positions: state.positions, ball: state.ball, routes: state.routes, cue: state.caption }, state.routes.length, true);
+            const scrubber = document.getElementById('tl-scrubber');
+            const pct = document.getElementById('tl-pct');
+            if (scrubber) scrubber.value = Math.round(tlT * 1000);
+            if (pct) pct.textContent = Math.round(tlT * 100) + '%';
+        }
+
+        function tlUpdateBtn() {
+            const btn = document.getElementById('tl-play-btn');
+            if (!btn) return;
+            btn.textContent = tlT >= 1 ? 'Replay' : (tlPlaying ? 'Pause' : 'Play');
+        }
+
+        function tlTick(ts) {
+            if (!tlPlaying) return;
+            if (tlLastTs !== null) { tlT = Math.min(1, tlT + (ts - tlLastTs) / currentTimeline.totalDuration); }
+            tlLastTs = ts;
+            tlRenderAt(tlT);
+            tlUpdateBtn();
+            if (tlT < 1) { tlRafId = requestAnimationFrame(tlTick); }
+            else { tlPlaying = false; tlRafId = null; tlLastTs = null; tlUpdateBtn(); }
+        }
+
+        function tlPlay() {
+            if (!currentTimeline || tlPlaying) return;
+            if (tlT >= 1) tlT = 0;
+            tlPlaying = true;
+            tlLastTs = null;
+            tlRafId = requestAnimationFrame(tlTick);
+            tlUpdateBtn();
+        }
+
+        function tlPause() {
+            if (!tlPlaying) return;
+            tlPlaying = false;
+            if (tlRafId) { cancelAnimationFrame(tlRafId); tlRafId = null; }
+            tlLastTs = null;
+            tlUpdateBtn();
+        }
+
+        function tlReset() {
+            tlPause();
+            tlRenderAt(0);
+            tlUpdateBtn();
+        }
+
+        function tlToggle() {
+            if (tlT >= 1) { tlT = 0; tlPlay(); return; }
+            if (tlPlaying) tlPause(); else tlPlay();
+        }
+
+        function setTimelineMode(active, timeline) {
+            const tlPanel = document.getElementById('timeline-player');
+            const btnRow = document.querySelector('#court-panel .flex.flex-wrap.justify-center');
+            if (active) {
+                currentTimeline = timeline;
+                tlT = 0; tlPlaying = false;
+                if (tlRafId) { cancelAnimationFrame(tlRafId); tlRafId = null; }
+                tlLastTs = null;
+                if (tlPanel) tlPanel.classList.remove('hidden');
+                if (btnRow) btnRow.classList.add('hidden');
+                tlRenderAt(0);
+                tlUpdateBtn();
+                const scrubber = document.getElementById('tl-scrubber');
+                if (scrubber) scrubber.value = 0;
+                const pct = document.getElementById('tl-pct');
+                if (pct) pct.textContent = '0%';
+            } else {
+                currentTimeline = null;
+                if (tlPanel) tlPanel.classList.add('hidden');
+                if (btnRow) btnRow.classList.remove('hidden');
+            }
+        }
+        // ──────────────────────────────────────────────────────────────────────────
+
         function setPlayer(id, xy) { const el = document.getElementById(id); el.style.left = xy[0] + '%'; el.style.top = xy[1] + '%'; }
         function setBall(xy) { const el = document.getElementById('ball'); el.style.left = xy[0] + '%'; el.style.top = xy[1] + '%'; }
         function drawRoutes(routes, limit = routes.length) {
@@ -782,6 +927,8 @@
                 if (courtEl) courtEl.classList.add('hidden');
                 if (stepCue) stepCue.classList.add('hidden');
                 if (btnRow) btnRow.classList.add('hidden');
+                const tlPanel0 = document.getElementById('timeline-player');
+                if (tlPanel0) tlPanel0.classList.add('hidden');
                 if (actionDetail) actionDetail.classList.add('hidden');
                 if (aside) aside.classList.add('hidden');
                 courtPanel.classList.remove('lg:col-span-7');
@@ -809,11 +956,25 @@
             document.querySelectorAll('.system-player').forEach(el => el.classList.remove('system-primary'));
             document.getElementById(primary).classList.add('system-primary');
             const animated = supportsAnimation(action);
-            setAnimationButtons(animated);
-            if (animated && action.frames) { renderFrame(action.frames[0], 0, false); }
-            else { renderNonAnimatedState(action); }
+            if (action.timeline) {
+                setAnimationButtons(false);
+                setTimelineMode(true, action.timeline);
+            } else if (animated && action.frames) {
+                setTimelineMode(false);
+                setAnimationButtons(true);
+                renderFrame(action.frames[0], 0, false);
+            } else {
+                setTimelineMode(false);
+                setAnimationButtons(animated);
+                renderNonAnimatedState(action);
+            }
         }
-        function clearTimers() { timers.forEach(clearTimeout); timers = []; if (animationFrame) { cancelAnimationFrame(animationFrame); animationFrame = null; } }
+        function clearTimers() {
+            timers.forEach(clearTimeout); timers = [];
+            if (animationFrame) { cancelAnimationFrame(animationFrame); animationFrame = null; }
+            if (tlRafId) { cancelAnimationFrame(tlRafId); tlRafId = null; }
+            tlPlaying = false; tlLastTs = null;
+        }
         function showSequence() {
             const action = systems[currentSystem].actions[currentAction];
             if (!supportsAnimation(action) || !action.frames) return;
@@ -837,6 +998,14 @@
         document.getElementById('play-system').addEventListener('click', () => playSequence(false));
         document.getElementById('detail-system').addEventListener('click', () => playSequence(true));
         document.getElementById('reset-system').addEventListener('click', () => renderSystem(currentSystem, currentAction));
+        document.getElementById('tl-play-btn').addEventListener('click', tlToggle);
+        document.getElementById('tl-reset-btn').addEventListener('click', tlReset);
+        document.getElementById('tl-scrubber').addEventListener('input', function() {
+            const t = Number(this.value) / 1000;
+            if (tlPlaying) tlPause();
+            tlRenderAt(t);
+            tlUpdateBtn();
+        });
         renderSystem('readreact');
     </script>
     <script src="../shared-nav.js"></script>
