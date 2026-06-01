@@ -41,7 +41,8 @@
 
   var footerEl = document.querySelector('[data-shared-footer]');
   if (footerEl) {
-    footerEl.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Misfit Island, LLC</span></footer>';
+    var wipNote = document.body.hasAttribute('data-no-wip') ? '' : '<p class="wip-note">* Animations and diagrams are a work in progress and may be inaccurate.</p>';
+    footerEl.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Misfit Island, LLC</span></footer>' + wipNote;
   }
 }());
 
