@@ -352,7 +352,11 @@
                             { actions: [
                                 { type: 'fill', player: 'p2', to: 'leftWing', label: '2 fills behind' },
                                 { type: 'fill', player: 'p4', to: 'top', label: '4 rotates to the top' }
-                            ], label: 'Perimeter fills away from the ball' }
+                            ], label: 'Perimeter fills away from the ball' },
+                            { actions: [
+                                { type: 'fill', player: 'p3', to: 'top', label: '3 lifts to the top' },
+                                { type: 'fill', player: 'p4', to: 'rightDeepCorner', label: '4 drops to the deep corner' }
+                            ], label: '3 lifts to the top — 4 drops to space the floor' }
                         ]
                     }),
                     defineAction({
@@ -605,7 +609,7 @@
             }
         };
         // Attach continuous timelines to Read & React layers using the new animation system
-        ['passcut', 'lakercut'].forEach(function(id) {
+        ['passcut', 'lakercut', 'dribbleat'].forEach(function(id) {
             const action = systems.readreact.actions.find(function(a) { return a.id === id; });
             if (action) action.timeline = buildTimeline(action.frames);
         });
