@@ -604,9 +604,11 @@
                     { id: 'postexchange', title: 'Post Entry & Exchange', desc: 'Guard enters to the post and immediately screens away for a weak-side teammate. The post reads the double and passes to the open cutter.', frames: buildActionFrames({ setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'leftBlock' }, ball: 'p1' }, steps: [ { type: 'pass', from: 'p1', to: 'p5' }, { type: 'screen', player: 'p1', to: 'postExchangeScreen' }, { type: 'cut', player: 'p3', to: 'postExchangeCatch' }, { type: 'pass', from: 'p5', to: 'p3' } ] })}]
             }
         };
-        // Attach a continuous timeline to Layer 1: Pass & Cut (test case for new system)
-        const passcutAction = systems.readreact.actions.find(function(a) { return a.id === 'passcut'; });
-        if (passcutAction) passcutAction.timeline = buildTimeline(passcutAction.frames);
+        // Attach continuous timelines to Read & React layers using the new animation system
+        ['passcut', 'lakercut'].forEach(function(id) {
+            const action = systems.readreact.actions.find(function(a) { return a.id === id; });
+            if (action) action.timeline = buildTimeline(action.frames);
+        });
 
         function base(opts = {}) { return move({}, [], opts); }
         function move(overrides = {}, routes = [], opts = {}) {
