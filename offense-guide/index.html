@@ -246,7 +246,8 @@
             postSeal: [60,66],
             trailTop: [50,24],
             skipLeftSlot: [25,24],
-            rightNail: [58,42]
+            rightNail: [58,42],
+            leftPaint: [40,50]
         };
         function clonePositions(positions) {
             return Object.fromEntries(Object.entries(positions).map(([key, value]) => [key, [value[0], value[1]]]));
@@ -334,14 +335,15 @@
                         id: 'lakercut',
                         title: 'Layer 2: Post Pass & Cut / Laker Cut',
                         desc: 'Enter the ball to the post, then cut off the post looking for a handoff or layup. A post entry should never stop movement.',
-                        setup: { players: { p1: 'top', p2: 'leftWing', p3: 'rightWing', p4: 'leftCorner', p5: 'rightBlock' }, ball: 'p1' },
+                        setup: { players: { p1: 'leftWing', p2: 'top', p3: 'rightWing', p4: 'leftCorner', p5: 'leftElbow' }, ball: 'p1' },
                         steps: [
                             { type: 'pass', from: 'p1', to: 'p5', label: '1 enters to the post' },
-                            { type: 'cut', player: 'p1', to: 'leftBlock', label: '1 laker cuts off 5' },
+                            { type: 'cut', player: 'p1', to: 'leftPaint', label: '1 cuts shoulder-to-shoulder off 5' },
                             { type: 'handoff', from: 'p5', to: 'p1', label: '5 feeds 1 on the cut' },
+                            { type: 'cut', player: 'p1', to: 'rim', label: '1 attacks the rim' },
                             { actions: [
-                                { type: 'fill', player: 'p2', to: 'top', label: '2 fills the top' },
-                                { type: 'fill', player: 'p4', to: 'leftWing', label: '4 fills the wing' }
+                                { type: 'fill', player: 'p2', to: 'leftWing', label: '2 fills behind' },
+                                { type: 'fill', player: 'p4', to: 'top', label: '4 rotates to the top' }
                             ], label: 'Perimeter fills away from the ball' }
                         ]
                     }),
@@ -581,7 +583,7 @@
                 ]
             },
             motion: {
-                title: 'Traditional Motion Offense', subtitle: 'Disciplined screening, cutting, and spacing without relying on called plays.', tag: 'Screening',
+                title: 'Traditional Motion Offense', subtitle: 'Disciplined screening, cutting, and spacing without relying on called plays. Primary read is the defense.', tag: 'Screening',
                 strengths: ['Creates balanced touches and player movement.', 'Rewards timing, screening angles, and patience.', 'Works against man or zone with rule tweaks.'],
                 weaknesses: ['Can stall without strong screeners.', 'Needs players who read defenders, not just patterns.', 'Less explosive if no one can pressure the rim.'],
                 cues: ['Screen the body, not the spot.', 'Cut shoulder-to-shoulder off screens.', 'Reverse the ball before forcing a contested shot.'],
