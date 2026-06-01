@@ -37,12 +37,18 @@
         }
       });
     }
+
+    if (!document.body.hasAttribute('data-no-wip')) {
+      var banner = document.createElement('div');
+      banner.className = 'wip-banner';
+      banner.textContent = '* Animations and diagrams are a work in progress and may be inaccurate.';
+      navEl.insertAdjacentElement('afterend', banner);
+    }
   }
 
   var footerEl = document.querySelector('[data-shared-footer]');
   if (footerEl) {
-    var wipNote = document.body.hasAttribute('data-no-wip') ? '' : '<p class="wip-note">* Animations and diagrams are a work in progress and may be inaccurate.</p>';
-    footerEl.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Misfit Island, LLC</span></footer>' + wipNote;
+    footerEl.innerHTML = '<footer class="shared-footer"><a href="' + pathPrefix + '">Wake Up &amp; Produce</a><span>Built by Misfit Island, LLC</span></footer>';
   }
 }());
 

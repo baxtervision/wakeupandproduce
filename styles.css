@@ -211,14 +211,15 @@ body:not(.site-home) {
   color: var(--site-subtle);
 }
 
-.wip-note {
+.wip-banner {
   text-align: center;
   font-family: var(--site-font);
   font-size: 0.72rem;
   font-weight: 500;
   color: var(--site-muted);
-  padding: 0 20px 20px;
-  margin: 0;
+  background: var(--site-surface-soft);
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--site-border, #e7e5e4);
 }
 
 .nav-hamburger {
