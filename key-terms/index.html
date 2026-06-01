@@ -812,40 +812,170 @@
 
     // ── Diagram data: id → { frames[], note } ─────────────────────────────
     const KT_DIAGRAMS = {
-      contain: {
-        frames: [
-          ktMove({p1:[40,34],p2:[34,22]}, [], {ball:'p2'}),
-          ktMove({p1:[52,54],p2:[48,46]}, [[34,22,48,46,'drive'],[40,34,52,54,'cut']], {ball:'p2'})
-        ],
-        note: '1 = containing defender — starts in the drive lane between the ball and the basket, not beside the handler. Backs up (gives ground) to stay in front. No reaching, no gambling. Chest between ball and rim the whole way.'
-      },
-      closeout: {
-        frames: [
-          ktMove({p1:[55,55],p2:[80,30]}, [], {ball:'p2'}),
-          ktMove({p1:[74,28]}, [[55,55,74,28,'sprint']], {ball:'p2'})
-        ],
-        note: '1 = closeout defender. Sprint hard, then chop feet short of the shooter — arrive balanced with high hands, not flying past.'
-      },
       help: {
-        frames: [
-          ktMove({p1:[50,40],p2:[22,32],p3:[80,30]}, [], {ball:'p2'}),
-          ktMove({p1:[40,54],p2:[36,58],p3:[80,30]}, [[22,32,36,58,'drive'],[50,40,40,54,'cut']], {ball:'p2'})
-        ],
-        note: '1 = help defender stepping in on the drive. 2 = driver. 3 = the assignment 1 is temporarily leaving. Step in early — the driver must see a body.'
+        illus: `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:420px;border-radius:8px;background:#fcfbf9;">
+  <!-- Court -->
+  <rect x="15" y="15" width="370" height="270" fill="#fcfbf9" stroke="#b0afac" stroke-width="1.5"/>
+  <path d="M 45 15 A 165 165 0 0 0 355 15" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <rect x="130" y="15" width="140" height="130" fill="#f3f2f0" stroke="#bcbab7" stroke-width="1.5"/>
+  <path d="M 130 145 A 70 70 0 0 0 270 145" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <line x1="170" y1="32" x2="230" y2="32" stroke="#78716c" stroke-width="2.5"/>
+  <circle cx="200" cy="42" r="9" fill="none" stroke="#f97316" stroke-width="2"/>
+  <line x1="15" y1="285" x2="385" y2="285" stroke="#b0afac" stroke-width="1.5"/>
+  <!-- Drive path: O2 drives toward baseline -->
+  <path d="M 330 100 Q 295 155 262 205" fill="none" stroke="#ea580c" stroke-width="2" stroke-dasharray="7 4" opacity="0.7"/>
+  <polygon points="262,205 270,193 273,206" fill="#ea580c" opacity="0.7"/>
+  <text x="312" y="162" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#ea580c" letter-spacing=".05em">DRIVE</text>
+  <!-- D1 move arrow: from original top position to help position -->
+  <circle cx="200" cy="78" r="12" fill="none" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.3"/>
+  <line x1="200" y1="78" x2="245" y2="178" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.45"/>
+  <polygon points="245,178 237,167 249,168" fill="#1e40af" opacity="0.45"/>
+  <!-- D3 rotate arrow: from left wing toward O1 area -->
+  <circle cx="72" cy="100" r="12" fill="none" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.3"/>
+  <line x1="85" y1="100" x2="162" y2="86" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.45"/>
+  <polygon points="162,86 151,82 153,93" fill="#1e40af" opacity="0.45"/>
+  <!-- Offense -->
+  <circle cx="200" cy="90" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="94" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">1</text>
+  <circle cx="330" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="330" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">2</text>
+  <circle cx="344" cy="89" r="5" fill="#f59e0b" stroke="#c2410c" stroke-width="1.5"/>
+  <circle cx="70" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="70" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">3</text>
+  <circle cx="358" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="358" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">4</text>
+  <circle cx="42" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="42" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">5</text>
+  <!-- Defense -->
+  <circle cx="248" cy="188" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="248" y="192" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D1</text>
+  <circle cx="332" cy="82" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="332" y="86" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D2</text>
+  <circle cx="158" cy="82" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="158" y="86" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D3</text>
+  <circle cx="350" cy="208" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="350" y="212" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D4</text>
+  <circle cx="118" cy="205" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="118" y="209" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D5</text>
+  <!-- Labels -->
+  <text x="248" y="208" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#1e40af" letter-spacing=".05em">HELP</text>
+  <text x="155" y="68" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#475569" letter-spacing=".05em">ROTATE</text>
+  <text x="105" y="222" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#475569" letter-spacing=".05em">WEAK-SIDE I</text>
+  <!-- Legend -->
+  <circle cx="22" cy="295" r="5" fill="#1c1917"/>
+  <text x="30" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">OFF</text>
+  <circle cx="60" cy="295" r="5" fill="#1e40af"/>
+  <text x="68" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">DEF</text>
+</svg>`,
+        note: 'D1 leaves their assignment and steps into the drive lane — the driver must see a body. D3 rotates to cover the vacated spot. D5 holds weak-side I. Every drive triggers a rotation chain.'
       },
       gap: {
-        frames: [
-          ktMove({p1:[64,28],p2:[50,18],p3:[80,30]}, [], {ball:'p2'}),
-          ktMove({p1:[54,36],p2:[38,32],p3:[80,30]}, [[50,18,38,32,'drive'],[64,28,54,36,'cut']], {ball:'p2'})
-        ],
-        note: '1 = off-ball defender in the gap. Ball is at the top (2). 3 is 1\'s assignment. One foot in the lane — visible to both but committed to neither.'
+        illus: `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:420px;border-radius:8px;background:#fcfbf9;">
+  <!-- Court -->
+  <rect x="15" y="15" width="370" height="270" fill="#fcfbf9" stroke="#b0afac" stroke-width="1.5"/>
+  <path d="M 45 15 A 165 165 0 0 0 355 15" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <rect x="130" y="15" width="140" height="130" fill="#f3f2f0" stroke="#bcbab7" stroke-width="1.5"/>
+  <path d="M 130 145 A 70 70 0 0 0 270 145" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <line x1="170" y1="32" x2="230" y2="32" stroke="#78716c" stroke-width="2.5"/>
+  <circle cx="200" cy="42" r="9" fill="none" stroke="#f97316" stroke-width="2"/>
+  <line x1="15" y1="285" x2="385" y2="285" stroke="#b0afac" stroke-width="1.5"/>
+  <!-- Lane edge reference line -->
+  <line x1="130" y1="15" x2="130" y2="145" stroke="#bcbab7" stroke-width="1.5"/>
+  <line x1="270" y1="15" x2="270" y2="145" stroke="#bcbab7" stroke-width="1.5"/>
+  <!-- Sight lines from D2 to ball and to O2 -->
+  <line x1="268" y1="100" x2="200" y2="90" stroke="#1e40af" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+  <line x1="268" y1="108" x2="330" y2="100" stroke="#1e40af" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+  <!-- Sight lines from D3 to ball and to O3 -->
+  <line x1="132" y1="100" x2="200" y2="90" stroke="#1e40af" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+  <line x1="132" y1="108" x2="70" y2="100" stroke="#1e40af" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+  <!-- "ONE FOOT IN LANE" bracket for D2 -->
+  <line x1="270" y1="120" x2="258" y2="120" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/>
+  <line x1="270" y1="116" x2="270" y2="124" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/>
+  <line x1="258" y1="116" x2="258" y2="124" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/>
+  <text x="264" y="133" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em" opacity="0.8">LANE EDGE</text>
+  <!-- Offense -->
+  <circle cx="200" cy="90" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="94" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">1</text>
+  <circle cx="200" cy="78" r="5" fill="#f59e0b" stroke="#c2410c" stroke-width="1.5"/>
+  <circle cx="330" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="330" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">2</text>
+  <circle cx="70" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="70" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">3</text>
+  <circle cx="358" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="358" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">4</text>
+  <circle cx="42" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="42" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">5</text>
+  <!-- Defense -->
+  <circle cx="200" cy="72" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="76" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D1</text>
+  <circle cx="258" cy="104" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="258" y="108" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D2</text>
+  <circle cx="142" cy="104" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="142" y="108" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D3</text>
+  <circle cx="308" cy="210" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="308" y="214" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D4</text>
+  <circle cx="92" cy="210" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="92" y="214" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D5</text>
+  <!-- GAP labels -->
+  <text x="258" y="124" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#1e40af" letter-spacing=".05em">GAP</text>
+  <text x="142" y="124" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#1e40af" letter-spacing=".05em">GAP</text>
+  <!-- Legend -->
+  <circle cx="22" cy="295" r="5" fill="#1c1917"/>
+  <text x="30" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">OFF</text>
+  <circle cx="60" cy="295" r="5" fill="#1e40af"/>
+  <text x="68" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">DEF</text>
+</svg>`,
+        note: 'Gap defenders (D2, D3) sit one foot inside the lane edge — close enough to see both the ball and their assignment simultaneously. They are not fully committed to either; they can contest a pass or step into a drive lane without overcommitting.'
       },
       deny: {
-        frames: [
-          ktMove({p1:[72,26],p2:[50,18],p3:[80,30]}, [], {ball:'p2'}),
-          ktMove({p1:[72,26],p3:[68,62]}, [[80,30,68,62,'cut'],[50,18,68,62,'pass']], {ball:[68,62]})
-        ],
-        note: '1 = denial defender on 3. Keeps hand and body in the passing lane. 3 reads the denial and back-cuts — 2 delivers a bounce pass to space.'
+        illus: `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:420px;border-radius:8px;background:#fcfbf9;">
+  <!-- Court -->
+  <rect x="15" y="15" width="370" height="270" fill="#fcfbf9" stroke="#b0afac" stroke-width="1.5"/>
+  <path d="M 45 15 A 165 165 0 0 0 355 15" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <rect x="130" y="15" width="140" height="130" fill="#f3f2f0" stroke="#bcbab7" stroke-width="1.5"/>
+  <path d="M 130 145 A 70 70 0 0 0 270 145" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <line x1="170" y1="32" x2="230" y2="32" stroke="#78716c" stroke-width="2.5"/>
+  <circle cx="200" cy="42" r="9" fill="none" stroke="#f97316" stroke-width="2"/>
+  <line x1="15" y1="285" x2="385" y2="285" stroke="#b0afac" stroke-width="1.5"/>
+  <!-- Faded background players -->
+  <circle cx="330" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="358" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="42" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="332" cy="82" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="350" cy="208" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="95" cy="208" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5" opacity="0.2"/>
+  <!-- Passing lane line (O1 to O3) — blocked by D3 -->
+  <line x1="200" y1="90" x2="70" y2="100" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 4" opacity="0.6"/>
+  <text x="138" y="83" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#ef4444" letter-spacing=".04em">PASSING LANE</text>
+  <!-- Back-cut arrow from O3 -->
+  <path d="M 70 112 Q 95 165 115 200" fill="none" stroke="#78716c" stroke-width="1.8" stroke-dasharray="6 4" opacity="0.7"/>
+  <polygon points="115,200 105,190 117,190" fill="#78716c" opacity="0.7"/>
+  <text x="60" y="178" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#78716c" letter-spacing=".04em">BACK-CUT</text>
+  <!-- Body angle wedge on D3 — chest faces between O3 and ball -->
+  <path d="M 138 112 L 148 96 A 14 14 0 0 1 152 108 Z" fill="#1e40af" opacity="0.25"/>
+  <!-- Arm in passing lane — short line from D3 toward passing lane -->
+  <line x1="138" y1="100" x2="156" y2="94" stroke="#1e40af" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <text x="172" y="90" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">ARM IN LANE</text>
+  <!-- Offense (active) -->
+  <circle cx="200" cy="90" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="94" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">1</text>
+  <circle cx="200" cy="78" r="5" fill="#f59e0b" stroke="#c2410c" stroke-width="1.5"/>
+  <circle cx="70" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="70" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">3</text>
+  <!-- Defense (active) -->
+  <circle cx="200" cy="72" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="76" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D1</text>
+  <circle cx="138" cy="100" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="138" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D3</text>
+  <!-- DENY label -->
+  <text x="138" y="120" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#1e40af" letter-spacing=".05em">DENY</text>
+  <!-- Legend -->
+  <circle cx="22" cy="295" r="5" fill="#1c1917"/>
+  <text x="30" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">OFF</text>
+  <circle cx="60" cy="295" r="5" fill="#1e40af"/>
+  <text x="68" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">DEF</text>
+</svg>`,
+        note: 'D3 sits between O3 and the ball with an arm in the passing lane — body angled to see both. O3 reads the denial and back-cuts to the basket. One hand takes away the pass; the body angle takes away the catch.'
       },
       hedge: {
         frames: [
@@ -921,18 +1051,106 @@
         note: '1 = small defender stuck in a post mismatch on 5. 2 = big with the wrong perimeter assignment. They scram: 1 sprints back out, 2 takes the post. Call it before the entry, not after the catch.'
       },
       shrink: {
-        frames: [
-          ktMove({p1:[50,36],p2:[22,30],p3:[78,30],p4:[22,56],p5:[78,56]}, [], {ball:[50,18]}),
-          ktMove({p1:[50,44],p2:[34,42],p3:[66,42],p4:[34,60],p5:[66,60]}, [[22,30,34,42,'cut'],[78,30,66,42,'cut'],[22,56,34,60,'cut'],[78,56,66,60,'cut']], {ball:[50,18]})
-        ],
-        note: 'All 5 defenders shrink toward the paint when the ball is above the break. Show a crowd — every drive should see a body. Recover fast when the ball swings.'
+        illus: `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:420px;border-radius:8px;background:#fcfbf9;">
+  <!-- Court -->
+  <rect x="15" y="15" width="370" height="270" fill="#fcfbf9" stroke="#b0afac" stroke-width="1.5"/>
+  <path d="M 45 15 A 165 165 0 0 0 355 15" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <rect x="130" y="15" width="140" height="130" fill="#f3f2f0" stroke="#bcbab7" stroke-width="1.5"/>
+  <path d="M 130 145 A 70 70 0 0 0 270 145" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <line x1="170" y1="32" x2="230" y2="32" stroke="#78716c" stroke-width="2.5"/>
+  <circle cx="200" cy="42" r="9" fill="none" stroke="#f97316" stroke-width="2"/>
+  <line x1="15" y1="285" x2="385" y2="285" stroke="#b0afac" stroke-width="1.5"/>
+  <!-- Ball-side / Help-side divider through basket -->
+  <line x1="200" y1="15" x2="200" y2="285" stroke="#94a3b8" stroke-width="1" stroke-dasharray="5 4" opacity="0.5"/>
+  <text x="295" y="29" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#64748b" letter-spacing=".05em">BALL SIDE →</text>
+  <text x="105" y="29" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#64748b" letter-spacing=".05em">← HELP SIDE</text>
+  <!-- Offense -->
+  <circle cx="200" cy="90" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="94" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">1</text>
+  <circle cx="330" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="330" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">2</text>
+  <circle cx="330" cy="88" r="5" fill="#f59e0b" stroke="#c2410c" stroke-width="1.5"/>
+  <circle cx="70" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="70" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">3</text>
+  <circle cx="358" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="358" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">4</text>
+  <circle cx="42" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="42" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">5</text>
+  <!-- Defense -->
+  <circle cx="330" cy="80" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="330" y="84" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D2</text>
+  <circle cx="272" cy="88" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="272" y="92" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D1</text>
+  <circle cx="140" cy="108" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="140" y="112" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D3</text>
+  <circle cx="348" cy="208" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="348" y="212" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D4</text>
+  <circle cx="158" cy="215" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="158" y="219" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D5</text>
+  <!-- Position labels -->
+  <text x="330" y="100" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">ON BALL</text>
+  <text x="272" y="108" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">DENY</text>
+  <text x="140" y="128" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">GAP</text>
+  <text x="348" y="228" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">DENY</text>
+  <text x="158" y="235" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">HELP / I</text>
+  <!-- Legend -->
+  <circle cx="22" cy="295" r="5" fill="#1c1917"/>
+  <text x="30" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">OFF</text>
+  <circle cx="60" cy="295" r="5" fill="#1e40af"/>
+  <text x="68" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">DEF</text>
+</svg>`,
+        note: 'Ball at right wing (2). Ball-side defenders deny; help-side defenders gap and hold I. Four positions: ON BALL, DENY (one pass away, ball side), GAP (one pass away, help side), HELP/I (two passes away). Rotate and recover every time the ball moves.'
       },
       nomiddle: {
-        frames: [
-          ktMove({p1:[30,28],p2:[22,32]}, [], {ball:'p2'}),
-          ktMove({p1:[24,36],p2:[16,50]}, [[22,32,16,50,'drive'],[30,28,24,36,'cut']], {ball:'p2'})
-        ],
-        note: '1 forces 2 to the sideline. Top foot stays high — body angled to deny the middle lane. One bad hip opens the straight-line drive to the rim.'
+        illus: `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-height:420px;border-radius:8px;background:#fcfbf9;">
+  <!-- Court -->
+  <rect x="15" y="15" width="370" height="270" fill="#fcfbf9" stroke="#b0afac" stroke-width="1.5"/>
+  <path d="M 45 15 A 165 165 0 0 0 355 15" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <rect x="130" y="15" width="140" height="130" fill="#f3f2f0" stroke="#bcbab7" stroke-width="1.5"/>
+  <path d="M 130 145 A 70 70 0 0 0 270 145" fill="none" stroke="#bcbab7" stroke-width="1.5"/>
+  <line x1="170" y1="32" x2="230" y2="32" stroke="#78716c" stroke-width="2.5"/>
+  <circle cx="200" cy="42" r="9" fill="none" stroke="#f97316" stroke-width="2"/>
+  <line x1="15" y1="285" x2="385" y2="285" stroke="#b0afac" stroke-width="1.5"/>
+  <!-- Pack line arc (dashed, inside 3pt arc) -->
+  <path d="M 62 15 A 148 148 0 0 0 338 15" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="8 5" opacity="0.55"/>
+  <text x="310" y="62" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="800" fill="#2563eb" letter-spacing=".04em" opacity="0.85">PACK LINE</text>
+  <line x1="310" y1="58" x2="300" y2="40" stroke="#2563eb" stroke-width="1" opacity="0.6"/>
+  <!-- No-middle arrow: force ball handler right (toward sideline) -->
+  <path d="M 195 100 Q 165 108 140 118" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 3" opacity="0.7"/>
+  <polygon points="140,118 152,112 150,123" fill="#ef4444" opacity="0.7"/>
+  <text x="144" y="134" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#ef4444" letter-spacing=".04em">FORCE SIDELINE</text>
+  <!-- Offense -->
+  <circle cx="200" cy="90" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="200" y="94" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">1</text>
+  <circle cx="200" cy="78" r="5" fill="#f59e0b" stroke="#c2410c" stroke-width="1.5"/>
+  <circle cx="330" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="330" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">2</text>
+  <circle cx="70" cy="100" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="70" y="104" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">3</text>
+  <circle cx="358" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="358" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">4</text>
+  <circle cx="42" cy="220" r="12" fill="#1c1917" stroke="#fff" stroke-width="1.5"/>
+  <text x="42" y="224" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#fff">5</text>
+  <!-- Defense — all inside/on the pack line -->
+  <circle cx="183" cy="78" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="183" y="82" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D1</text>
+  <circle cx="285" cy="108" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="285" y="112" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D2</text>
+  <circle cx="115" cy="108" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="115" y="112" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D3</text>
+  <circle cx="322" cy="215" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="322" y="219" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D4</text>
+  <circle cx="78" cy="215" r="12" fill="#1e40af" stroke="#fff" stroke-width="1.5"/>
+  <text x="78" y="219" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="#fff">D5</text>
+  <!-- NO MIDDLE label near D1 -->
+  <text x="183" y="98" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="7" font-weight="800" fill="#1e40af" letter-spacing=".04em">NO MIDDLE</text>
+  <!-- Legend -->
+  <circle cx="22" cy="295" r="5" fill="#1c1917"/>
+  <text x="30" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">OFF</text>
+  <circle cx="60" cy="295" r="5" fill="#1e40af"/>
+  <text x="68" y="298" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="700" fill="#78716c">DEF</text>
+</svg>`,
+        note: 'The pack line (dashed blue arc) sits one step inside the 3-point arc. All five defenders stay on or behind it — protecting the paint, clogging driving lanes, and eliminating straight-line paths to the rim. D1 shades toward the middle to force the ball handler sideline. One bad hip by D1 opens the drive.'
       },
       icepost: {
         frames: [
@@ -1082,10 +1300,12 @@
   <line x1="152" y1="116" x2="202" y2="116" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
   <polyline points="136,74 108,112 90,150" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
   <polyline points="224,74 252,112 270,150" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <polyline points="154,118 120,178 94,230" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <line x1="94" y1="230" x2="76" y2="232" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
-  <polyline points="200,118 234,178 258,230" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <line x1="258" y1="230" x2="276" y2="232" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Left leg: thigh angles outward to knee, shin angles back inward — visible V-bend at the knee -->
+  <polyline points="154,118 104,174 132,220" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="132" y1="220" x2="106" y2="225" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Right leg: mirror of left -->
+  <polyline points="200,118 252,174 224,220" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="224" y1="220" x2="250" y2="225" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
   <line x1="196" y1="28" x2="283" y2="22" stroke="#c4bfba" stroke-width="1"/>
   <text x="286" y="25" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em">HEAD UP</text>
   <line x1="210" y1="92" x2="283" y2="88" stroke="#c4bfba" stroke-width="1"/>
@@ -1094,8 +1314,9 @@
   <text x="286" y="151" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em">HANDS OUT</text>
   <line x1="152" y1="116" x2="97" y2="114" stroke="#c4bfba" stroke-width="1"/>
   <text x="94" y="117" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em" text-anchor="end">HIPS LOW</text>
-  <line x1="120" y1="178" x2="97" y2="176" stroke="#c4bfba" stroke-width="1"/>
-  <text x="94" y="179" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em" text-anchor="end">KNEES BENT</text>
+  <!-- Callout now points at the actual knee vertex -->
+  <line x1="104" y1="174" x2="78" y2="172" stroke="#c4bfba" stroke-width="1"/>
+  <text x="75" y="175" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" fill="#78716c" letter-spacing=".06em" text-anchor="end">KNEES BENT</text>
   <line x1="82" y1="249" x2="270" y2="249" stroke="#c4bfba" stroke-width="1.5"/>
   <polygon points="78,249 86,246 86,252" fill="#c4bfba"/>
   <polygon points="274,249 266,246 266,252" fill="#c4bfba"/>
@@ -1243,8 +1464,9 @@
 
     const openDiagram = (button, term) => {
       const key = normalizeTerm(term);
-      const id = KT_MAP[key] || 'contain';
-      const diagram = KT_DIAGRAMS[id] || KT_DIAGRAMS.contain;
+      const id = KT_MAP[key];
+      const diagram = id && KT_DIAGRAMS[id];
+      if (!diagram) return;
       lastDiagramButton = button;
       diagramTitle.textContent = term;
       document.getElementById('kt-diagram-note').textContent = diagram.note;
@@ -1277,6 +1499,8 @@
       const nameEl = termEl.querySelector('.kt-term-name');
       if (!nameEl || nameEl.querySelector('.kt-view-btn')) return;
       const term = nameEl.childNodes[0].textContent.trim();
+      const diagId = KT_MAP[normalizeTerm(term)];
+      if (!diagId || !KT_DIAGRAMS[diagId]) return;
       const btn = document.createElement('button');
       btn.className = 'kt-view-btn'; btn.type = 'button'; btn.textContent = 'View';
       btn.setAttribute('aria-label', 'View diagram for ' + term);
