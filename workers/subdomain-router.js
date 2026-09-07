@@ -26,13 +26,27 @@ export default {
     // Serve the standalone calculator Worker from the main site's tool path.
     // The calculator app expects to run from `/`, so remove the public prefix
     // before proxying it to the Worker.
-    const calculatorPrefix = '/tools/calculator';
+    const calculatorPrefix = hostname === 'tools.wakeupandproduce.com'
+      ? '/consultant-calculator'
+      : '/tools/calculator';
     if (
-      hostname === 'wakeupandproduce.com' &&
+      (hostname === 'wakeupandproduce.com' || hostname === 'tools.wakeupandproduce.com') &&
       (url.pathname === calculatorPrefix || url.pathname.startsWith(`${calculatorPrefix}/`))
     ) {
       url.pathname = url.pathname.slice(calculatorPrefix.length) || '/';
       url.hostname = 'consultant-calculator.media-930.workers.dev';
+      return fetch(url.toString(), request);
+    }
+
+    // Keep Segment Timer at a WUAP path while serving its static assets from
+    // its dedicated Pages project.
+    const segmentTimerPrefix = '/tools/segment-timer';
+    if (
+      hostname === 'wakeupandproduce.com' &&
+      (url.pathname === segmentTimerPrefix || url.pathname.startsWith(`${segmentTimerPrefix}/`))
+    ) {
+      url.pathname = url.pathname.slice(segmentTimerPrefix.length) || '/';
+      url.hostname = 'segment-timer.pages.dev';
       return fetch(url.toString(), request);
     }
 
