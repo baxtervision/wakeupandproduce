@@ -6,431 +6,784 @@
   <title>Wake Up &amp; Produce</title>
   <meta name="description" content="Tools and information for those who want to do more. Sports resources, productivity tools, recovery products, and merch — all under one roof.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <style>
-    /* ── tokens: dark-first ── */
-    :root {
-      --bg: #0A0E1A;
-      --bg-card: rgba(255,255,255,0.04);
-      --bg-card-hover: rgba(255,255,255,0.08);
-      --fg: #E8E6E1;
-      --fg-dim: #7B7F8E;
-      --green: #3ECF8E;
-      --green-glow: rgba(62,207,142,0.35);
-      --amber: #E8A840;
-      --amber-glow: rgba(232,168,64,0.3);
-      --border: rgba(255,255,255,0.06);
-      --border-hover: rgba(62,207,142,0.3);
-      --icon-bg: rgba(62,207,142,0.08);
-      --icon-border: rgba(62,207,142,0.12);
-      --divider: rgba(255,255,255,0.06);
-    }
-
-    :root[data-theme="light"] {
-      --bg: #F4F3EF;
-      --bg-card: rgba(255,255,255,0.85);
-      --bg-card-hover: rgba(255,255,255,1);
-      --fg: #1C2130;
-      --fg-dim: #6E7280;
-      --green: #2D7A5F;
-      --green-glow: rgba(45,122,95,0.15);
-      --amber: #D4933D;
-      --amber-glow: rgba(212,147,61,0.15);
-      --border: rgba(0,0,0,0.08);
-      --border-hover: rgba(45,122,95,0.4);
-      --icon-bg: rgba(45,122,95,0.07);
-      --icon-border: rgba(45,122,95,0.1);
-      --divider: rgba(0,0,0,0.08);
-    }
-
-    @media (prefers-color-scheme: light) {
-      :root:not([data-theme="dark"]) {
-        --bg: #F4F3EF;
-        --bg-card: rgba(255,255,255,0.85);
-        --bg-card-hover: rgba(255,255,255,1);
-        --fg: #1C2130;
-        --fg-dim: #6E7280;
-        --green: #2D7A5F;
-        --green-glow: rgba(45,122,95,0.15);
-        --amber: #D4933D;
-        --amber-glow: rgba(212,147,61,0.15);
-        --border: rgba(0,0,0,0.08);
-        --border-hover: rgba(45,122,95,0.4);
-        --icon-bg: rgba(45,122,95,0.07);
-        --icon-border: rgba(45,122,95,0.1);
-        --divider: rgba(0,0,0,0.08);
-      }
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* ── ambient orbs ── */
-    .scene {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.45;
-      animation: drift 20s ease-in-out infinite alternate;
-    }
-    .orb--green {
-      width: 500px; height: 500px;
-      background: var(--green-glow);
-      top: 8%; left: 12%;
-    }
-    .orb--amber {
-      width: 400px; height: 400px;
-      background: var(--amber-glow);
-      top: 48%; right: 8%;
-      animation-delay: -7s;
-      animation-duration: 25s;
-    }
-    .orb--dim {
-      width: 600px; height: 600px;
-      background: rgba(62,207,142,0.06);
-      bottom: -15%; left: 35%;
-      animation-delay: -12s;
-      animation-duration: 30s;
-    }
-    @keyframes drift {
-      0%   { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(40px, -30px) scale(1.12); }
-    }
-
-    /* ── subtle grid ── */
-    .grid-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: radial-gradient(ellipse 60% 55% at 50% 35%, black 5%, transparent 65%);
-      -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 35%, black 5%, transparent 65%);
-    }
-
-    /* ── page shell ── */
-    .page {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── hero ── */
-    .hero {
-      padding: 6rem 1.5rem 0;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .hero-brand {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 900;
-      font-size: clamp(3.2rem, 9vw, 6rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
-      text-wrap: balance;
-    }
-    .hero-brand .amp {
-      color: var(--amber);
-      display: inline-block;
-      text-shadow: 0 0 40px var(--amber-glow);
-    }
-    .hero-tagline {
-      margin-top: 1.5rem;
-      font-size: 1.15rem;
-      color: var(--fg-dim);
-      max-width: 420px;
-      line-height: 1.6;
-    }
-
-    /* ── glowing diamond ── */
-    .diamond-wrap {
-      margin: 3rem 0 3.5rem;
-      display: flex;
-      justify-content: center;
-    }
-    .diamond {
-      width: 52px;
-      height: 52px;
-      transform: rotate(45deg);
-      border: 2px solid var(--green);
-      border-radius: 4px;
-      position: relative;
-      animation: pulse-diamond 4s ease-in-out infinite;
-    }
-    .diamond::before {
-      content: '';
-      position: absolute;
-      inset: -14px;
-      border: 1px solid rgba(62,207,142,0.15);
-      border-radius: 6px;
-    }
-    .diamond::after {
-      content: '';
-      position: absolute;
-      inset: 8px;
-      background: var(--green);
-      border-radius: 2px;
-      opacity: 0.25;
-      box-shadow: 0 0 30px var(--green-glow), 0 0 60px var(--green-glow);
-    }
-    @keyframes pulse-diamond {
-      0%, 100% { box-shadow: 0 0 20px var(--green-glow), 0 0 50px rgba(62,207,142,0.08); }
-      50%      { box-shadow: 0 0 35px var(--green-glow), 0 0 80px rgba(62,207,142,0.18); }
-    }
-
-    /* ── cards ── */
-    .cards {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 1.5rem 5rem;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-      perspective: 900px;
-    }
-    .card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 2rem 1.75rem;
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      text-decoration: none;
-      color: var(--fg);
-      transition: background 0.3s, border-color 0.3s, transform 0.4s ease, box-shadow 0.3s;
-      transform-style: preserve-3d;
-      will-change: transform;
-      animation: float-in 0.7s ease-out both;
-    }
-    .card:nth-child(1) { animation-delay: 0.1s; }
-    .card:nth-child(2) { animation-delay: 0.2s; }
-    .card:nth-child(3) { animation-delay: 0.3s; }
-    .card:nth-child(4) { animation-delay: 0.4s; }
-
-    @keyframes float-in {
-      from { opacity: 0; transform: translateY(30px) rotateX(6deg); }
-      to   { opacity: 1; transform: translateY(0) rotateX(0); }
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(62,207,142,0.2), transparent 50%);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .card:hover::before,
-    .card:focus-visible::before { opacity: 1; }
-
-    .card:hover, .card:focus-visible {
-      background: var(--bg-card-hover);
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 40px rgba(62,207,142,0.08), 0 0 0 1px var(--border-hover);
-      outline: none;
-    }
-    .card:focus-visible {
-      outline: 2px solid var(--green);
-      outline-offset: 2px;
-    }
-
-    .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: var(--icon-bg);
-      border: 1px solid var(--icon-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .card-icon svg {
-      width: 22px;
-      height: 22px;
-      stroke: var(--green);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .card-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.35rem;
-      letter-spacing: -0.01em;
-      line-height: 1.2;
-    }
-    .card-desc {
-      font-size: 0.9rem;
-      color: var(--fg-dim);
-      line-height: 1.6;
-      flex-grow: 1;
-    }
-    .card-arrow {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      margin-top: 0.5rem;
-    }
-    .card-arrow svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      transition: transform 0.2s ease;
-    }
-    .card:hover .card-arrow svg { transform: translateX(4px); }
-
-    /* ── footer ── */
-    .footer {
-      margin-top: auto;
-      border-top: 1px solid var(--divider);
-      padding: 2rem 1.5rem;
-      text-align: center;
-    }
-    .footer-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .footer-brand {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 0.9rem;
-      letter-spacing: -0.01em;
-    }
-    .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-    .footer-links a {
-      font-size: 0.8rem;
-      color: var(--fg-dim);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .footer-links a:hover { color: var(--green); }
-    .footer-copy { font-size: 0.75rem; color: var(--fg-dim); }
-
-    /* ── responsive ── */
-    @media (max-width: 640px) {
-      .hero { padding: 4rem 1.25rem 0; }
-      .cards { grid-template-columns: 1fr; padding: 0 1.25rem 3.5rem; }
-      .card { padding: 1.5rem; }
-      .diamond-wrap { margin: 2rem 0 2.5rem; }
-      .orb { filter: blur(80px); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .card, .card-arrow svg { transition: none; }
-      .card:hover { transform: none; }
-      .card:hover .card-arrow svg { transform: none; }
-      .orb { animation: none; }
-      .diamond { animation: none; }
-      .card { animation: none; opacity: 1; }
-    }
-  </style>
 </head>
 <body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- ambient background -->
-<div class="scene" aria-hidden="true">
-  <div class="orb orb--green"></div>
-  <div class="orb orb--amber"></div>
-  <div class="orb orb--dim"></div>
-</div>
-<div class="grid-bg" aria-hidden="true"></div>
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --bg-card: rgba(255,255,255,0.03);
+    --bg-card-hover: rgba(255,255,255,0.055);
+    --fg: #E8E7ED;
+    --fg-dim: #5E5D6B;
+    --fg-mid: #8D8C9A;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --sports: #F07030;
+    --sports-glow: rgba(240,112,48,0.35);
+    --tools: #4B80F5;
+    --tools-glow: rgba(75,128,245,0.30);
+    --recovery: #30D9A8;
+    --recovery-glow: rgba(48,217,168,0.30);
+    --merch: #9B6DFF;
+    --merch-glow: rgba(155,109,255,0.30);
+    --amber: #F0B030;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #F4F3F0;
+    --bg-card: rgba(255,255,255,0.85);
+    --bg-card-hover: rgba(255,255,255,0.95);
+    --fg: #151320;
+    --fg-dim: #7A7888;
+    --fg-mid: #5A586A;
+    --border: rgba(0,0,0,0.07);
+    --border-hover: rgba(0,0,0,0.14);
+    --sports: #D45A20;
+    --sports-glow: rgba(212,90,32,0.15);
+    --tools: #3A6AD4;
+    --tools-glow: rgba(58,106,212,0.12);
+    --recovery: #1EA87A;
+    --recovery-glow: rgba(30,168,122,0.12);
+    --merch: #7B4FD6;
+    --merch-glow: rgba(123,79,214,0.12);
+    --amber: #C49020;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F4F3F0;
+      --bg-card: rgba(255,255,255,0.85);
+      --bg-card-hover: rgba(255,255,255,0.95);
+      --fg: #151320;
+      --fg-dim: #7A7888;
+      --fg-mid: #5A586A;
+      --border: rgba(0,0,0,0.07);
+      --border-hover: rgba(0,0,0,0.14);
+      --sports: #D45A20;
+      --sports-glow: rgba(212,90,32,0.15);
+      --tools: #3A6AD4;
+      --tools-glow: rgba(58,106,212,0.12);
+      --recovery: #1EA87A;
+      --recovery-glow: rgba(30,168,122,0.12);
+      --merch: #7B4FD6;
+      --merch-glow: rgba(123,79,214,0.12);
+      --amber: #C49020;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* ── grain ── */
+  .grain {
+    position: fixed; inset: 0; z-index: 50;
+    pointer-events: none; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-size: 200px 200px;
+  }
+
+  /* ── ambient gradient ── */
+  .ambient {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(75,128,245,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(240,112,48,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 70%, rgba(155,109,255,0.04) 0%, transparent 60%);
+  }
+
+  /* ── decorative watermark ── */
+  .watermark {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 38vw;
+    line-height: 1;
+    color: var(--fg);
+    opacity: 0.018;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+  }
+
+  /* ── page ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── hero ── */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* orbital rings behind the hero text */
+  .hero-orbits {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    width: clamp(320px, 55vw, 640px);
+    height: clamp(320px, 55vw, 640px);
+    pointer-events: none;
+  }
+  .orbit-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid;
+    border-color: rgba(240,176,48,0.08);
+  }
+  .orbit-ring:nth-child(1) {
+    inset: 8%; animation: orbitSpin 40s linear infinite;
+    border-color: rgba(240,176,48,0.1);
+  }
+  .orbit-ring:nth-child(2) {
+    inset: 20%; animation: orbitSpin 30s linear infinite reverse;
+    border-color: rgba(75,128,245,0.08);
+  }
+  .orbit-ring:nth-child(3) {
+    inset: 32%; animation: orbitSpin 22s linear infinite;
+    border-color: rgba(155,109,255,0.08);
+  }
+  /* orbital dots */
+  .orbit-ring::after {
+    content: '';
+    position: absolute;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    top: -2px; left: 50%;
+  }
+  .orbit-ring:nth-child(1)::after {
+    background: var(--amber); box-shadow: 0 0 10px rgba(240,176,48,0.6);
+  }
+  .orbit-ring:nth-child(2)::after {
+    background: var(--tools); box-shadow: 0 0 10px rgba(75,128,245,0.6);
+  }
+  .orbit-ring:nth-child(3)::after {
+    background: var(--merch); box-shadow: 0 0 10px rgba(155,109,255,0.6);
+  }
+
+  @keyframes orbitSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .brand-pill {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--fg-mid);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.5s ease-out 0.1s both;
+  }
+  .brand-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--recovery);
+    box-shadow: 0 0 8px rgba(48,217,168,0.5);
+  }
+
+  /* stacked headline */
+  .hero-headline {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    animation: fadeUp 0.6s ease-out 0.2s both;
+  }
+
+  .hero-line {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(3.2rem, 12vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--fg) 0%, var(--fg-mid) 50%, var(--fg) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 6s ease-in-out infinite;
+  }
+
+  @keyframes shimmerText {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* the oversized ampersand */
+  .hero-amp {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(5rem, 22vw, 16rem);
+    line-height: 0.75;
+    margin: -0.08em 0;
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(180deg, #FFD080 0%, #F0B030 30%, #E08820 70%, #C06818 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 40px rgba(240,176,48,0.3)) drop-shadow(0 0 80px rgba(240,176,48,0.15));
+    animation: fadeUp 0.6s ease-out 0.25s both, ampPulse 4s ease-in-out infinite 1s;
+  }
+
+  @keyframes ampPulse {
+    0%, 100% { filter: drop-shadow(0 0 40px rgba(240,176,48,0.3)) drop-shadow(0 0 80px rgba(240,176,48,0.15)); }
+    50% { filter: drop-shadow(0 0 60px rgba(240,176,48,0.45)) drop-shadow(0 0 100px rgba(240,176,48,0.25)); }
+  }
+
+  /* subtitle with flanking lines */
+  .hero-sub-wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 1.8rem;
+    animation: fadeUp 0.5s ease-out 0.4s both;
+  }
+  .hero-sub-line {
+    width: clamp(30px, 8vw, 80px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--fg-dim));
+  }
+  .hero-sub-line:last-child {
+    background: linear-gradient(90deg, var(--fg-dim), transparent);
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--fg-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+  }
+
+  /* floating particles in the hero */
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--amber);
+    opacity: 0;
+    animation: particleFloat 8s ease-in-out infinite;
+  }
+  .particle:nth-child(1) { left: 12%; top: 30%; animation-delay: 0s; background: var(--sports); }
+  .particle:nth-child(2) { left: 85%; top: 25%; animation-delay: 1.5s; background: var(--tools); }
+  .particle:nth-child(3) { left: 20%; top: 70%; animation-delay: 3s; background: var(--recovery); }
+  .particle:nth-child(4) { left: 78%; top: 65%; animation-delay: 4.5s; background: var(--merch); }
+  .particle:nth-child(5) { left: 50%; top: 15%; animation-delay: 2s; width: 2px; height: 2px; }
+  .particle:nth-child(6) { left: 35%; top: 80%; animation-delay: 5.5s; background: var(--tools); width: 2px; height: 2px; }
+  .particle:nth-child(7) { left: 65%; top: 85%; animation-delay: 7s; background: var(--sports); width: 2px; height: 2px; }
+  .particle:nth-child(8) { left: 8%; top: 55%; animation-delay: 6s; background: var(--merch); width: 4px; height: 4px; }
+
+  @keyframes particleFloat {
+    0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
+    20% { opacity: 0.7; transform: translateY(-10px) scale(1); }
+    80% { opacity: 0.5; transform: translateY(-30px) scale(0.8); }
+  }
+
+  /* ── cards ── */
+  .cards {
+    max-width: 880px;
+    margin: 2.5rem auto 0;
+    padding: 0 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--fg);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1),
+                background 0.4s ease,
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+    animation: fadeUp 0.6s ease-out both;
+    cursor: pointer;
+  }
+  .card:nth-child(1) { animation-delay: 0.3s; }
+  .card:nth-child(2) { animation-delay: 0.4s; }
+  .card:nth-child(3) { animation-delay: 0.5s; }
+  .card:nth-child(4) { animation-delay: 0.6s; }
+
+  .card:hover {
+    transform: translateY(-6px);
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    box-shadow: 0 20px 50px -12px var(--glow);
+  }
+  .card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── card visual area ── */
+  .card-vis {
+    position: relative;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ambient glow behind each visual */
+  .card-vis::before {
+    content: '';
+    position: absolute;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: var(--glow);
+    filter: blur(50px);
+    opacity: 0.6;
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .card:hover .card-vis::before {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  /* the visual shape itself */
+  .card-shape {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+  .card:hover .card-shape {
+    transform: scale(1.08) translateY(-4px);
+  }
+
+  /* ── card info ── */
+  .card-info {
+    padding: 0 1.5rem 1.5rem;
+  }
+  .card-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+  .card-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--glow);
+  }
+  .card-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--fg-dim);
+    line-height: 1.55;
+    max-width: 280px;
+  }
+
+  /* arrow indicator */
+  .card-arrow {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: all 0.3s ease;
+  }
+  .card-arrow svg {
+    width: 14px; height: 14px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .card:hover .card-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ── individual shape styles ── */
+
+  /* SPORTS — basketball sphere */
+  .shape-sports {
+    width: 130px; height: 130px;
+    position: relative;
+  }
+  .shape-sports svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 8px 24px rgba(240,112,48,0.3));
+  }
+  .card:hover .shape-sports {
+    animation: gentleRotate 6s linear infinite;
+  }
+
+  /* TOOLS — lightning crystal */
+  .shape-tools {
+    width: 110px; height: 140px;
+    position: relative;
+  }
+  .shape-tools svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 8px 24px rgba(75,128,245,0.35));
+  }
+
+  /* RECOVERY — organic leaf cluster */
+  .shape-recovery {
+    width: 130px; height: 140px;
+    position: relative;
+  }
+  .shape-recovery svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 8px 24px rgba(48,217,168,0.3));
+  }
+  .card:hover .shape-recovery {
+    animation: gentlePulse 3s ease-in-out infinite;
+  }
+
+  /* MERCH — diamond prism */
+  .shape-merch {
+    width: 120px; height: 140px;
+    position: relative;
+  }
+  .shape-merch svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 8px 24px rgba(155,109,255,0.35));
+  }
+  .card:hover .shape-merch {
+    animation: gentleFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes gentleRotate {
+    from { transform: scale(1.08) translateY(-4px) rotate(0deg); }
+    to   { transform: scale(1.08) translateY(-4px) rotate(360deg); }
+  }
+  @keyframes gentlePulse {
+    0%, 100% { transform: scale(1.08) translateY(-4px); }
+    50%      { transform: scale(1.14) translateY(-6px); }
+  }
+  @keyframes gentleFloat {
+    0%, 100% { transform: scale(1.08) translateY(-4px); }
+    50%      { transform: scale(1.08) translateY(-12px); }
+  }
+
+  /* ── footer ── */
+  .footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .footer-brand {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .footer-links a {
+    font-size: 0.76rem;
+    color: var(--fg-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--fg); }
+  .footer-copy { font-size: 0.7rem; color: var(--fg-dim); }
+
+  /* ── animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── responsive ── */
+  @media (max-width: 640px) {
+    .hero { padding: 2.5rem 1rem 1rem; }
+    .hero-line { font-size: clamp(2.8rem, 14vw, 4.5rem); }
+    .hero-amp { font-size: clamp(4.5rem, 28vw, 10rem); }
+    .brand-pill { margin-bottom: 1rem; }
+    .hero-orbits { width: 90vw; height: 90vw; }
+    .hero-sub { font-size: 0.75rem; letter-spacing: 0.12em; }
+    .hero-sub-line { width: 24px; }
+    .cards {
+      grid-template-columns: 1fr;
+      padding: 0 1rem 3rem;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .card-vis { height: 160px; }
+    .watermark { font-size: 60vw; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0s !important;
+      transition-duration: 0s !important;
+    }
+  }
+</style>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="ambient" aria-hidden="true"></div>
+<div class="watermark" aria-hidden="true">&amp;</div>
 
 <div class="page">
 
   <header class="hero">
-    <h1 class="hero-brand">Wake Up <span class="amp">&amp;</span> Produce</h1>
-    <p class="hero-tagline">Tools and information for those who want to do more.</p>
-    <div class="diamond-wrap" aria-hidden="true"><div class="diamond"></div></div>
+    <div class="hero-orbits" aria-hidden="true">
+      <div class="orbit-ring"></div>
+      <div class="orbit-ring"></div>
+      <div class="orbit-ring"></div>
+    </div>
+    <div class="hero-particles" aria-hidden="true">
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+      <span class="particle"></span>
+    </div>
+    <div class="brand-pill">
+      <span class="brand-dot"></span>
+      wakeupandproduce.com
+    </div>
+    <h1 class="hero-headline">
+      <span class="hero-line">Wake Up</span>
+      <span class="hero-amp">&amp;</span>
+      <span class="hero-line">Produce</span>
+    </h1>
+    <div class="hero-sub-wrap">
+      <span class="hero-sub-line" aria-hidden="true"></span>
+      <p class="hero-sub">For Those Who Want To Do More</p>
+      <span class="hero-sub-line" aria-hidden="true"></span>
+    </div>
   </header>
 
   <main class="cards">
 
-    <a href="/sports/" class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3C12 3 7.5 8 7.5 12S12 21 12 21"/><path d="M12 3C12 3 16.5 8 16.5 12S12 21 12 21"/><line x1="3.5" y1="10" x2="20.5" y2="10"/><line x1="3.5" y1="14" x2="20.5" y2="14"/></svg>
+    <!-- SPORTS -->
+    <a href="/sports/" class="card" style="--accent: var(--sports); --glow: var(--sports-glow)">
+      <div class="card-vis">
+        <div class="card-shape shape-sports">
+          <svg viewBox="0 0 130 130" fill="none">
+            <defs>
+              <radialGradient id="ball" cx="40%" cy="35%" r="55%">
+                <stop offset="0%" stop-color="#FFAA60"/>
+                <stop offset="60%" stop-color="#F07030"/>
+                <stop offset="100%" stop-color="#C04818"/>
+              </radialGradient>
+            </defs>
+            <circle cx="65" cy="65" r="58" fill="url(#ball)"/>
+            <path d="M65 7v116" stroke="#C04818" stroke-width="2.5" stroke-opacity="0.5"/>
+            <path d="M7 65h116" stroke="#C04818" stroke-width="2.5" stroke-opacity="0.5"/>
+            <path d="M12 30 q53 35 106 0" stroke="#C04818" stroke-width="2" stroke-opacity="0.4" fill="none"/>
+            <path d="M12 100 q53-35 106 0" stroke="#C04818" stroke-width="2" stroke-opacity="0.4" fill="none"/>
+            <!-- highlight -->
+            <circle cx="45" cy="40" r="18" fill="white" opacity="0.08"/>
+          </svg>
+        </div>
       </div>
-      <h2 class="card-title">Sports</h2>
-      <p class="card-desc">Systems, vocabulary, and standards for basketball, football, volleyball, and more. Diagrams, breakdowns, and the concepts behind how games are taught.</p>
-      <span class="card-arrow">Explore <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="card-info">
+        <div class="card-label">
+          <span class="card-dot"></span>
+          <h2 class="card-name">Sports</h2>
+        </div>
+        <p class="card-desc">Systems, vocabulary, and standards for basketball, football, volleyball, and more.</p>
+      </div>
+      <span class="card-arrow"><svg viewBox="0 0 14 14"><path d="M3 11L11 3M6 3h5v5"/></svg></span>
     </a>
 
-    <a href="/tools/" class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <!-- TOOLS -->
+    <a href="/tools/" class="card" style="--accent: var(--tools); --glow: var(--tools-glow)">
+      <div class="card-vis">
+        <div class="card-shape shape-tools">
+          <svg viewBox="0 0 110 140" fill="none">
+            <defs>
+              <linearGradient id="bolt" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#8CB4FF"/>
+                <stop offset="50%" stop-color="#4B80F5"/>
+                <stop offset="100%" stop-color="#2855C0"/>
+              </linearGradient>
+              <filter id="bolt-glow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- outer hexagon frame -->
+            <path d="M55 8 L98 30 L98 80 L55 102 L12 80 L12 30 Z" stroke="#4B80F5" stroke-width="1.5" stroke-opacity="0.25" fill="rgba(75,128,245,0.04)"/>
+            <path d="M55 20 L88 38 L88 74 L55 92 L22 74 L22 38 Z" stroke="#4B80F5" stroke-width="1" stroke-opacity="0.15" fill="none"/>
+            <!-- lightning bolt -->
+            <path d="M62 18 L38 65 L56 65 L48 118 L78 58 L58 58 Z" fill="url(#bolt)" filter="url(#bolt-glow)"/>
+            <!-- sparkle dots -->
+            <circle cx="30" cy="42" r="2" fill="#8CB4FF" opacity="0.6"/>
+            <circle cx="82" cy="50" r="1.5" fill="#8CB4FF" opacity="0.5"/>
+            <circle cx="75" cy="90" r="2" fill="#4B80F5" opacity="0.4"/>
+          </svg>
+        </div>
       </div>
-      <h2 class="card-title">Tools</h2>
-      <p class="card-desc">A programmable segment timer, a consultant calculator, financial and research education modules, and PocketCoach — a training platform for guides and learners.</p>
-      <span class="card-arrow">Browse tools <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="card-info">
+        <div class="card-label">
+          <span class="card-dot"></span>
+          <h2 class="card-name">Tools</h2>
+        </div>
+        <p class="card-desc">Segment timer, consultant calculator, education modules, and PocketCoach.</p>
+      </div>
+      <span class="card-arrow"><svg viewBox="0 0 14 14"><path d="M3 11L11 3M6 3h5v5"/></svg></span>
     </a>
 
-    <a href="/recovery/" class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+    <!-- RECOVERY -->
+    <a href="/recovery/" class="card" style="--accent: var(--recovery); --glow: var(--recovery-glow)">
+      <div class="card-vis">
+        <div class="card-shape shape-recovery">
+          <svg viewBox="0 0 130 140" fill="none">
+            <defs>
+              <radialGradient id="leaf1" cx="45%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#60F0C8"/>
+                <stop offset="70%" stop-color="#30D9A8"/>
+                <stop offset="100%" stop-color="#1A9070"/>
+              </radialGradient>
+              <radialGradient id="leaf2" cx="55%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#50E8B8"/>
+                <stop offset="100%" stop-color="#20A878"/>
+              </radialGradient>
+            </defs>
+            <!-- large leaf -->
+            <path d="M65 10 C30 30, 15 75, 65 130 C115 75, 100 30, 65 10 Z" fill="url(#leaf1)" opacity="0.9"/>
+            <!-- vein lines -->
+            <path d="M65 30 v80" stroke="#1A7858" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"/>
+            <path d="M65 50 L45 38" stroke="#1A7858" stroke-width="1.5" stroke-opacity="0.3" stroke-linecap="round"/>
+            <path d="M65 50 L85 38" stroke="#1A7858" stroke-width="1.5" stroke-opacity="0.3" stroke-linecap="round"/>
+            <path d="M65 70 L40 58" stroke="#1A7858" stroke-width="1.5" stroke-opacity="0.3" stroke-linecap="round"/>
+            <path d="M65 70 L90 58" stroke="#1A7858" stroke-width="1.5" stroke-opacity="0.3" stroke-linecap="round"/>
+            <path d="M65 90 L45 80" stroke="#1A7858" stroke-width="1.5" stroke-opacity="0.3" stroke-linecap="round"/>
+            <path d="M65 90 L85 80" stroke="#1A7858" stroke-width="1.5" stroke-opacity="0.3" stroke-linecap="round"/>
+            <!-- small secondary leaf -->
+            <path d="M95 25 C85 32, 80 55, 95 75 C110 55, 105 32, 95 25 Z" fill="url(#leaf2)" opacity="0.5"/>
+            <!-- highlight -->
+            <circle cx="50" cy="45" r="16" fill="white" opacity="0.06"/>
+          </svg>
+        </div>
       </div>
-      <h2 class="card-title">Recovery</h2>
-      <p class="card-desc">LifeWave recovery patches for athletes and active people. More wellness products coming.</p>
-      <span class="card-arrow">Shop recovery <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="card-info">
+        <div class="card-label">
+          <span class="card-dot"></span>
+          <h2 class="card-name">Recovery</h2>
+        </div>
+        <p class="card-desc">LifeWave patches and wellness products for athletes and active people.</p>
+      </div>
+      <span class="card-arrow"><svg viewBox="0 0 14 14"><path d="M3 11L11 3M6 3h5v5"/></svg></span>
     </a>
 
-    <a href="/merch/" class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    <!-- MERCH -->
+    <a href="/merch/" class="card" style="--accent: var(--merch); --glow: var(--merch-glow)">
+      <div class="card-vis">
+        <div class="card-shape shape-merch">
+          <svg viewBox="0 0 120 140" fill="none">
+            <defs>
+              <linearGradient id="gem1" x1="30%" y1="0%" x2="70%" y2="100%">
+                <stop offset="0%" stop-color="#C8A0FF"/>
+                <stop offset="50%" stop-color="#9B6DFF"/>
+                <stop offset="100%" stop-color="#6840CC"/>
+              </linearGradient>
+              <linearGradient id="gem2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#B88AFF"/>
+                <stop offset="100%" stop-color="#7B50E0"/>
+              </linearGradient>
+            </defs>
+            <!-- diamond body -->
+            <path d="M60 10 L105 55 L60 130 L15 55 Z" fill="url(#gem1)"/>
+            <!-- facets -->
+            <path d="M60 10 L60 130" stroke="#6840CC" stroke-width="1.2" stroke-opacity="0.3"/>
+            <path d="M15 55 L105 55" stroke="#6840CC" stroke-width="1.2" stroke-opacity="0.3"/>
+            <path d="M60 10 L15 55 L60 80 Z" fill="url(#gem2)" opacity="0.4"/>
+            <path d="M60 10 L105 55 L60 80 Z" fill="white" opacity="0.06"/>
+            <!-- top facet highlight -->
+            <path d="M60 10 L38 40 L60 50 L82 40 Z" fill="white" opacity="0.1"/>
+            <!-- sparkle -->
+            <circle cx="45" cy="40" r="3" fill="white" opacity="0.2"/>
+            <circle cx="42" cy="37" r="1" fill="white" opacity="0.5"/>
+          </svg>
+        </div>
       </div>
-      <h2 class="card-title">Merch</h2>
-      <p class="card-desc">Apparel from Elegant Futures. Wear something that says something.</p>
-      <span class="card-arrow">Shop merch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="card-info">
+        <div class="card-label">
+          <span class="card-dot"></span>
+          <h2 class="card-name">Merch</h2>
+        </div>
+        <p class="card-desc">Apparel from Elegant Futures. Wear something that says something.</p>
+      </div>
+      <span class="card-arrow"><svg viewBox="0 0 14 14"><path d="M3 11L11 3M6 3h5v5"/></svg></span>
     </a>
 
   </main>
@@ -450,19 +803,21 @@
 </div>
 
 <script>
-  // 3D tilt on hover (mouse devices, respects reduced-motion)
-  if (window.matchMedia('(pointer: fine)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // parallax on card visuals
+  if (window.matchMedia('(pointer: fine)').matches) {
     document.querySelectorAll('.card').forEach(function(card) {
       card.addEventListener('mousemove', function(e) {
         var r = card.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width - 0.5;
         var y = (e.clientY - r.top) / r.height - 0.5;
-        card.style.transform =
-          'translateY(-4px) rotateY(' + (x * 6) + 'deg) rotateX(' + (-y * 6) + 'deg)';
+        var shape = card.querySelector('.card-shape');
+        if (shape && !card._hoverAnim) {
+          shape.style.transform = 'translate(' + (x * 12) + 'px, ' + (y * 8) + 'px)';
+        }
       });
       card.addEventListener('mouseleave', function() {
-        card.style.transform = '';
+        var shape = card.querySelector('.card-shape');
+        if (shape) shape.style.transform = '';
       });
     });
   }
