@@ -23,6 +23,19 @@ export default {
     const url = new URL(request.url);
     const hostname = url.hostname;
 
+    // Serve the standalone calculator Worker from the main site's tool path.
+    // The calculator app expects to run from `/`, so remove the public prefix
+    // before proxying it to the Worker.
+    const calculatorPrefix = '/tools/calculator';
+    if (
+      hostname === 'wakeupandproduce.com' &&
+      (url.pathname === calculatorPrefix || url.pathname.startsWith(`${calculatorPrefix}/`))
+    ) {
+      url.pathname = url.pathname.slice(calculatorPrefix.length) || '/';
+      url.hostname = 'consultant-calculator.media-930.workers.dev';
+      return fetch(url.toString(), request);
+    }
+
     // Extract subdomain (e.g. "sports" from "sports.wakeupandproduce.com")
     const parts = hostname.split('.');
     const subdomain = parts.length > 2 ? parts[0] : null;
