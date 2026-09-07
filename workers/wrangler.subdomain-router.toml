@@ -1,0 +1,10 @@
+name = "wuap-subdomain-router"
+main = "subdomain-router.js"
+compatibility_date = "2024-09-25"
+
+# Routes: attach this worker to all subdomain traffic
+# Add these routes in the Cloudflare dashboard under Workers > Routes:
+#   sports.wakeupandproduce.com/*
+#   tools.wakeupandproduce.com/*
+#   recovery.wakeupandproduce.com/*
+#   merch.wakeupandproduce.com/*
