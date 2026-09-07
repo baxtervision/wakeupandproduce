@@ -50,6 +50,18 @@ export default {
       return fetch(url.toString(), request);
     }
 
+    // The fluency lessons are standalone Workers. Proxy their exact Learn
+    // paths here so they remain reliable alongside the Learn catch-all route.
+    const learningWorker = {
+      '/quant-fluency': 'quant-fluency.media-930.workers.dev',
+      '/financial-fluency': 'financial-fluency.media-930.workers.dev',
+    }[url.pathname];
+    if (hostname === 'learn.wakeupandproduce.com' && learningWorker) {
+      url.pathname = '/';
+      url.hostname = learningWorker;
+      return fetch(url.toString(), request);
+    }
+
     // Extract subdomain (e.g. "sports" from "sports.wakeupandproduce.com")
     const parts = hostname.split('.');
     const subdomain = parts.length > 2 ? parts[0] : null;
