@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/macbax/WakeUpandProduce push)",
+      "Bash(git -C /Users/macbax/WakeUpandProduce commit -m ' *)"
+    ]
+  }
+}

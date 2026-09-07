@@ -1,128 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wake Up &amp; Produce</title>
-    <meta name="description" content="Wake Up & Produce is a collection of basketball coaching tools, playbooks, systems guides, and interactive teaching resources built by Baxter.">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wake Up &amp; Produce</title>
+  <meta name="description" content="Tools and information for those who want to do more. Sports resources, productivity tools, recovery products, and merch — all under one roof.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1C2130;
+      --paper: #F7F6F3;
+      --surface: #FFFFFF;
+      --accent: #2D7A5F;
+      --accent-hover: #246B52;
+      --warm: #D4933D;
+      --warm-hover: #BF832F;
+      --muted: #6E7280;
+      --border: #E2E0DB;
+      --card-shadow: 0 1px 3px rgba(28, 33, 48, 0.06), 0 4px 12px rgba(28, 33, 48, 0.04);
+      --card-shadow-hover: 0 2px 8px rgba(28, 33, 48, 0.1), 0 8px 24px rgba(28, 33, 48, 0.06);
+
+      --bg: var(--paper);
+      --fg: var(--ink);
+      --fg-muted: var(--muted);
+      --card-bg: var(--surface);
+      --card-border: var(--border);
+      --card-sh: var(--card-shadow);
+      --card-sh-hover: var(--card-shadow-hover);
+      --divider: var(--border);
+      --icon-bg: rgba(45, 122, 95, 0.07);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #14181F;
+        --fg: #E8E6E1;
+        --fg-muted: #8B8E97;
+        --card-bg: #1E2330;
+        --card-border: #2A2F3D;
+        --card-sh: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+        --card-sh-hover: 0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2);
+        --divider: #2A2F3D;
+        --icon-bg: rgba(45, 122, 95, 0.12);
+        --accent: #3D9A75;
+        --accent-hover: #4CAF7A;
+        --warm: #E0A44E;
+        --warm-hover: #D4933D;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #14181F;
+      --fg: #E8E6E1;
+      --fg-muted: #8B8E97;
+      --card-bg: #1E2330;
+      --card-border: #2A2F3D;
+      --card-sh: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+      --card-sh-hover: 0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2);
+      --divider: #2A2F3D;
+      --icon-bg: rgba(45, 122, 95, 0.12);
+      --accent: #3D9A75;
+      --accent-hover: #4CAF7A;
+      --warm: #E0A44E;
+      --warm-hover: #D4933D;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Libre Franklin', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .site { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .hero {
+      padding: 5rem 1.5rem 3.5rem;
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero-brand {
+      font-family: 'Outfit', 'Helvetica Neue', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      text-wrap: balance;
+      color: var(--fg);
+    }
+
+    .hero-brand .amp { color: var(--warm); font-weight: 700; }
+
+    .hero-tagline {
+      margin-top: 1.25rem;
+      font-size: 1.15rem;
+      color: var(--fg-muted);
+      font-weight: 400;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.55;
+    }
+
+    .hero-rule {
+      width: 48px;
+      height: 3px;
+      background: var(--accent);
+      border: none;
+      border-radius: 2px;
+      margin: 2.5rem auto 0;
+    }
+
+    .cards {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 2rem 1.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      box-shadow: var(--card-sh);
+      text-decoration: none;
+      color: var(--fg);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .card:hover, .card:focus-visible {
+      box-shadow: var(--card-sh-hover);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--icon-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-size: 0.925rem;
+      color: var(--fg-muted);
+      line-height: 1.55;
+      flex-grow: 1;
+    }
+
+    .card-arrow {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.25rem;
+    }
+
+    .card-arrow svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      transition: transform 0.15s ease;
+    }
+
+    .card:hover .card-arrow svg { transform: translateX(3px); }
+
+    .footer {
+      margin-top: auto;
+      border-top: 1px solid var(--divider);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-brand {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--fg);
+      letter-spacing: -0.01em;
+    }
+
+    .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy { font-size: 0.75rem; color: var(--fg-muted); }
+
+    @media (max-width: 640px) {
+      .hero { padding: 3.5rem 1.25rem 2.5rem; }
+      .cards { grid-template-columns: 1fr; padding: 0 1.25rem 3rem; }
+      .card { padding: 1.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .card-arrow svg { transition: none; }
+      .card:hover { transform: none; }
+      .card:hover .card-arrow svg { transform: none; }
+    }
+  </style>
 </head>
-<body class="site-home">
-    <div data-shared-nav></div>
-    <header class="site-header">
-        <p class="site-kicker">Systems · Vocabulary · Standards</p>
-        <h1 class="site-wordmark" aria-label="Wake Up and Produce">Wake Up<br><em>&amp; Produce</em></h1>
-        <p class="site-tagline">The basketball blueprint for teaching pace, pressure, spacing, vocabulary, and the standards that turn athletes into varsity-ready players.</p>
-    </header>
+<body>
+<div class="site">
 
-    <div class="site-divider"><hr></div>
+  <header class="hero">
+    <h1 class="hero-brand">Wake Up <span class="amp">&amp;</span> Produce</h1>
+    <p class="hero-tagline">Tools and information for those who want to do more.</p>
+    <hr class="hero-rule">
+  </header>
 
-    <main class="site-main">
-        <div class="sport-tabs" role="tablist" aria-label="Sport">
-          <button class="sport-tab active" role="tab" aria-selected="true"  data-sport="basketball">Basketball</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Football">Football</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Volleyball">Volleyball</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Baseball">Baseball</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Soccer">Soccer</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Track &amp; Field">Track &amp; Field</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Tennis">Tennis</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Lacrosse">Lacrosse</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Golf">Golf</button>
-        </div>
+  <main class="cards">
 
-        <div id="sport-panel-basketball">
-          <div style="padding-block: 28px 8px; max-width: 680px;">
-            <p style="margin: 0 0 16px; font-size: clamp(1.1rem, 2.5vw, 1.35rem); font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; color: var(--site-text);">Basketball is not just a collection of plays. It is a game of concepts.</p>
-            <p style="margin: 0 0 12px; font-size: 1rem; line-height: 1.7; color: var(--site-muted);"><strong style="color: var(--site-text);">Spacing. Timing. Movement. Pressure. Help. Recovery. Communication. Rebounding. Decision-making. Each piece is simple enough to learn on its own, but the game becomes complex when those pieces come together across offense, defense, and transition.</p>
-            <p style="margin: 0; font-size: 1rem; line-height: 1.7; color: var(--site-muted);">When players understand the building blocks, they stop guessing. They start recognizing. That is when the game begins to slow down.</p>
-          </div>
-          <div class="projects-grid">
-            <a href="offense-guide/" class="project-card">
-                <span class="card-tag">Offense</span>
-                <h2 class="card-title">Offense</h2>
-                <p class="card-desc">Explanations, diagrams, strengths, weaknesses, and counter for Read &amp; React, Grinnell, and Traditional Motion offenses.</p>
-                <span class="card-arrow" aria-hidden="true">&nearr;</span>
-            </a>
+    <a href="/sports/" class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 3C12 3 7.5 8 7.5 12S12 21 12 21"/>
+          <path d="M12 3C12 3 16.5 8 16.5 12S12 21 12 21"/>
+          <line x1="3.5" y1="10" x2="20.5" y2="10"/>
+          <line x1="3.5" y1="14" x2="20.5" y2="14"/>
+        </svg>
+      </div>
+      <h2 class="card-title">Sports</h2>
+      <p class="card-desc">Systems, vocabulary, and standards for basketball, football, volleyball, and more. Diagrams, breakdowns, and the concepts behind how games are taught.</p>
+      <span class="card-arrow">Explore <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
 
-            <a href="defense-guide/" class="project-card">
-                <span class="card-tag">Defense</span>
-                <h2 class="card-title">Defense</h2>
-                <p class="card-desc">Explanations, diagrams, strengths, weaknesses, and counter for man, zone, press, and junk defenses, including cues, rotations, and decisions.</p>
-                <span class="card-arrow" aria-hidden="true">&nearr;</span>
-            </a>
+    <a href="/tools/" class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+        </svg>
+      </div>
+      <h2 class="card-title">Tools</h2>
+      <p class="card-desc">A programmable segment timer, a consultant calculator, financial and research education modules, and PocketCoach — a training platform for guides and learners.</p>
+      <span class="card-arrow">Browse tools <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
 
-            <a href="offensive-key-actions/" class="project-card">
-                <span class="card-tag">Actions</span>
-                <h2 class="card-title">Key Actions</h2>
-                <p class="card-desc">The 7 core offensive movements: cuts, screens, reads, and counters, with animated diagrams and decision cues for each.</p>
-                <span class="card-arrow" aria-hidden="true">&nearr;</span>
-            </a>
+    <a href="/recovery/" class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+        </svg>
+      </div>
+      <h2 class="card-title">Recovery</h2>
+      <p class="card-desc">LifeWave recovery patches for athletes and active people. More wellness products coming.</p>
+      <span class="card-arrow">Shop recovery <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
 
-            <a href="key-terms/" class="project-card">
-                <span class="card-tag">Vocabulary</span>
-                <h2 class="card-title">Key Terms</h2>
-                <p class="card-desc">A glossary of basketball terms including coverages, screens, rotations and communication calls.</p>
-                <span class="card-arrow" aria-hidden="true">&nearr;</span>
-            </a>
+    <a href="/merch/" class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+      </div>
+      <h2 class="card-title">Merch</h2>
+      <p class="card-desc">Apparel from Elegant Futures. Wear something that says something.</p>
+      <span class="card-arrow">Shop merch <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
 
-            <a href="learning/" class="project-card">
-                <span class="card-tag">philosophy</span>
-                <h2 class="card-title">The Lab</h2>
-                <p class="card-desc">Why changing every rep in practice, instead of drilling the same move, builds players who can read and adjust at game speed.</p>
-                <span class="card-arrow" aria-hidden="true">&nearr;</span>
-            </a>
+  </main>
 
-            <a href="standard/" class="project-card">
-                <span class="card-tag">Varsity Blueprint</span>
-                <h2 class="card-title">The Standard</h2>
-                <p class="card-desc">The six measurable habits that define varsity level athletes: speed, deceleration, next-play reset, discomfort tolerance, communication, and trust.</p>
-                <span class="card-arrow" aria-hidden="true">&nearr;</span>
-            </a>
-          </div>
-        </div>
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Wake Up &amp; Produce</span>
+      <nav class="footer-links">
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="/cookies/">Cookies</a>
+      </nav>
+      <p class="footer-copy">&copy; 2026 Misfit Island, LLC. All rights reserved.</p>
+    </div>
+  </footer>
 
-        <div id="sport-panel-coming" hidden>
-          <div class="sport-soon-card">
-            <p class="sport-soon-eyebrow">Arriving late 2026</p>
-            <h2 class="sport-soon-title">We're actively building <span id="sport-soon-name"></span> resources.</h2>
-            <p class="sport-soon-body">Check back later. In the meantime, join the community for real conversations about mental resilience, recruiting, and what it takes to perform at a high level.</p>
-            <a class="sport-soon-cta" href="https://community.wakeupandproduce.com" target="_blank" rel="noopener">Join the Community &nearr;</a>
-          </div>
-        </div>
-    </main>
-    <div data-shared-footer></div>
-    
-<script src="shared-nav.js"></script>
-<script>
-  (function () {
-    var tabs = document.querySelectorAll('.sport-tab');
-    var basketballPanel = document.getElementById('sport-panel-basketball');
-    var comingPanel = document.getElementById('sport-panel-coming');
-    var sportName = document.getElementById('sport-soon-name');
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        tabs.forEach(function (t) {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-
-        if (tab.dataset.sport === 'basketball') {
-          basketballPanel.hidden = false;
-          comingPanel.hidden = true;
-        } else {
-          basketballPanel.hidden = true;
-          comingPanel.hidden = false;
-          sportName.textContent = tab.dataset.sport;
-        }
-      });
-    });
-  }());
-</script>
-<!-- cloudflare-pages-refresh: 2026-05-27 -->
+</div>
 </body>
 </html>

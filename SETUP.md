@@ -88,6 +88,65 @@ If you are using Zoho Billing's **Automation > Workflow Actions > Webhook** scre
 
 ---
 
+## Step 4b — Auto-grant Grinnell access to "Produce Plus" subscribers
+
+Anyone who pays for the "Produce Plus" tier of the Producer Community
+(`community.wakeupandproduce.com`, billed as a recurring Zoho Billing /
+Subscriptions plan) should automatically get Grinnell Tracker access too —
+no separate $9 purchase. `workers/zoho-billing-webhook.js` does this by
+writing the subscriber's email into the same `PAID_USERS` KV the Grinnell
+purchase and admin-grant flows use.
+
+Zoho Billing's native subscription webhooks aren't signed, so this uses the
+same **Workflow Rule > Webhook + shared-secret-header** approach already
+documented for Zoho Billing in Step 1.
+
+1. Generate a shared secret: `openssl rand -hex 32`
+2. Cloudflare Dashboard > Workers & Pages > Create Worker
+3. Name it: `zoho-billing-webhook`
+4. Paste the contents of `workers/zoho-billing-webhook.js`
+5. Settings > Variables > KV Namespace Bindings:
+   - Variable name: `PAID_USERS` → select your namespace
+6. Settings > Variables > Environment Variables > Add (Encrypt):
+   - `ZOHO_BILLING_WEBHOOK_SECRET` = the secret from step 1
+   - `PRODUCE_PLUS_PLAN_CODE` = (optional) the Zoho Billing plan code for
+     Produce Plus, if you run other subscription products through the same
+     Zoho Billing account and want this worker to ignore their events
+7. Settings > Triggers > Add Route:
+   - `wakeupandproduce.com/api/zoho-billing-webhook*` → this worker
+8. In Zoho Billing: Settings > Automation > Workflow Rules > New Workflow
+   - Module: Subscription
+   - When: Subscription Activated, Subscription Renewed, Subscription Reactivated
+     (limit to the Produce Plus plan if Zoho Billing lets you scope the rule)
+   - Action: Webhook
+     - URL: `https://wakeupandproduce.com/api/zoho-billing-webhook`
+     - Method: `POST`
+     - Header key: `x-wup-webhook-secret`
+     - Header value: the same secret as `ZOHO_BILLING_WEBHOOK_SECRET`
+     - Body (JSON):
+       ```json
+       {
+         "event": "subscription_activation",
+         "subscription": {
+           "subscription_id": "${subscription.subscription_id}",
+           "plan_code": "${subscription.plan.plan_code}",
+           "email": "${subscription.customer.email}"
+         }
+       }
+       ```
+9. Trigger a test subscription activation and check Cloudflare Worker logs
+   to confirm the email lands in `PAID_USERS` (the worker logs the raw event
+   on every run, so you can adjust field paths if Zoho's merge fields differ).
+
+> **On cancellations:** this worker does **not** auto-revoke access when a
+> Produce Plus subscription lapses — same "doesn't expire automatically"
+> policy as the $9 Grinnell purchase. If you want to claw back access from a
+> lapsed subscriber, do it manually from `/admin/` (the panel now also lists
+> auto-granted Produce Plus accounts alongside manual grants, both revocable
+> from the same screen).
+
+---
+
 ## Step 5 — Deploy the Access Evaluator Worker
 
 1. Create another Worker, name it: `access-evaluator`

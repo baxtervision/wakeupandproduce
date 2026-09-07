@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Wake Up and Produce">
+  <rect width="64" height="64" rx="16" fill="#f97316"/>
+  <circle cx="32" cy="32" r="23" fill="none" stroke="#fff7ed" stroke-width="4" opacity="0.95"/>
+  <path d="M9 32h46" stroke="#fff7ed" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+  <path d="M32 9c8 7 12 15 12 23s-4 16-12 23" fill="none" stroke="#fff7ed" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+  <path d="M32 9c-8 7-12 15-12 23s4 16 12 23" fill="none" stroke="#fff7ed" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+  <path d="M22 22h11c5 0 8 3 8 7s-3 7-8 7h-5v8h-6V22zm6 5v4h5c1.5 0 2.5-.8 2.5-2s-1-2-2.5-2h-5z" fill="#1c1a16"/>
+</svg>

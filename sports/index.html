@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wake Up &amp; Produce</title>
+    <meta name="description" content="Wake Up & Produce is a collection of basketball coaching tools, playbooks, systems guides, and interactive teaching resources built by Baxter.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="site-home">
+    <div data-shared-nav></div>
+    <header class="site-header">
+        <p class="site-kicker">Systems · Vocabulary · Standards</p>
+        <h1 class="site-wordmark" aria-label="Wake Up and Produce">Wake Up<br><em>&amp; Produce</em></h1>
+        <p class="site-tagline">The basketball blueprint for teaching pace, pressure, spacing, vocabulary, and the standards that turn athletes into varsity-ready players.</p>
+    </header>
+
+    <div class="site-divider"><hr></div>
+
+    <main class="site-main">
+        <div class="sport-tabs" role="tablist" aria-label="Sport">
+          <button class="sport-tab active" role="tab" aria-selected="true"  data-sport="basketball">Basketball</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Football">Football</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Volleyball">Volleyball</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Baseball">Baseball</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Soccer">Soccer</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Track &amp; Field">Track &amp; Field</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Tennis">Tennis</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Lacrosse">Lacrosse</button>
+          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Golf">Golf</button>
+        </div>
+
+        <div id="sport-panel-basketball">
+          <div style="padding-block: 28px 8px; max-width: 680px;">
+            <p style="margin: 0 0 16px; font-size: clamp(1.1rem, 2.5vw, 1.35rem); font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; color: var(--site-text);">Basketball is not just a collection of plays. It is a game of concepts.</p>
+            <p style="margin: 0 0 12px; font-size: 1rem; line-height: 1.7; color: var(--site-muted);"><strong style="color: var(--site-text);">Spacing. Timing. Movement. Pressure. Help. Recovery. Communication. Rebounding. Decision-making. Each piece is simple enough to learn on its own, but the game becomes complex when those pieces come together across offense, defense, and transition.</p>
+            <p style="margin: 0; font-size: 1rem; line-height: 1.7; color: var(--site-muted);">When players understand the building blocks, they stop guessing. They start recognizing. That is when the game begins to slow down.</p>
+          </div>
+          <div class="projects-grid">
+            <a href="offense-guide/" class="project-card">
+                <span class="card-tag">Offense</span>
+                <h2 class="card-title">Offense</h2>
+                <p class="card-desc">Explanations, diagrams, strengths, weaknesses, and counter for Read &amp; React, Grinnell, and Traditional Motion offenses.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
+            <a href="defense-guide/" class="project-card">
+                <span class="card-tag">Defense</span>
+                <h2 class="card-title">Defense</h2>
+                <p class="card-desc">Explanations, diagrams, strengths, weaknesses, and counter for man, zone, press, and junk defenses, including cues, rotations, and decisions.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
+            <a href="offensive-key-actions/" class="project-card">
+                <span class="card-tag">Actions</span>
+                <h2 class="card-title">Key Actions</h2>
+                <p class="card-desc">The 7 core offensive movements: cuts, screens, reads, and counters, with animated diagrams and decision cues for each.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
+            <a href="key-terms/" class="project-card">
+                <span class="card-tag">Vocabulary</span>
+                <h2 class="card-title">Key Terms</h2>
+                <p class="card-desc">A glossary of basketball terms including coverages, screens, rotations and communication calls.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
+            <a href="learning/" class="project-card">
+                <span class="card-tag">philosophy</span>
+                <h2 class="card-title">The Lab</h2>
+                <p class="card-desc">Why changing every rep in practice, instead of drilling the same move, builds players who can read and adjust at game speed.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
+            <a href="standard/" class="project-card">
+                <span class="card-tag">Varsity Blueprint</span>
+                <h2 class="card-title">The Standard</h2>
+                <p class="card-desc">The six measurable habits that define varsity level athletes: speed, deceleration, next-play reset, discomfort tolerance, communication, and trust.</p>
+                <span class="card-arrow" aria-hidden="true">&nearr;</span>
+            </a>
+          </div>
+        </div>
+
+        <div id="sport-panel-coming" hidden>
+          <div class="sport-soon-card">
+            <p class="sport-soon-eyebrow">Arriving late 2026</p>
+            <h2 class="sport-soon-title">We're actively building <span id="sport-soon-name"></span> resources.</h2>
+            <p class="sport-soon-body">Check back later. We're building resources for more sports.</p>
+          </div>
+        </div>
+    </main>
+    <div data-shared-footer></div>
+    
+<script src="shared-nav.js"></script>
+<script>
+  (function () {
+    var tabs = document.querySelectorAll('.sport-tab');
+    var basketballPanel = document.getElementById('sport-panel-basketball');
+    var comingPanel = document.getElementById('sport-panel-coming');
+    var sportName = document.getElementById('sport-soon-name');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        if (tab.dataset.sport === 'basketball') {
+          basketballPanel.hidden = false;
+          comingPanel.hidden = true;
+        } else {
+          basketballPanel.hidden = true;
+          comingPanel.hidden = false;
+          sportName.textContent = tab.dataset.sport;
+        }
+      });
+    });
+  }());
+</script>
+<!-- cloudflare-pages-refresh: 2026-05-27 -->
+</body>
+</html>

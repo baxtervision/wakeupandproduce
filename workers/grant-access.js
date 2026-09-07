@@ -28,12 +28,26 @@ export default {
     const url = new URL(request.url);
 
     // LIST — GET /api/grant-access?list=1
+    // Lists both manually-granted accounts (free:) and auto-granted Produce
+    // Plus subscribers (plus:) so the admin panel shows everyone with
+    // non-purchase Grinnell access in one place. Records are stored as the
+    // KV value (not metadata), so each entry is fetched and parsed.
     if (request.method === 'GET' && url.searchParams.get('list') === '1') {
-      const keys = await env.PAID_USERS.list({ prefix: 'free:' });
-      const entries = keys.keys.map(k => ({
-        email: k.name.replace('free:', ''),
-        ...k.metadata,
+      const [freeKeys, plusKeys] = await Promise.all([
+        env.PAID_USERS.list({ prefix: 'free:' }),
+        env.PAID_USERS.list({ prefix: 'plus:' }),
+      ]);
+
+      const refs = [
+        ...freeKeys.keys.map(k => ({ prefix: 'free:', name: k.name })),
+        ...plusKeys.keys.map(k => ({ prefix: 'plus:', name: k.name })),
+      ];
+
+      const entries = await Promise.all(refs.map(async ({ prefix, name }) => {
+        const record = await env.PAID_USERS.get(name, 'json');
+        return { email: name.replace(prefix, ''), ...record };
       }));
+
       return json({ free_access: entries });
     }
 
