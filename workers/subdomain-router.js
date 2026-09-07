@@ -38,11 +38,11 @@ export default {
       return fetch(url.toString(), request);
     }
 
-    // Keep Segment Timer at a WUAP path while serving its static assets from
-    // its dedicated Pages project.
-    const segmentTimerPrefix = '/tools/segment-timer';
+    // Keep Segment Timer at its Tools subdomain path while serving its static
+    // assets from the dedicated Pages project.
+    const segmentTimerPrefix = '/segment-timer';
     if (
-      hostname === 'wakeupandproduce.com' &&
+      hostname === 'tools.wakeupandproduce.com' &&
       (url.pathname === segmentTimerPrefix || url.pathname.startsWith(`${segmentTimerPrefix}/`))
     ) {
       url.pathname = url.pathname.slice(segmentTimerPrefix.length) || '/';
