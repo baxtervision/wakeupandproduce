@@ -15,6 +15,7 @@ const SUBDOMAIN_MAP = {
   'tools': '/tools',
   'recovery': '/recovery',
   'merch': '/merch',
+  'learn': '/learn',
 };
 
 export default {
