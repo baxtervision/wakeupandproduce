@@ -50,6 +50,16 @@ export default {
       return fetch(url.toString(), request);
     }
 
+    const playMatchPrefix = '/playmatch';
+    if (
+      hostname === 'tools.wakeupandproduce.com' &&
+      (url.pathname === playMatchPrefix || url.pathname.startsWith(`${playMatchPrefix}/`))
+    ) {
+      url.pathname = url.pathname.slice(playMatchPrefix.length) || '/';
+      url.hostname = 'playmatch-api.media-930.workers.dev';
+      return fetch(url.toString(), request);
+    }
+
     // The fluency lessons are standalone Workers. Proxy their exact Learn
     // paths here so they remain reliable alongside the Learn catch-all route.
     const learningWorker = {
