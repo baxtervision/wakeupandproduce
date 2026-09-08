@@ -141,6 +141,8 @@
     .narrow-hint{font-size:.87rem;color:var(--fg);background:var(--badge-bg);border-radius:8px;padding:.7rem .9rem;margin:-.25rem 0 .75rem}
     .narrow-hint[hidden]{display:none}
     .narrow-hint button{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline}
+    .catalog-status{margin-top:1.25rem;font-size:.84rem;color:var(--fg-muted)}
+    .catalog-status[hidden]{display:none}
     .refine{margin-top:1.25rem}
     .refine .field-note{min-height:0}
     .fit-note{font-size:.83rem;color:var(--fg-muted);line-height:1.5;margin:-.25rem 0 1rem;max-width:60ch}
@@ -181,6 +183,7 @@
     <h1 class="hero-brand">PlayMatch</h1>
     <p class="hero-tagline">Tell it who is in your company. It searches publisher catalogs and ranks the plays that actually fit.</p>
     <hr class="hero-rule">
+    <p class="catalog-status" id="catalog-status" hidden></p>
   </header>
 
   <main>
@@ -597,6 +600,32 @@
 
   // Populate the genre list from the catalogue itself, so the options are
   // real values with real counts rather than a text box to guess at.
+  // Catalogue size and freshness, stated up front. The date is the oldest
+  // complete pass across publishers, not the last time anything ran — ingest
+  // is incremental, so a recent run does not mean a current catalogue.
+  fetch(API + '/health', { headers: { accept: 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (health) {
+      if (!health) return;
+      var el = $('catalog-status');
+      var titles = (health.totalTitles || 0).toLocaleString();
+      var parts = [titles + ' titles from ' + (health.sources || []).length + ' publishers'];
+
+      if (health.catalogUpdatedAt) {
+        var when = new Date(health.catalogUpdatedAt);
+        if (!isNaN(when)) {
+          parts.push('fully refreshed ' + when.toLocaleDateString(undefined, {
+            year: 'numeric', month: 'long', day: 'numeric'
+          }));
+        }
+      } else {
+        parts.push('first full refresh still in progress');
+      }
+      el.textContent = parts.join(' · ') + '.';
+      el.hidden = false;
+    })
+    .catch(function () { /* the line simply stays hidden */ });
+
   fetch(API + '/facets', { headers: { accept: 'application/json' } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (facets) {
