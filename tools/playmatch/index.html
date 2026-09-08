@@ -138,6 +138,9 @@
     .open:hover{color:var(--accent-hover)}
     .open svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 
+    .fit-note{font-size:.83rem;color:var(--fg-muted);line-height:1.5;margin:-.25rem 0 1rem;max-width:60ch}
+    .fit-note[hidden]{display:none}
+    .tag.unverified{background:transparent;color:var(--fg-muted);border:1px dashed var(--card-border)}
     .placeholder{border:1px dashed var(--card-border);border-radius:10px;padding:2.25rem 1.5rem;text-align:center;color:var(--fg-muted);font-size:.92rem}
     .placeholder.error{border-style:solid;border-color:#b04a4a55;color:#b04a4a;background:rgba(176,74,74,.05)}
 
@@ -274,6 +277,10 @@
         <h2>Matches</h2>
         <span class="result-count" id="count"></span>
       </div>
+      <p class="fit-note" id="fit-note" hidden>
+        Fit compares your company to published cast lists. It can tell you a show is
+        castable &mdash; not that it&rsquo;s right for your program. Read anything you&rsquo;re serious about.
+      </p>
       <div id="results" class="placeholder">Enter your company and search to see plays that fit.</div>
     </section>
   </main>
@@ -408,7 +415,16 @@
       return '<span class="tag">' + esc(r) + '</span>';
     }).concat((p.fitWarnings || []).slice(0, 2).map(function (w) {
       return '<span class="tag warn">' + esc(w) + '</span>';
-    })).join('');
+    }));
+
+    // Publishers that print cast requirements as prose ("9m., 2w., with
+    // doubling") have to be parsed, and the result is a good guess rather than
+    // a reading. Say so on those titles instead of letting one blanket caveat
+    // imply every score is equally soft.
+    if (p.dataConfidence && p.dataConfidence !== 'high') {
+      tags.push('<span class="tag unverified" title="This publisher lists cast requirements as free text, so these counts were interpreted rather than read directly.">Cast details interpreted</span>');
+    }
+    tags = tags.join('');
 
     var cast = castSummary(p);
 
@@ -486,6 +502,7 @@
     count.textContent = '';
     results.className = '';
     results.innerHTML = skeletons(4);
+    document.getElementById('fit-note').hidden = true;
 
     fetch(API + '/search?' + buildParams().toString(), { headers: { accept: 'application/json' } })
       .then(function (res) {
@@ -500,6 +517,8 @@
         count.textContent = items.length
           ? items.length + ' of ' + (data.candidatesEvaluated || 0) + ' titles considered'
           : '';
+
+        document.getElementById('fit-note').hidden = !items.length;
 
         if (!items.length) {
           results.className = 'placeholder';
