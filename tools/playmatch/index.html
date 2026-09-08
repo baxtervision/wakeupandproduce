@@ -138,6 +138,11 @@
     .open:hover{color:var(--accent-hover)}
     .open svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 
+    .narrow-hint{font-size:.87rem;color:var(--fg);background:var(--badge-bg);border-radius:8px;padding:.7rem .9rem;margin:-.25rem 0 .75rem}
+    .narrow-hint[hidden]{display:none}
+    .narrow-hint button{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline}
+    .refine{margin-top:1.25rem}
+    .refine .field-note{min-height:0}
     .fit-note{font-size:.83rem;color:var(--fg-muted);line-height:1.5;margin:-.25rem 0 1rem;max-width:60ch}
     .fit-note[hidden]{display:none}
     .tag.unverified{background:transparent;color:var(--fg-muted);border:1px dashed var(--card-border)}
@@ -215,30 +220,38 @@
           <span id="readout-text"></span>
         </p>
 
+        <div class="fields refine" id="refine">
+          <div class="field">
+            <label for="type">Play or musical</label>
+            <select id="type">
+              <option value="">Either</option>
+              <option value="play">Play</option>
+              <option value="musical">Musical</option>
+            </select>
+            <p class="field-note"></p>
+          </div>
+          <div class="field">
+            <label for="format">Length</label>
+            <select id="format">
+              <option value="">Any length</option>
+              <option value="full-length">Full-length</option>
+              <option value="one-act">One-act</option>
+              <option value="ten-minute">Ten-minute</option>
+            </select>
+            <p class="field-note"></p>
+          </div>
+          <div class="field">
+            <label for="genre">Genre</label>
+            <select id="genre">
+              <option value="">Any genre</option>
+            </select>
+            <p class="field-note" id="genre-note"></p>
+          </div>
+        </div>
+
         <details class="advanced">
           <summary>More filters</summary>
           <div class="advanced-grid">
-            <div class="field">
-              <label for="type">Play or musical</label>
-              <select id="type">
-                <option value="">Either</option>
-                <option value="play">Play</option>
-                <option value="musical">Musical</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="format">Length</label>
-              <select id="format">
-                <option value="">Any</option>
-                <option value="full-length">Full-length</option>
-                <option value="one-act">One-act</option>
-                <option value="ten-minute">Ten-minute</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="genre">Genre <span class="opt">optional</span></label>
-              <input id="genre" type="text" placeholder="comedy, drama…" autocomplete="off">
-            </div>
             <div class="field">
               <label for="maxRuntime">Max runtime <span class="opt">minutes</span></label>
               <input id="maxRuntime" type="number" min="10" max="300" inputmode="numeric" placeholder="no limit">
@@ -277,6 +290,7 @@
         <h2>Matches</h2>
         <span class="result-count" id="count"></span>
       </div>
+      <p class="narrow-hint" id="narrow-hint" hidden></p>
       <p class="fit-note" id="fit-note" hidden>
         Fit compares your company to published cast lists. It can tell you a show is
         castable &mdash; not that it&rsquo;s right for your program. Read anything you&rsquo;re serious about.
@@ -421,6 +435,12 @@
     // doubling") have to be parsed, and the result is a good guess rather than
     // a reading. Say so on those titles instead of letting one blanket caveat
     // imply every score is equally soft.
+    // Filtering by genre keeps titles whose genre the publisher never listed,
+    // rather than dropping them silently. Mark those so the gap is visible.
+    if ($('genre').value && !p.genre) {
+      tags.push('<span class="tag unverified" title="This publisher does not list a genre for its titles, so this one could not be confirmed as a match.">Genre not listed</span>');
+    }
+
     if (p.dataConfidence && p.dataConfidence !== 'high') {
       tags.push('<span class="tag unverified" title="This publisher lists cast requirements as free text, so these counts were interpreted rather than read directly.">Cast details interpreted</span>');
     }
@@ -474,7 +494,7 @@
 
     if ($('type').value) p.set('productionType', $('type').value);
     if ($('format').value) p.set('format', $('format').value);
-    if ($('genre').value.trim()) p.set('genre', $('genre').value.trim());
+    if ($('genre').value) p.set('genre', $('genre').value);
     if ($('maxRuntime').value) p.set('maxRuntime', $('maxRuntime').value);
     if ($('tech').value) p.set('maxTechnicalComplexity', $('tech').value);
     p.set('limit', $('limit').value);
@@ -503,6 +523,7 @@
     results.className = '';
     results.innerHTML = skeletons(4);
     document.getElementById('fit-note').hidden = true;
+    document.getElementById('narrow-hint').hidden = true;
 
     fetch(API + '/search?' + buildParams().toString(), { headers: { accept: 'application/json' } })
       .then(function (res) {
@@ -513,10 +534,35 @@
       })
       .then(function (data) {
         var items = data.results || [];
+        var total = typeof data.totalMatches === 'number' ? data.totalMatches : null;
         status.textContent = 'Search complete.';
         count.textContent = items.length
-          ? items.length + ' of ' + (data.candidatesEvaluated || 0) + ' titles considered'
+          ? (total !== null
+              ? 'Showing ' + items.length + ' of ' + total.toLocaleString() + ' matching titles'
+              : items.length + ' titles')
           : '';
+
+        // A long list is not a useful answer. Past a threshold, say so and put
+        // the filters one click away rather than leaving the director to
+        // scroll and hope.
+        var hint = $('narrow-hint');
+        if (total !== null && total > 50 && items.length) {
+          hint.innerHTML = total.toLocaleString() + ' plays fit a company this size. ' +
+            'Narrowing by genre, length, or staging will get you a shortlist worth reading — ' +
+            '<button type="button" id="open-filters">open the filters</button>.';
+          hint.hidden = false;
+          var opener = $('open-filters');
+          if (opener) {
+            opener.addEventListener('click', function () {
+              var refine = $('refine');
+              document.querySelector('details.advanced').open = true;
+              refine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              $('genre').focus();
+            });
+          }
+        } else {
+          hint.hidden = true;
+        }
 
         document.getElementById('fit-note').hidden = !items.length;
 
@@ -532,11 +578,38 @@
       .catch(function (err) {
         status.textContent = 'Search unavailable.';
         status.className = 'status error';
+        $('narrow-hint').hidden = true;
         results.className = 'placeholder error';
         results.textContent = err.message || 'Something went wrong. Please try again.';
       })
       .finally(function () { submit.disabled = false; });
   });
+
+  // Populate the genre list from the catalogue itself, so the options are
+  // real values with real counts rather than a text box to guess at.
+  fetch(API + '/facets', { headers: { accept: 'application/json' } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (facets) {
+      if (!facets || !facets.genres) return;
+      var select = $('genre');
+      facets.genres.forEach(function (g) {
+        var opt = document.createElement('option');
+        opt.value = g.value;
+        opt.textContent = g.value + ' (' + g.count + ')';
+        select.appendChild(opt);
+      });
+
+      // Not every publisher lists a genre — Dramatic Publishing lists none at
+      // all — so filtering by one quietly drops those titles. Say so instead
+      // of letting a third of the catalogue disappear without explanation.
+      var missing = (facets.genreCoverage || []).filter(function (c) { return c.withGenre === 0; });
+      if (missing.length) {
+        $('genre-note').textContent =
+          missing.map(function (c) { return c.licensor; }).join(' and ') +
+          ' do not list genres — those titles still appear, marked.';
+      }
+    })
+    .catch(function () { /* the free-text fallback is simply no options */ });
 
   setMode('flexible');
 })();
