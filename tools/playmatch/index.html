@@ -614,9 +614,10 @@
       // of letting a third of the catalogue disappear without explanation.
       var missing = (facets.genreCoverage || []).filter(function (c) { return c.withGenre === 0; });
       if (missing.length) {
+        var names = missing.map(function (c) { return c.licensor; });
         $('genre-note').textContent =
-          missing.map(function (c) { return c.licensor; }).join(' and ') +
-          ' do not list genres — those titles still appear, marked.';
+          names.join(' and ') + (names.length === 1 ? ' does' : ' do') +
+          ' not list genres — those titles still appear, marked.';
       }
     })
     .catch(function () { /* the free-text fallback is simply no options */ });
