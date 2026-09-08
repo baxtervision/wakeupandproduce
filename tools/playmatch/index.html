@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlayMatch — Wake Up &amp; Produce</title>
+  <meta name="description" content="Find high-school plays that match the size and makeup of your acting company. Searches Concord Theatricals, Dramatic Publishing, and Eldridge.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1C2130;
+      --paper: #F7F6F3;
+      --surface: #FFFFFF;
+      --accent: #2D7A5F;
+      --accent-hover: #246B52;
+      --warm: #D4933D;
+      --muted: #6E7280;
+      --border: #E2E0DB;
+      --card-shadow: 0 1px 3px rgba(28,33,48,0.06), 0 4px 12px rgba(28,33,48,0.04);
+      --card-shadow-hover: 0 2px 8px rgba(28,33,48,0.1), 0 8px 24px rgba(28,33,48,0.06);
+      --bg: var(--paper); --fg: var(--ink); --fg-muted: var(--muted);
+      --card-bg: var(--surface); --card-border: var(--border);
+      --card-sh: var(--card-shadow); --card-sh-hover: var(--card-shadow-hover);
+      --divider: var(--border);
+      --badge-bg: rgba(45,122,95,0.08); --badge-fg: var(--accent);
+      --icon-bg: rgba(45,122,95,0.07);
+      --field-bg: #FFFFFF; --field-border: #C9C8C2;
+      --warn-bg: rgba(212,147,61,0.10); --warn-fg: #8A5A15;
+      --track: #E2E0DB;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:#14181F;--fg:#E8E6E1;--fg-muted:#8B8E97;--card-bg:#1E2330;--card-border:#2A2F3D;
+        --card-sh:0 1px 3px rgba(0,0,0,0.2),0 4px 12px rgba(0,0,0,0.15);
+        --card-sh-hover:0 2px 8px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.2);
+        --divider:#2A2F3D;--badge-bg:rgba(45,122,95,0.15);--badge-fg:#4CAF7A;
+        --icon-bg:rgba(45,122,95,0.12);--accent:#3D9A75;--accent-hover:#4CAF7A;--warm:#E0A44E;
+        --field-bg:#171B24;--field-border:#333A49;
+        --warn-bg:rgba(224,164,78,0.12);--warn-fg:#E0A44E;
+        --track:#2A2F3D;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg:#14181F;--fg:#E8E6E1;--fg-muted:#8B8E97;--card-bg:#1E2330;--card-border:#2A2F3D;
+      --card-sh:0 1px 3px rgba(0,0,0,0.2),0 4px 12px rgba(0,0,0,0.15);
+      --card-sh-hover:0 2px 8px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.2);
+      --divider:#2A2F3D;--badge-bg:rgba(45,122,95,0.15);--badge-fg:#4CAF7A;
+      --icon-bg:rgba(45,122,95,0.12);--accent:#3D9A75;--accent-hover:#4CAF7A;--warm:#E0A44E;
+      --field-bg:#171B24;--field-border:#333A49;
+      --warn-bg:rgba(224,164,78,0.12);--warn-fg:#E0A44E;
+      --track:#2A2F3D;
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--fg);font-family:'Libre Franklin','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    .site{min-height:100vh;display:flex;flex-direction:column}
+
+    /* Header ------------------------------------------------------------ */
+    .hero{padding:4rem 1.5rem 2.5rem;max-width:940px;margin:0 auto;width:100%}
+    .back-link{display:inline-flex;align-items:center;gap:.35rem;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--accent);text-decoration:none;margin-bottom:1.25rem;transition:color .15s}
+    .back-link:hover{color:var(--accent-hover)}
+    .back-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+    .hero-brand{font-family:'Outfit',sans-serif;font-weight:900;font-size:clamp(2.4rem,6vw,3.4rem);line-height:1.05;letter-spacing:-.03em}
+    .hero-tagline{margin-top:1rem;font-size:1.1rem;color:var(--fg-muted);max-width:560px}
+    .hero-rule{width:48px;height:3px;background:var(--accent);border:none;border-radius:2px;margin-top:1.75rem}
+
+    /* Layout ------------------------------------------------------------ */
+    main{max-width:940px;margin:0 auto;width:100%;padding:0 1.5rem 4rem}
+    .panel{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;box-shadow:var(--card-sh);padding:1.75rem}
+
+    /* Mode toggle -------------------------------------------------------- */
+    .modes{display:flex;gap:.5rem;padding:.3rem;background:var(--bg);border:1px solid var(--card-border);border-radius:10px;margin-bottom:1.5rem}
+    .mode{flex:1;border:0;background:transparent;border-radius:7px;padding:.7rem .5rem;cursor:pointer;font:inherit;color:var(--fg-muted);text-align:center;transition:background .15s,color .15s}
+    .mode strong{display:block;font-family:'Outfit',sans-serif;font-weight:700;font-size:.95rem;color:inherit}
+    .mode span{display:block;font-size:.76rem;line-height:1.35;margin-top:.15rem}
+    .mode[aria-pressed="true"]{background:var(--card-bg);color:var(--fg);box-shadow:var(--card-sh)}
+    .mode[aria-pressed="true"] strong{color:var(--accent)}
+    .mode:focus-visible{outline:3px solid var(--badge-bg);outline-offset:1px}
+
+    /* Fields ------------------------------------------------------------- */
+    .fields{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .field label{display:block;font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;margin-bottom:.4rem}
+    .field .opt{color:var(--fg-muted);font-weight:400;font-size:.78rem}
+    .field input,.field select{width:100%;background:var(--field-bg);color:var(--fg);border:1px solid var(--field-border);border-radius:8px;padding:.7rem .75rem;font:inherit}
+    .field input:focus,.field select:focus{outline:3px solid var(--badge-bg);border-color:var(--accent)}
+    .field-note{font-size:.76rem;color:var(--fg-muted);margin-top:.35rem;min-height:1.1em}
+
+    /* Flexible-slot readout ---------------------------------------------- */
+    .readout{margin-top:1.25rem;padding:.85rem 1rem;background:var(--badge-bg);border-radius:8px;font-size:.88rem;color:var(--fg);display:flex;align-items:center;gap:.5rem}
+    .readout svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2;flex-shrink:0}
+    .readout[hidden]{display:none}
+
+    /* Advanced ----------------------------------------------------------- */
+    details.advanced{margin-top:1.25rem;border-top:1px solid var(--divider);padding-top:1.25rem}
+    details.advanced summary{cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.87rem;color:var(--accent);list-style:none;display:inline-flex;align-items:center;gap:.4rem}
+    details.advanced summary::-webkit-details-marker{display:none}
+    details.advanced summary::before{content:"+";font-size:1rem;line-height:1}
+    details.advanced[open] summary::before{content:"−"}
+    .advanced-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.1rem}
+    .sources{margin-top:1.1rem;display:flex;flex-wrap:wrap;gap:.6rem}
+    .source-chip{display:inline-flex;align-items:center;gap:.4rem;font-size:.83rem;color:var(--fg-muted);background:var(--bg);border:1px solid var(--card-border);border-radius:999px;padding:.35rem .75rem;cursor:pointer}
+    .source-chip input{accent-color:var(--accent);margin:0}
+
+    /* Actions ------------------------------------------------------------ */
+    .actions{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+    .button{border:0;border-radius:8px;padding:.8rem 1.4rem;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:background .15s}
+    .button:hover:not(:disabled){background:var(--accent-hover)}
+    .button:disabled{opacity:.55;cursor:progress}
+    .status{font-size:.87rem;color:var(--fg-muted)}
+    .status.error{color:#b04a4a}
+
+    /* Results ------------------------------------------------------------ */
+    .results-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin:2.75rem 0 1rem;flex-wrap:wrap}
+    .results-head h2{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:-.02em}
+    .result-count{font-size:.85rem;color:var(--fg-muted)}
+    .cards{display:grid;gap:.9rem}
+    .card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;box-shadow:var(--card-sh);padding:1.4rem 1.5rem;transition:box-shadow .2s,border-color .2s}
+    .card:hover{box-shadow:var(--card-sh-hover);border-color:var(--accent)}
+    .card-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}
+    .card h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.15rem;line-height:1.25;letter-spacing:-.01em}
+    .card h3 a{color:var(--fg);text-decoration:none}
+    .card h3 a:hover{color:var(--accent)}
+    .byline{font-size:.85rem;color:var(--fg-muted);margin-top:.15rem}
+    .score{flex-shrink:0;font-family:'Outfit',sans-serif;font-weight:700;font-size:.8rem;background:var(--badge-bg);color:var(--badge-fg);border-radius:999px;padding:.3rem .7rem;white-space:nowrap}
+    .score.mid{background:var(--warn-bg);color:var(--warn-fg)}
+    .meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:.7rem;font-size:.84rem;color:var(--fg-muted)}
+    .meta-item{display:inline-flex;align-items:center;gap:.3rem}
+    .cast-line{margin-top:.6rem;font-size:.87rem;color:var(--fg)}
+    .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+    .tag{font-size:.76rem;border-radius:5px;padding:.25rem .55rem;background:var(--badge-bg);color:var(--badge-fg)}
+    .tag.warn{background:var(--warn-bg);color:var(--warn-fg)}
+    .card-foot{margin-top:.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+    .licensor{font-size:.78rem;color:var(--fg-muted)}
+    .open{font-family:'Outfit',sans-serif;font-weight:600;font-size:.84rem;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+    .open:hover{color:var(--accent-hover)}
+    .open svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+
+    .placeholder{border:1px dashed var(--card-border);border-radius:10px;padding:2.25rem 1.5rem;text-align:center;color:var(--fg-muted);font-size:.92rem}
+    .placeholder.error{border-style:solid;border-color:#b04a4a55;color:#b04a4a;background:rgba(176,74,74,.05)}
+
+    .skeleton{background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:1.4rem 1.5rem}
+    .sk-line{height:.85rem;border-radius:4px;background:var(--track);animation:pulse 1.4s ease-in-out infinite}
+    .sk-line + .sk-line{margin-top:.6rem}
+    .sk-line.w60{width:60%} .sk-line.w40{width:40%} .sk-line.w80{width:80%}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+    .footer{margin-top:auto;border-top:1px solid var(--divider);padding:2rem 1.5rem;text-align:center}
+    .footer-inner{max-width:940px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.6rem}
+    .footer-brand{font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem}
+    .footer-copy{font-size:.75rem;color:var(--fg-muted)}
+    .footer-sources{font-size:.75rem;color:var(--fg-muted);max-width:520px}
+
+    @media(max-width:720px){
+      .hero{padding:2.75rem 1.25rem 2rem}
+      main{padding:0 1.25rem 3rem}
+      .fields,.advanced-grid{grid-template-columns:1fr}
+      .panel{padding:1.35rem}
+      .modes{flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+<div class="site">
+
+  <header class="hero">
+    <a href="/tools/" class="back-link">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Tools
+    </a>
+    <h1 class="hero-brand">PlayMatch</h1>
+    <p class="hero-tagline">Tell it who is in your company. It searches publisher catalogs and ranks the plays that actually fit.</p>
+    <hr class="hero-rule">
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="modes" role="group" aria-label="Matching mode">
+        <button type="button" class="mode" id="mode-flexible" aria-pressed="true">
+          <strong>Fit my company</strong>
+          <span>I have this many actors — what can we stage?</span>
+        </button>
+        <button type="button" class="mode" id="mode-exact" aria-pressed="false">
+          <strong>Exact breakdown</strong>
+          <span>I need a specific number of female and male roles.</span>
+        </button>
+      </div>
+
+      <form id="search-form" novalidate>
+        <div class="fields">
+          <div class="field">
+            <label for="total">Total actors <span class="opt" id="total-opt"></span></label>
+            <input id="total" name="total" type="number" min="1" max="200" inputmode="numeric" value="20">
+            <p class="field-note" id="total-note">The size of your company.</p>
+          </div>
+          <div class="field">
+            <label for="female">Female roles <span class="opt" id="female-opt">optional</span></label>
+            <input id="female" name="female" type="number" min="0" max="200" inputmode="numeric" placeholder="0">
+            <p class="field-note" id="female-note">Roles that must be cast female.</p>
+          </div>
+          <div class="field">
+            <label for="male">Male roles <span class="opt" id="male-opt">optional</span></label>
+            <input id="male" name="male" type="number" min="0" max="200" inputmode="numeric" placeholder="0">
+            <p class="field-note" id="male-note">Roles that must be cast male.</p>
+          </div>
+        </div>
+
+        <p class="readout" id="readout" hidden>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span id="readout-text"></span>
+        </p>
+
+        <details class="advanced">
+          <summary>More filters</summary>
+          <div class="advanced-grid">
+            <div class="field">
+              <label for="type">Play or musical</label>
+              <select id="type">
+                <option value="">Either</option>
+                <option value="play">Play</option>
+                <option value="musical">Musical</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="format">Length</label>
+              <select id="format">
+                <option value="">Any</option>
+                <option value="full-length">Full-length</option>
+                <option value="one-act">One-act</option>
+                <option value="ten-minute">Ten-minute</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="genre">Genre <span class="opt">optional</span></label>
+              <input id="genre" type="text" placeholder="comedy, drama…" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="maxRuntime">Max runtime <span class="opt">minutes</span></label>
+              <input id="maxRuntime" type="number" min="10" max="300" inputmode="numeric" placeholder="no limit">
+            </div>
+            <div class="field">
+              <label for="tech">Staging you can handle</label>
+              <select id="tech">
+                <option value="">Any</option>
+                <option value="1">Bare stage only</option>
+                <option value="2">Simple set</option>
+                <option value="3">Unit set / multiple settings</option>
+                <option value="5">Anything</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="limit">Results</label>
+              <select id="limit">
+                <option value="12">12</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </div>
+          <div class="sources" id="sources" role="group" aria-label="Publishers"></div>
+        </details>
+
+        <div class="actions">
+          <button class="button" id="submit" type="submit">Find plays</button>
+          <span class="status" id="status" role="status" aria-live="polite">Ready when you are.</span>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <div class="results-head">
+        <h2>Matches</h2>
+        <span class="result-count" id="count"></span>
+      </div>
+      <div id="results" class="placeholder">Enter your company and search to see plays that fit.</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Wake Up &amp; Produce</span>
+      <p class="footer-sources">Catalog data from Concord Theatricals, Dramatic Publishing, and Eldridge Plays &amp; Musicals. Always confirm rights and cast requirements with the publisher before you plan a season.</p>
+      <p class="footer-copy">&copy; 2026 Misfit Island, LLC. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var API = 'https://playmatch-api.media-930.workers.dev';
+
+  var SOURCES = [
+    { slug: 'concord',             label: 'Concord Theatricals' },
+    { slug: 'dramatic-publishing', label: 'Dramatic Publishing' },
+    { slug: 'eldridge',            label: 'Eldridge' }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('search-form'), results = $('results'), status = $('status');
+  var count = $('count'), submit = $('submit'), readout = $('readout');
+  var readoutText = $('readout-text');
+  var totalEl = $('total'), femaleEl = $('female'), maleEl = $('male');
+  var mode = 'flexible';
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function num(el) {
+    var v = parseInt(el.value, 10);
+    return isNaN(v) || v < 0 ? null : v;
+  }
+
+  // --- Source chips --------------------------------------------------------
+  SOURCES.forEach(function (s) {
+    var label = document.createElement('label');
+    label.className = 'source-chip';
+    label.innerHTML = '<input type="checkbox" value="' + s.slug + '" checked> ' + esc(s.label);
+    $('sources').appendChild(label);
+  });
+
+  // --- Mode switching ------------------------------------------------------
+  function setMode(next) {
+    mode = next;
+    $('mode-flexible').setAttribute('aria-pressed', String(next === 'flexible'));
+    $('mode-exact').setAttribute('aria-pressed', String(next === 'exact'));
+
+    if (next === 'flexible') {
+      $('total-opt').textContent = '';
+      $('female-opt').textContent = 'optional';
+      $('male-opt').textContent = 'optional';
+      $('total-note').textContent = 'The size of your company.';
+      $('female-note').textContent = 'Actors who must play female roles.';
+      $('male-note').textContent = 'Actors who must play male roles.';
+    } else {
+      $('total-opt').textContent = 'optional';
+      $('female-opt').textContent = '';
+      $('male-opt').textContent = '';
+      $('total-note').textContent = 'An upper limit, if you have one.';
+      $('female-note').textContent = 'Find plays written for exactly this many.';
+      $('male-note').textContent = 'Find plays written for exactly this many.';
+    }
+    updateReadout();
+  }
+
+  $('mode-flexible').addEventListener('click', function () { setMode('flexible'); });
+  $('mode-exact').addEventListener('click', function () { setMode('exact'); });
+
+  // --- Live "gender-flexible slots" readout --------------------------------
+  function updateReadout() {
+    if (mode !== 'flexible') { readout.hidden = true; return; }
+    var t = num(totalEl), f = num(femaleEl) || 0, m = num(maleEl) || 0;
+    if (t === null) { readout.hidden = true; return; }
+
+    if (f + m > t) {
+      readoutText.textContent =
+        'That is ' + (f + m) + ' gendered roles in a company of ' + t + '. Lower one of them.';
+      readout.hidden = false;
+      return;
+    }
+    var flex = t - f - m;
+    readoutText.textContent = flex === 0
+      ? 'Every role is gender-specific — that narrows the field considerably.'
+      : flex + ' of your ' + t + ' actors can play any role.';
+    readout.hidden = false;
+  }
+
+  [totalEl, femaleEl, maleEl].forEach(function (el) {
+    el.addEventListener('input', updateReadout);
+  });
+
+  // --- Rendering -----------------------------------------------------------
+  function skeletons(n) {
+    var html = '';
+    for (var i = 0; i < n; i++) {
+      html += '<div class="skeleton"><div class="sk-line w60"></div>' +
+              '<div class="sk-line w40"></div><div class="sk-line w80"></div></div>';
+    }
+    return '<div class="cards">' + html + '</div>';
+  }
+
+  function castSummary(p) {
+    var bits = [];
+    if (p.femaleRoles) bits.push(p.femaleRoles + ' female');
+    if (p.maleRoles) bits.push(p.maleRoles + ' male');
+    if (p.flexibleRoles) bits.push(p.flexibleRoles + ' any gender');
+    if (bits.length) return bits.join(' · ');
+    if (p.castText) return p.castText;
+    if (p.minCast) return 'Cast of ' + p.minCast + (p.maxCast && p.maxCast !== p.minCast ? '–' + p.maxCast : '');
+    return '';
+  }
+
+  function card(p) {
+    var scoreClass = p.fitScore >= 70 ? 'score' : 'score mid';
+
+    var meta = [];
+    if (p.productionType) meta.push(p.productionType === 'musical' ? 'Musical' : 'Play');
+    if (p.format) meta.push(p.format.replace('-', ' '));
+    if (p.genre) meta.push(p.genre);
+    if (p.runtimeMinutes) meta.push(p.runtimeMinutes + ' min');
+
+    var tags = (p.fitReasons || []).slice(0, 3).map(function (r) {
+      return '<span class="tag">' + esc(r) + '</span>';
+    }).concat((p.fitWarnings || []).slice(0, 2).map(function (w) {
+      return '<span class="tag warn">' + esc(w) + '</span>';
+    })).join('');
+
+    var cast = castSummary(p);
+
+    return '' +
+      '<article class="card">' +
+        '<div class="card-top">' +
+          '<div>' +
+            '<h3><a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.title) + '</a></h3>' +
+            (p.playwright ? '<p class="byline">' + esc(p.playwright) + '</p>' : '') +
+          '</div>' +
+          '<span class="' + scoreClass + '">' + esc(p.fitScore) + '% fit</span>' +
+        '</div>' +
+        (meta.length ? '<div class="meta">' + meta.map(function (m) {
+          return '<span class="meta-item">' + esc(m) + '</span>';
+        }).join('') + '</div>' : '') +
+        (cast ? '<p class="cast-line">' + esc(cast) + '</p>' : '') +
+        (tags ? '<div class="tags">' + tags + '</div>' : '') +
+        '<div class="card-foot">' +
+          '<span class="licensor">' + esc(p.licensor) + '</span>' +
+          '<a class="open" href="' + esc(p.url) + '" target="_blank" rel="noopener">' +
+            'View at publisher <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+          '</a>' +
+        '</div>' +
+      '</article>';
+  }
+
+  // --- Search --------------------------------------------------------------
+  function validate() {
+    var t = num(totalEl), f = num(femaleEl), m = num(maleEl);
+    if (mode === 'flexible') {
+      if (t === null || t < 1) return 'Enter how many actors you have.';
+      if ((f || 0) + (m || 0) > t) return 'Female and male counts add up to more than your company.';
+    } else if (f === null && m === null) {
+      return 'Enter a female or male role count to match exactly.';
+    }
+    return null;
+  }
+
+  function buildParams() {
+    var p = new URLSearchParams();
+    p.set('mode', mode);
+
+    var t = num(totalEl), f = num(femaleEl), m = num(maleEl);
+    if (t !== null) p.set('totalActors', t);
+    if (f !== null) p.set('femaleActors', f);
+    if (m !== null) p.set('maleActors', m);
+
+    if ($('type').value) p.set('productionType', $('type').value);
+    if ($('format').value) p.set('format', $('format').value);
+    if ($('genre').value.trim()) p.set('genre', $('genre').value.trim());
+    if ($('maxRuntime').value) p.set('maxRuntime', $('maxRuntime').value);
+    if ($('tech').value) p.set('maxTechnicalComplexity', $('tech').value);
+    p.set('limit', $('limit').value);
+
+    var checked = [].slice.call(document.querySelectorAll('#sources input:checked'))
+      .map(function (i) { return i.value; });
+    if (checked.length && checked.length < SOURCES.length) p.set('licensors', checked.join(','));
+
+    return p;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var problem = validate();
+    if (problem) {
+      status.textContent = problem;
+      status.className = 'status error';
+      return;
+    }
+
+    submit.disabled = true;
+    status.textContent = 'Searching…';
+    status.className = 'status';
+    count.textContent = '';
+    results.className = '';
+    results.innerHTML = skeletons(4);
+
+    fetch(API + '/search?' + buildParams().toString(), { headers: { accept: 'application/json' } })
+      .then(function (res) {
+        return res.json().then(function (data) {
+          if (!res.ok) throw new Error(data.detail || data.error || 'Search failed');
+          return data;
+        });
+      })
+      .then(function (data) {
+        var items = data.results || [];
+        status.textContent = 'Search complete.';
+        count.textContent = items.length
+          ? items.length + ' of ' + (data.candidatesEvaluated || 0) + ' titles considered'
+          : '';
+
+        if (!items.length) {
+          results.className = 'placeholder';
+          results.textContent =
+            'No plays matched. Try widening the filters, or turning on more publishers under “More filters.”';
+          return;
+        }
+        results.className = 'cards';
+        results.innerHTML = items.map(card).join('');
+      })
+      .catch(function (err) {
+        status.textContent = 'Search unavailable.';
+        status.className = 'status error';
+        results.className = 'placeholder error';
+        results.textContent = err.message || 'Something went wrong. Please try again.';
+      })
+      .finally(function () { submit.disabled = false; });
+  });
+
+  setMode('flexible');
+})();
+</script>
+</body>
+</html>
