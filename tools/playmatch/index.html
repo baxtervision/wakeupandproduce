@@ -253,8 +253,14 @@
           <summary>More filters</summary>
           <div class="advanced-grid">
             <div class="field">
-              <label for="maxRuntime">Max runtime <span class="opt">minutes</span></label>
-              <input id="maxRuntime" type="number" min="10" max="300" inputmode="numeric" placeholder="no limit">
+              <label for="minRuntime">Runtime from <span class="opt">minutes</span></label>
+              <input id="minRuntime" type="number" min="5" max="300" inputmode="numeric" placeholder="any">
+              <p class="field-note"></p>
+            </div>
+            <div class="field">
+              <label for="maxRuntime">Runtime to <span class="opt">minutes</span></label>
+              <input id="maxRuntime" type="number" min="5" max="300" inputmode="numeric" placeholder="any">
+              <p class="field-note"></p>
             </div>
             <div class="field">
               <label for="tech">Staging you can handle</label>
@@ -424,6 +430,9 @@
     if (p.format) meta.push(p.format.replace('-', ' '));
     if (p.genre) meta.push(p.genre);
     if (p.runtimeMinutes) meta.push(p.runtimeMinutes + ' min');
+    // Some publishers print a page count and no runtime; it is a rough proxy
+    // for length, and better than showing nothing.
+    else if (p.pageCount) meta.push(p.pageCount + ' pages');
 
     var tags = (p.fitReasons || []).slice(0, 3).map(function (r) {
       return '<span class="tag">' + esc(r) + '</span>';
@@ -495,6 +504,7 @@
     if ($('type').value) p.set('productionType', $('type').value);
     if ($('format').value) p.set('format', $('format').value);
     if ($('genre').value) p.set('genre', $('genre').value);
+    if ($('minRuntime').value) p.set('minRuntime', $('minRuntime').value);
     if ($('maxRuntime').value) p.set('maxRuntime', $('maxRuntime').value);
     if ($('tech').value) p.set('maxTechnicalComplexity', $('tech').value);
     p.set('limit', $('limit').value);
