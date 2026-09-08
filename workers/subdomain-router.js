@@ -50,15 +50,11 @@ export default {
       return fetch(url.toString(), request);
     }
 
-    const playMatchPrefix = '/playmatch';
-    if (
-      hostname === 'tools.wakeupandproduce.com' &&
-      (url.pathname === playMatchPrefix || url.pathname.startsWith(`${playMatchPrefix}/`))
-    ) {
-      url.pathname = url.pathname.slice(playMatchPrefix.length) || '/';
-      url.hostname = 'playmatch-api.media-930.workers.dev';
-      return fetch(url.toString(), request);
-    }
+    // PlayMatch used to be proxied here, back when its Worker served its own
+    // front end from a static assets binding. The page now lives in this repo
+    // at /tools/playmatch/ and calls the Worker's API directly, so this path
+    // falls through to Pages like every other tool. Proxying it again would
+    // serve the API's JSON at the page's URL.
 
     // The fluency lessons are standalone Workers. Proxy their exact Learn
     // paths here so they remain reliable alongside the Learn catch-all route.
