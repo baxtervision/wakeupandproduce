@@ -365,6 +365,37 @@
     $('sources').appendChild(label);
   });
 
+  // Populate this from the catalog rather than making directors guess a
+  // publisher's spelling or choose from a stale hand-maintained list.
+  function loadGenres() {
+    fetch(API + '/facets', { headers: { accept: 'application/json' } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Facets failed');
+        return res.json();
+      })
+      .then(function (data) {
+        (data.genres || []).forEach(function (genre) {
+          if (!genre || !genre.value) return;
+          var option = document.createElement('option');
+          option.value = genre.value;
+          option.textContent = genre.value + (genre.count ? ' (' + genre.count.toLocaleString() + ')' : '');
+          $('genre').appendChild(option);
+        });
+
+        var missingGenreSource = (data.genreCoverage || []).some(function (source) {
+          return source.total && !source.withGenre;
+        });
+        if (missingGenreSource) {
+          $('genre-note').textContent = 'Titles without a listed genre stay in the results.';
+        }
+      })
+      .catch(function () {
+        // Search works without facets; leave the optional dropdown empty if
+        // this small enhancement is temporarily unavailable.
+        $('genre-note').textContent = 'Genre filters are temporarily unavailable.';
+      });
+  }
+
   // --- Mode switching ------------------------------------------------------
   function setMode(next) {
     mode = next;
@@ -678,6 +709,7 @@
   });
 
   setMode('flexible');
+  loadGenres();
 })();
 </script>
 </body>
