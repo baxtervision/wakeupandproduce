@@ -138,6 +138,11 @@
     .open:hover{color:var(--accent-hover)}
     .open svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 
+    .more-wrap{margin-top:1.25rem;text-align:center}
+    .button.secondary{background:transparent;color:var(--accent);border:1px solid var(--card-border)}
+    .button.secondary:hover:not(:disabled){background:var(--badge-bg);border-color:var(--accent)}
+    .more-note{margin-top:.75rem;font-size:.84rem;color:var(--fg-muted)}
+    .more-note[hidden],.button.secondary[hidden]{display:none}
     .narrow-hint{font-size:.87rem;color:var(--fg);background:var(--badge-bg);border-radius:8px;padding:.7rem .9rem;margin:-.25rem 0 .75rem}
     .narrow-hint[hidden]{display:none}
     .narrow-hint button{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--accent);cursor:pointer;text-decoration:underline}
@@ -305,6 +310,10 @@
         castable &mdash; not that it&rsquo;s right for your program. Read anything you&rsquo;re serious about.
       </p>
       <div id="results" class="placeholder">Enter your company and search to see plays that fit.</div>
+      <div class="more-wrap">
+        <button type="button" class="button secondary" id="show-more" hidden>Show more</button>
+        <p class="more-note" id="more-note" hidden></p>
+      </div>
     </section>
   </main>
 
@@ -335,6 +344,8 @@
   var readoutText = $('readout-text');
   var totalEl = $('total'), femaleEl = $('female'), maleEl = $('male');
   var mode = 'flexible';
+  var shown = 0;          // results already on the page
+  var lastParams = null;  // the query they belong to
 
   function esc(v) {
     return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
@@ -495,7 +506,7 @@
     return null;
   }
 
-  function buildParams() {
+  function buildParams(offset) {
     var p = new URLSearchParams();
     p.set('mode', mode);
 
@@ -511,6 +522,7 @@
     if ($('maxRuntime').value) p.set('maxRuntime', $('maxRuntime').value);
     if ($('tech').value) p.set('maxTechnicalComplexity', $('tech').value);
     p.set('limit', $('limit').value);
+    if (offset) p.set('offset', offset);
 
     var checked = [].slice.call(document.querySelectorAll('#sources input:checked'))
       .map(function (i) { return i.value; });
@@ -519,9 +531,46 @@
     return p;
   }
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+  function renderCount(shownCount, total) {
+    if (!shownCount) { count.textContent = ''; return; }
+    count.textContent = total !== null
+      ? 'Showing ' + shownCount + ' of ' + total.toLocaleString() + ' matching titles'
+      : shownCount + ' titles';
+  }
 
+  function updateMore(total, rankedAvailable) {
+    var more = $('show-more');
+    var note = $('more-note');
+
+    // Ranking judges a bounded window of the catalogue, so there is a point
+    // past which more pages are not available and narrowing is the real
+    // answer. Say which case the reader is in rather than just stopping.
+    var reachable = Math.min(total === null ? Infinity : total, rankedAvailable || 0);
+
+    if (shown < reachable) {
+      more.hidden = false;
+      more.disabled = false;
+      more.textContent = 'Show more';
+      note.hidden = true;
+      return;
+    }
+
+    more.hidden = true;
+    if (total !== null && shown < total) {
+      note.textContent =
+        'That is the ' + shown + ' best matches PlayMatch ranks for this company. ' +
+        'The other ' + (total - shown).toLocaleString() +
+        ' fit on cast size too — narrow by genre, length, or staging to see different ones.';
+      note.hidden = false;
+    } else if (shown) {
+      note.textContent = 'That is every match.';
+      note.hidden = false;
+    } else {
+      note.hidden = true;
+    }
+  }
+
+  function runSearch(append) {
     var problem = validate();
     if (problem) {
       status.textContent = problem;
@@ -529,16 +578,26 @@
       return;
     }
 
-    submit.disabled = true;
-    status.textContent = 'Searching…';
-    status.className = 'status';
-    count.textContent = '';
-    results.className = '';
-    results.innerHTML = skeletons(4);
-    document.getElementById('fit-note').hidden = true;
-    document.getElementById('narrow-hint').hidden = true;
+    var offset = append ? shown : 0;
+    var params = buildParams(offset);
+    var button = append ? $('show-more') : submit;
 
-    fetch(API + '/search?' + buildParams().toString(), { headers: { accept: 'application/json' } })
+    button.disabled = true;
+    status.textContent = append ? 'Loading more…' : 'Searching…';
+    status.className = 'status';
+
+    if (!append) {
+      shown = 0;
+      count.textContent = '';
+      results.className = '';
+      results.innerHTML = skeletons(4);
+      $('fit-note').hidden = true;
+      $('narrow-hint').hidden = true;
+      $('show-more').hidden = true;
+      $('more-note').hidden = true;
+    }
+
+    fetch(API + '/search?' + params.toString(), { headers: { accept: 'application/json' } })
       .then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw new Error(data.detail || data.error || 'Search failed');
@@ -549,17 +608,32 @@
         var items = data.results || [];
         var total = typeof data.totalMatches === 'number' ? data.totalMatches : null;
         status.textContent = 'Search complete.';
-        count.textContent = items.length
-          ? (total !== null
-              ? 'Showing ' + items.length + ' of ' + total.toLocaleString() + ' matching titles'
-              : items.length + ' titles')
-          : '';
 
-        // A long list is not a useful answer. Past a threshold, say so and put
-        // the filters one click away rather than leaving the director to
-        // scroll and hope.
+        if (!append && !items.length) {
+          results.className = 'placeholder';
+          results.textContent =
+            'No plays matched. Try widening the filters, or turning on more publishers under "More filters."';
+          $('fit-note').hidden = true;
+          updateMore(total, 0);
+          return;
+        }
+
+        if (append) {
+          results.insertAdjacentHTML('beforeend', items.map(card).join(''));
+        } else {
+          results.className = 'cards';
+          results.innerHTML = items.map(card).join('');
+          $('fit-note').hidden = false;
+        }
+
+        shown += items.length;
+        lastParams = params.toString();
+        renderCount(shown, total);
+
+        // The narrowing prompt is about the size of the result set, so it
+        // belongs on the first page only.
         var hint = $('narrow-hint');
-        if (total !== null && total > 50 && items.length) {
+        if (!append && total !== null && total > 50) {
           hint.innerHTML = total.toLocaleString() + ' plays fit a company this size. ' +
             'Narrowing by genre, length, or staging will get you a shortlist worth reading — ' +
             '<button type="button" id="open-filters">open the filters</button>.';
@@ -567,89 +641,41 @@
           var opener = $('open-filters');
           if (opener) {
             opener.addEventListener('click', function () {
-              var refine = $('refine');
               document.querySelector('details.advanced').open = true;
-              refine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              $('refine').scrollIntoView({ behavior: 'smooth', block: 'center' });
               $('genre').focus();
             });
           }
-        } else {
-          hint.hidden = true;
         }
 
-        document.getElementById('fit-note').hidden = !items.length;
-
-        if (!items.length) {
-          results.className = 'placeholder';
-          results.textContent =
-            'No plays matched. Try widening the filters, or turning on more publishers under “More filters.”';
-          return;
-        }
-        results.className = 'cards';
-        results.innerHTML = items.map(card).join('');
+        updateMore(total, data.rankedAvailable);
       })
       .catch(function (err) {
         status.textContent = 'Search unavailable.';
         status.className = 'status error';
         $('narrow-hint').hidden = true;
-        results.className = 'placeholder error';
-        results.textContent = err.message || 'Something went wrong. Please try again.';
+        if (!append) {
+          results.className = 'placeholder error';
+          results.textContent = err.message || 'Something went wrong. Please try again.';
+        } else {
+          $('more-note').textContent = 'Could not load more. Try again.';
+          $('more-note').hidden = false;
+        }
       })
-      .finally(function () { submit.disabled = false; });
+      .finally(function () {
+        submit.disabled = false;
+        $('show-more').disabled = false;
+      });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    runSearch(false);
   });
 
-  // Populate the genre list from the catalogue itself, so the options are
-  // real values with real counts rather than a text box to guess at.
-  // Catalogue size and freshness, stated up front. The date is the oldest
-  // complete pass across publishers, not the last time anything ran — ingest
-  // is incremental, so a recent run does not mean a current catalogue.
-  fetch(API + '/health', { headers: { accept: 'application/json' } })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (health) {
-      if (!health) return;
-      var el = $('catalog-status');
-      var titles = (health.totalTitles || 0).toLocaleString();
-      var parts = [titles + ' titles from ' + (health.sources || []).length + ' publishers'];
-
-      if (health.catalogUpdatedAt) {
-        var when = new Date(health.catalogUpdatedAt);
-        if (!isNaN(when)) {
-          parts.push('fully refreshed ' + when.toLocaleDateString(undefined, {
-            year: 'numeric', month: 'long', day: 'numeric'
-          }));
-        }
-      } else {
-        parts.push('first full refresh still in progress');
-      }
-      el.textContent = parts.join(' · ') + '.';
-      el.hidden = false;
-    })
-    .catch(function () { /* the line simply stays hidden */ });
-
-  fetch(API + '/facets', { headers: { accept: 'application/json' } })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (facets) {
-      if (!facets || !facets.genres) return;
-      var select = $('genre');
-      facets.genres.forEach(function (g) {
-        var opt = document.createElement('option');
-        opt.value = g.value;
-        opt.textContent = g.value + ' (' + g.count + ')';
-        select.appendChild(opt);
-      });
-
-      // Not every publisher lists a genre — Dramatic Publishing lists none at
-      // all — so filtering by one quietly drops those titles. Say so instead
-      // of letting a third of the catalogue disappear without explanation.
-      var missing = (facets.genreCoverage || []).filter(function (c) { return c.withGenre === 0; });
-      if (missing.length) {
-        var names = missing.map(function (c) { return c.licensor; });
-        $('genre-note').textContent =
-          names.join(' and ') + (names.length === 1 ? ' does' : ' do') +
-          ' not list genres — those titles still appear, marked.';
-      }
-    })
-    .catch(function () { /* the free-text fallback is simply no options */ });
+  $('show-more').addEventListener('click', function () {
+    runSearch(true);
+  });
 
   setMode('flexible');
 })();
