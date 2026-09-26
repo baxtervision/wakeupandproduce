@@ -16,3 +16,6 @@
 /grinnell-tracker/   /sports/grinnell-tracker/        301
 /community/*      /sports/  301
 /community/       /sports/  301
+/tools/playmatch/*  /tools/playfinder/:splat  301
+/tools/playmatch/   /tools/playfinder/        301
+/tools/playmatch    /tools/playfinder/        301

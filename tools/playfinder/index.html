@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PlayMatch: Find Plays That Fit Your Cast | Wake Up &amp; Produce</title>
+  <title>PlayFinder: Find Plays That Fit Your Cast | Wake Up &amp; Produce</title>
   <meta name="description" content="Find high-school plays that match the size and makeup of your acting company. Searches Concord Theatricals, Dramatic Publishing, and Eldridge.">
-  <meta property="og:title" content="PlayMatch | Wake Up &amp; Produce">
+  <meta property="og:title" content="PlayFinder | Wake Up &amp; Produce">
   <meta property="og:description" content="Find high-school plays that match the size and makeup of your acting company.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://wakeupandproduce.com/tools/playmatch/">
-  <link rel="canonical" href="https://wakeupandproduce.com/tools/playmatch/">
+  <meta property="og:url" content="https://wakeupandproduce.com/tools/playfinder/">
+  <link rel="canonical" href="https://wakeupandproduce.com/tools/playfinder/">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -190,7 +190,7 @@
     <a href="/tools/" class="back-link">
       <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Tools
     </a>
-    <h1 class="hero-brand">PlayMatch</h1>
+    <h1 class="hero-brand">PlayFinder</h1>
     <p class="hero-tagline">Tell it who is in your company. It searches publisher catalogs and ranks the plays that actually fit.</p>
     <hr class="hero-rule">
     <p class="catalog-status" id="catalog-status" hidden></p>
@@ -335,7 +335,7 @@
 (function () {
   'use strict';
 
-  var API = 'https://playmatch-api.media-930.workers.dev';
+  var API = 'https://playfinder-api.media-930.workers.dev';
 
   var SOURCES = [
     { slug: 'concord',             label: 'Concord Theatricals' },
@@ -594,7 +594,7 @@
     more.hidden = true;
     if (total !== null && shown < total) {
       note.textContent =
-        'That is the ' + shown + ' best matches PlayMatch ranks for this company. ' +
+        'That is the ' + shown + ' best matches PlayFinder ranks for this company. ' +
         'The other ' + (total - shown).toLocaleString() +
         ' fit on cast size too — narrow by genre, length, or staging to see different ones.';
       note.hidden = false;

@@ -50,9 +50,9 @@ export default {
       return fetch(url.toString(), request);
     }
 
-    // PlayMatch used to be proxied here, back when its Worker served its own
+    // PlayFinder used to be proxied here, back when its Worker served its own
     // front end from a static assets binding. The page now lives in this repo
-    // at /tools/playmatch/ and calls the Worker's API directly, so this path
+    // at /tools/playfinder/ and calls the Worker's API directly, so this path
     // falls through to Pages like every other tool. Proxying it again would
     // serve the API's JSON at the page's URL.
 
