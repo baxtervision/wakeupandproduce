@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basketball Coaching Tools &amp; Systems Guides | Wake Up &amp; Produce</title>
-    <meta name="description" content="Wake Up & Produce is a collection of basketball coaching tools, playbooks, systems guides, and interactive teaching resources built by Baxter.">
+    <title>Varsity Sports Blueprint | Basketball Systems &amp; Coaching Guides</title>
+    <meta name="description" content="Varsity Sports Blueprint is a collection of basketball coaching tools, playbooks, systems guides, and interactive teaching resources built by Baxter.">
     <link rel="canonical" href="https://wakeupandproduce.com/sports/">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -14,25 +14,13 @@
     <div data-shared-nav></div>
     <header class="site-header">
         <p class="site-kicker">Systems · Vocabulary · Standards</p>
-        <h1 class="site-wordmark" aria-label="Wake Up and Produce">Wake Up<br><em>&amp; Produce</em></h1>
+        <h1 class="site-wordmark" aria-label="Varsity Sports Blueprint">Varsity Sports<br><em>Blueprint</em></h1>
         <p class="site-tagline">The basketball blueprint for teaching pace, pressure, spacing, vocabulary, and the standards that turn athletes into varsity-ready players.</p>
     </header>
 
     <div class="site-divider"><hr></div>
 
     <main class="site-main">
-        <div class="sport-tabs" role="tablist" aria-label="Sport">
-          <button class="sport-tab active" role="tab" aria-selected="true"  data-sport="basketball">Basketball</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Football">Football</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Volleyball">Volleyball</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Baseball">Baseball</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Soccer">Soccer</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Track &amp; Field">Track &amp; Field</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Tennis">Tennis</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Lacrosse">Lacrosse</button>
-          <button class="sport-tab"        role="tab" aria-selected="false" data-sport="Golf">Golf</button>
-        </div>
-
         <div id="sport-panel-basketball">
           <div style="padding-block: 28px 8px; max-width: 680px;">
             <p style="margin: 0 0 16px; font-size: clamp(1.1rem, 2.5vw, 1.35rem); font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; color: var(--site-text);">Basketball is not just a collection of plays. It is a game of concepts.</p>
@@ -97,30 +85,19 @@
 <script src="shared-nav.js"></script>
 <script>
   (function () {
-    var tabs = document.querySelectorAll('.sport-tab');
     var basketballPanel = document.getElementById('sport-panel-basketball');
     var comingPanel = document.getElementById('sport-panel-coming');
     var sportName = document.getElementById('sport-soon-name');
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        tabs.forEach(function (t) {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-
-        if (tab.dataset.sport === 'basketball') {
-          basketballPanel.hidden = false;
-          comingPanel.hidden = true;
-        } else {
-          basketballPanel.hidden = true;
-          comingPanel.hidden = false;
-          sportName.textContent = tab.dataset.sport;
-        }
-      });
-    });
+    var sports = {
+      football: 'Football', volleyball: 'Volleyball', baseball: 'Baseball', soccer: 'Soccer',
+      'track-and-field': 'Track & Field', tennis: 'Tennis', lacrosse: 'Lacrosse', golf: 'Golf'
+    };
+    var requestedSport = location.hash.slice(1);
+    if (sports[requestedSport]) {
+      basketballPanel.hidden = true;
+      comingPanel.hidden = false;
+      sportName.textContent = sports[requestedSport];
+    }
   }());
 </script>
 <!-- cloudflare-pages-refresh: 2026-05-27 -->

@@ -1,24 +1,70 @@
 (function () {
   var depth = location.pathname.replace(/^\/sports\/?/, '').split('/').filter(Boolean).length;
   var pathPrefix = depth > 0 ? '../'.repeat(depth) : '';
+  var sports = [
+    { name: 'Basketball', id: 'basketball', href: '/sports/#basketball' },
+    { name: 'Football', id: 'football', href: '/sports/#football' },
+    { name: 'Volleyball', id: 'volleyball', href: '/sports/#volleyball' },
+    { name: 'Baseball', id: 'baseball', href: '/sports/#baseball' },
+    { name: 'Soccer', id: 'soccer', href: '/sports/#soccer' },
+    { name: 'Track & Field', id: 'track-and-field', href: '/sports/#track-and-field' },
+    { name: 'Tennis', id: 'tennis', href: '/sports/#tennis' },
+    { name: 'Lacrosse', id: 'lacrosse', href: '/sports/#lacrosse' },
+    { name: 'Golf', id: 'golf', href: '/sports/#golf' }
+  ];
+  var sportSections = {
+    basketball: [
+      { name: 'Overview', href: '/sports/#basketball' },
+      { name: 'Offense', href: '/sports/offense-guide/' },
+      { name: 'Defense', href: '/sports/defense-guide/' },
+      { name: 'Key Actions', href: '/sports/offensive-key-actions/' },
+      { name: 'Key Terms', href: '/sports/key-terms/' },
+      { name: 'The Lab', href: '/sports/learning/' },
+      { name: 'The Standard', href: '/sports/standard/' }
+    ]
+  };
+  var basketballPaths = Object.keys(sportSections.basketball).map(function (index) {
+    return sportSections.basketball[index].href.replace(/\/?$/, '');
+  });
+  var currentPath = location.pathname.replace(/\/$/, '') || '/';
+  var landingSport = sports.filter(function (sport) {
+    return sport.id === location.hash.slice(1);
+  })[0];
+  var currentPrimarySport = landingSport ? landingSport.id : (currentPath === '/sports' ? 'basketball' : null);
+  var currentSport = basketballPaths.indexOf(currentPath) !== -1 || currentPrimarySport === 'basketball' ? 'basketball' : null;
+
+  // Sport sections currently share the landing page and are selected by hash.
+  // Reloading on a hash change lets this central configuration update both nav levels.
+  if (currentPath === '/sports') {
+    window.addEventListener('hashchange', function () {
+      window.location.reload();
+    });
+  }
+
+  function linkMarkup(link, current) {
+    return '<a href="' + link.href + '"' + (current ? ' aria-current="page"' : '') + '>' + link.name + '</a>';
+  }
 
   const navEl = document.querySelector('[data-shared-nav]');
   if (navEl) {
+    var primaryLinks = '<a href="/sports/"' + (currentPath === '/sports' ? ' aria-current="page"' : '') + '>Varsity Sports Blueprint</a>';
+    primaryLinks += sports.map(function (sport) {
+      return linkMarkup(sport, currentPrimarySport === sport.id);
+    }).join('');
+    var secondaryLinks = currentSport ? sportSections[currentSport].map(function (section) {
+      return linkMarkup(section, currentPath === section.href.replace(/\/$/, ''));
+    }).join('') : '';
+
     navEl.innerHTML =
-      '<nav class="shared-nav" aria-label="Primary navigation">' +
-        '<a class="shared-brand" href="/">Wake Up &amp; Produce</a>' +
-        '<button class="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">' +
-          '<span></span><span></span><span></span>' +
-        '</button>' +
-        '<div class="shared-nav-links">' +
-          '<a href="/sports/">Home</a>' +
-          '<a href="/sports/offense-guide/">Offense</a>' +
-          '<a href="/sports/defense-guide/">Defense</a>' +
-          '<a href="/sports/offensive-key-actions/">Key Actions</a>' +
-          '<a href="/sports/key-terms/">Key Terms</a>' +
-          '<a href="/sports/learning/">The Lab</a>' +
-          '<a href="/sports/standard/">The Standard</a>' +
+      '<nav class="shared-nav" aria-label="Sports navigation">' +
+        '<div class="nav-primary">' +
+          '<a class="shared-brand" href="/sports/">Varsity Sports Blueprint</a>' +
+          '<button class="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">' +
+            '<span></span><span></span><span></span>' +
+          '</button>' +
+          '<div class="shared-nav-links nav-primary-links" aria-label="Primary Sports navigation">' + primaryLinks + '</div>' +
         '</div>' +
+        (secondaryLinks ? '<div class="sports-secondary-nav" aria-label="Basketball navigation">' + secondaryLinks + '</div>' : '') +
       '</nav>';
 
     var sharedNav = navEl.querySelector('.shared-nav');
