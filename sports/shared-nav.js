@@ -30,7 +30,7 @@
   var landingSport = sports.filter(function (sport) {
     return sport.id === location.hash.slice(1);
   })[0];
-  var currentPrimarySport = landingSport ? landingSport.id : (currentPath === '/sports' ? 'basketball' : null);
+  var currentPrimarySport = landingSport ? landingSport.id : (currentPath === '/sports' || basketballPaths.indexOf(currentPath) !== -1 ? 'basketball' : null);
   var currentSport = basketballPaths.indexOf(currentPath) !== -1 || currentPrimarySport === 'basketball' ? 'basketball' : null;
 
   // Sport sections currently share the landing page and are selected by hash.
@@ -42,29 +42,31 @@
   }
 
   function linkMarkup(link, current) {
-    return '<a href="' + link.href + '"' + (current ? ' aria-current="page"' : '') + '>' + link.name + '</a>';
+    return '<a href="' + link.href + '"' + (current ? ' class="is-active" aria-current="page"' : '') + '>' + link.name + '</a>';
   }
 
   const navEl = document.querySelector('[data-shared-nav]');
   if (navEl) {
-    var primaryLinks = '<a href="/sports/"' + (currentPath === '/sports' ? ' aria-current="page"' : '') + '>Varsity Sports Blueprint</a>';
-    primaryLinks += sports.map(function (sport) {
+    var primaryLinks = sports.map(function (sport) {
       return linkMarkup(sport, currentPrimarySport === sport.id);
     }).join('');
     var secondaryLinks = currentSport ? sportSections[currentSport].map(function (section) {
-      return linkMarkup(section, currentPath === section.href.replace(/\/$/, ''));
+      var isOverview = section.name === 'Overview' && currentSport === 'basketball' && currentPath === '/sports';
+      return linkMarkup(section, isOverview || currentPath === section.href.replace(/\/$/, ''));
     }).join('') : '';
 
     navEl.innerHTML =
       '<nav class="shared-nav" aria-label="Sports navigation">' +
         '<div class="nav-primary">' +
-          '<a class="shared-brand" href="/sports/">Varsity Sports Blueprint</a>' +
+          '<div class="shared-brand" aria-label="Breadcrumb">' +
+            '<a href="/">Wake Up &amp; Produce</a><span aria-hidden="true">→</span><a href="/sports/"' + (currentPath === '/sports' ? ' aria-current="page"' : '') + '>Varsity Sports Blueprint</a>' +
+          '</div>' +
           '<button class="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">' +
             '<span></span><span></span><span></span>' +
           '</button>' +
           '<div class="shared-nav-links nav-primary-links" aria-label="Primary Sports navigation">' + primaryLinks + '</div>' +
         '</div>' +
-        (secondaryLinks ? '<div class="sports-secondary-nav" aria-label="Basketball navigation">' + secondaryLinks + '</div>' : '') +
+        (secondaryLinks ? '<div class="sports-secondary"><span class="sports-section-label">Basketball</span><div class="sports-secondary-nav" aria-label="Basketball navigation">' + secondaryLinks + '</div></div>' : '') +
       '</nav>';
 
     var sharedNav = navEl.querySelector('.shared-nav');
