@@ -482,6 +482,8 @@
   .section-kicker { color: var(--amber); font: 700 .72rem/1 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
   .company-intro h2 { margin-top: .55rem; font: 800 clamp(1.55rem, 3vw, 2.2rem)/1.05 'Outfit', sans-serif; letter-spacing: -.03em; }
   .company-intro p { max-width: 65ch; margin-top: .8rem; color: var(--fg-mid); font-size: .98rem; }
+  .company-intro .film-link { display: inline-flex; align-items: center; gap: .35rem; color: var(--amber); font-weight: 700; text-decoration: none; }
+  .company-intro .film-link:hover { text-decoration: underline; text-underline-offset: .2em; }
 
   /* ── individual shape styles ── */
 
@@ -580,6 +582,7 @@
     font-weight: 700;
     font-size: 0.82rem;
   }
+  .footer-brand em { font-weight: 400; }
   .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
   .footer-links a {
     font-size: 0.76rem;
@@ -666,7 +669,7 @@
     <p class="section-kicker">What we’re building</p>
     <h2 id="building-title">Practical products for people in motion.</h2>
     <p>Wake Up &amp; Produce develops tools, training, and products that help people do more of what matters.</p>
-    <p><em>A Misfit Island company.</em></p>
+    <p><a class="film-link" href="https://film.wakeupandproduce.com/" target="_blank" rel="noopener noreferrer">Explore Wake Up &amp; Produce Films <span aria-hidden="true">↗</span></a></p>
   </section>
 
   <main class="cards">
@@ -865,7 +868,7 @@
 
   <footer class="footer">
     <div class="footer-inner">
-      <span class="footer-brand">Wake Up &amp; Produce</span>
+      <span class="footer-brand">Wake Up &amp; Produce | <em>A Misfit Island company.</em></span>
       <nav class="footer-links">
         <a href="https://misfitis.land/privacy">Privacy</a>
         <a href="https://misfitis.land/terms">Terms</a>
